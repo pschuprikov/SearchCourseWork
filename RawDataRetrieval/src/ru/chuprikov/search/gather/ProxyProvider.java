@@ -9,6 +9,6 @@ import java.net.Proxy;
  * Time: 4:24 PM
  * To change this template use File | Settings | File Templates.
  */
-public interface ProxyProvider {
+interface ProxyProvider {
     Proxy getProxy();
 }

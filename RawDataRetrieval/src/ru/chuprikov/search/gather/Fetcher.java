@@ -8,7 +8,7 @@ package ru.chuprikov.search.gather;
  * To change this template use File | Settings | File Templates.
  */
 
-public interface Fetcher {
+interface Fetcher {
     void fetchProblemAsync(ProblemFetchData problem, FetchCompletionHandler handler);
     void awaitCompletion() throws InterruptedException;
 }

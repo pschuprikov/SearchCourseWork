@@ -9,7 +9,7 @@ import java.net.Proxy;
  * Time: 5:04 PM
  * To change this template use File | Settings | File Templates.
  */
-public class NoProxyProvider implements ProxyProvider {
+class NoProxyProvider implements ProxyProvider {
     @Override
     public Proxy getProxy() {
         return Proxy.NO_PROXY;

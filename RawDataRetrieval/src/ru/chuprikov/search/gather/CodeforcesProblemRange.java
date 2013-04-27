@@ -53,4 +53,9 @@ class CodeforcesProblemRange implements ProblemRange {
     public boolean checkValid(String content) {
         return content.contains("<div class=\"problem-statement\">");
     }
+
+    @Override
+    public ProblemLoader getLoader() {
+        return new StandardProblemLoader();
+    }
 }

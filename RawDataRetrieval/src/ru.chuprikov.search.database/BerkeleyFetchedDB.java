@@ -6,6 +6,8 @@ import com.sleepycat.bind.tuple.TupleTupleBinding;
 import com.sleepycat.je.*;
 import ru.chuprikov.search.gather.ProblemRawData;
 
+import java.util.Iterator;
+
 /**
  * Created with IntelliJ IDEA.
  * User: pasha
@@ -18,6 +20,55 @@ class BerkeleyFetchedDB implements FetchedDB {
 
     BerkeleyFetchedDB(Database db) {
         this.db = db;
+    }
+
+    @Override
+    public Iterator<ProblemRawData> iterator() {
+        try {
+            return new ProblemDataIterator<>(this.db.openCursor(null, CursorConfig.DEFAULT));
+        } catch (DatabaseException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    private static class ProblemDataIterator<String> implements Iterator<ProblemRawData> {
+        private final Cursor cursor;
+        private DatabaseEntry keyEntry = new DatabaseEntry();
+        private DatabaseEntry dataEntry = new DatabaseEntry();
+
+        ProblemDataIterator(Cursor cursor) throws DatabaseException {
+            this.cursor = cursor;
+            if (cursor.getFirst(keyEntry, dataEntry, LockMode.DEFAULT) == OperationStatus.NOTFOUND) {
+                keyEntry = null;
+                dataEntry = null;
+            }
+        }
+
+        @Override
+        public boolean hasNext() {
+            return keyEntry != null;
+        }
+
+        @Override
+        public ProblemRawData next() {
+            try {
+                if (cursor.getNext(keyEntry, dataEntry, LockMode.DEFAULT) == OperationStatus.NOTFOUND) {
+                    keyEntry = null;
+                    dataEntry = null;
+                }
+            } catch (DatabaseException e) {
+                keyEntry = null;
+                dataEntry = null;
+            }
+
+            return hasNext() ? binding.entryToObject(keyEntry, dataEntry) : null;
+        }
+
+        @Override
+        public void remove() {
+            throw new UnsupportedOperationException();
+        }
     }
 
     private static class ProblemFetchDataBinding extends TupleTupleBinding<ProblemRawData> {

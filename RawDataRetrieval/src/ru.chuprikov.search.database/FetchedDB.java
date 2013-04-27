@@ -9,7 +9,7 @@ import ru.chuprikov.search.gather.ProblemRawData;
  * Time: 8:05 PM
  * To change this template use File | Settings | File Templates.
  */
-public interface FetchedDB extends AutoCloseable {
+public interface FetchedDB extends AutoCloseable, Iterable<ProblemRawData> {
     void saveFetched(ProblemRawData problem) throws Exception;
     boolean contains(ProblemRawData problem) throws Exception;
 }

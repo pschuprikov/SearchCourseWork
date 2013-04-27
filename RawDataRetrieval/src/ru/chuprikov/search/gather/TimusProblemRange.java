@@ -21,7 +21,7 @@ class TimusProblemRange implements ProblemRange {
 
     @Override
     public boolean hasNext() {
-        return current <= last;
+        return current < last;
     }
 
     @Override
@@ -41,5 +41,10 @@ class TimusProblemRange implements ProblemRange {
     @Override
     public boolean checkValid(String content) {
         return content.contains("<DIV CLASS=\"problem_content\">");
+    }
+
+    @Override
+    public ProblemLoader getLoader() {
+        return new StandardProblemLoader();
     }
 }

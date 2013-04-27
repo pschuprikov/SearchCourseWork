@@ -11,4 +11,5 @@ import java.util.Iterator;
  */
 interface ProblemRange extends Iterator<ProblemFetchData> {
     boolean checkValid(String content);
+    ProblemLoader getLoader();
 }

@@ -14,16 +14,15 @@ import java.net.URLConnection;
  * Time: 4:37 PM
  * To change this template use File | Settings | File Templates.
  */
-public class ProxyFetchProcessor implements Runnable {
-    ProxyProvider proxies;
+class ProxyFetchProcessor implements Runnable {
+    private final ProxyProvider proxies;
 
-    ProblemFetchData problem;
-    FetchCompletionHandler handler;
+    private final ProblemFetchData problem;
+    private final FetchCompletionHandler handler;
 
     private static int NUM_OF_RETRIES = 5;
-    private static int CONNECT_TIMEOUT_MILLS = 100;
 
-    public ProxyFetchProcessor(ProxyProvider proxies, ProblemFetchData problem, FetchCompletionHandler handler) {
+    ProxyFetchProcessor(ProxyProvider proxies, ProblemFetchData problem, FetchCompletionHandler handler) {
         this.proxies = proxies;
         this.problem = problem;
         this.handler = handler;
@@ -35,33 +34,14 @@ public class ProxyFetchProcessor implements Runnable {
 
         problem.setContent(null);
         Exception lastException = null;
-        try {
-            URL url = new URL(problem.url);
-
-            for (int i = 0; i < NUM_OF_RETRIES; i++) {
-                try {
-                    URLConnection conn = url.openConnection(proxies.getProxy());
-                    conn.setConnectTimeout(CONNECT_TIMEOUT_MILLS);
-
-                    BufferedReader contentReader =  new BufferedReader(
-                            new InputStreamReader(conn.getInputStream()));
-                    StringBuilder contentBuilder = new StringBuilder();
-                    while (true) {
-                        String line = contentReader.readLine();
-                        if (line == null)
-                            break;
-                        contentBuilder.append(line).append("\n");
-                    }
-
-                    problem.setContent(contentBuilder.toString());
-                } catch (IOException ex) {
-                    lastException = ex;
-                    continue;
-                }
-                break;
+        for (int i = 0; i < NUM_OF_RETRIES; i++) {
+            try {
+                problem.setContent(problem.range.getLoader().load(problem, proxies.getProxy()));
+            } catch (IOException ex) {
+                lastException = ex;
+                continue;
             }
-        } catch (MalformedURLException e) {
-            handler.fetchFailed(problem, e);
+            break;
         }
 
         if (problem.getContent() == null) {
