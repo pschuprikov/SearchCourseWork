@@ -25,11 +25,8 @@ public class Gather implements Runnable {
         try (SearchDatabase db = SearchDatabases.openBerkeley(new File(System.getProperty("user.dir") + "/mydb"));
              FetchedDB fetchedDB = db.openFetchDB()
         ) {
-            for (ProblemRawData prd : fetchedDB) {
-                System.err.println(prd);
-            }
             ProblemRangeLoader loader = new ProblemRangeLoader(proxyFetcher, fetchedDB);
-            loader.loadURLs(new CodeforcesProblemRange(1, 300));
+            loader.loadURLs(new UVaProblemRange(100, 100));
             proxyFetcher.awaitCompletion();
             System.err.println("Fetch results. Total: " + loader.getNumTotal() + "; Successful: "
                 + loader.getNumSuccessfull() + "; Already fetched: " + loader.getNumAlreadyFetched());

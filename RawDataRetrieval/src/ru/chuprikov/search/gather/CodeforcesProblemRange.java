@@ -14,6 +14,8 @@ class CodeforcesProblemRange implements ProblemRange {
     int currentRound;
     char currentLetter;
 
+    private static ProblemLoader loader = new StandardProblemLoader();
+
     CodeforcesProblemRange(int firstRound, int lastRound) {
         this.firstRound = firstRound;
         this.lastRound = lastRound;
@@ -56,6 +58,6 @@ class CodeforcesProblemRange implements ProblemRange {
 
     @Override
     public ProblemLoader getLoader() {
-        return new StandardProblemLoader();
+        return loader;
     }
 }

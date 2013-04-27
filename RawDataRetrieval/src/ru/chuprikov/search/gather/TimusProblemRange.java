@@ -13,6 +13,8 @@ class TimusProblemRange implements ProblemRange {
     private final int last;
     private int current;
 
+    private static ProblemLoader loader = new StandardProblemLoader();
+
     TimusProblemRange(int first, int last) {
         this.first = first;
         this.last = last;
@@ -45,6 +47,6 @@ class TimusProblemRange implements ProblemRange {
 
     @Override
     public ProblemLoader getLoader() {
-        return new StandardProblemLoader();
+        return loader;
     }
 }
