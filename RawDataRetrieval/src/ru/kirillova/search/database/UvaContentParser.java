@@ -33,20 +33,22 @@ class UvaContentParser implements ContentParser {
 
         public ParsedProblem parseContent(ProblemRawData problem) {
             ParsedProblem p = new ParsedProblem(problem);
-            String s = problem.getContent().substring(problem.getContent().indexOf(";<A NAME=\"SECTION0001000000000000000000\">"));
+            String s = problem.getContent();
             s = s.replaceAll("&nbsp;", " ");
-            String term = "<A NAME=\"SECTION0001000000000000000000\">";
+            String term = "<<<";
             String s2 = s.substring(s.indexOf(term));
             p.title = getTextBody(s2, false, 0);
-            term = "</A>";
+            term = ">>>";
             String term2 = "<A NAME=\"SECTION0001001000000000000000\">";
-            s2 = s.substring(s.indexOf(term), s.indexOf(term2));
+            if (s.indexOf(term2) == -1) return p;
+            s2 = s.substring(s.indexOf(term) + 3, s.indexOf(term2));
             p.condition = getTextBody(s2, true, 0);
             term = "<A NAME=\"SECTION0001002000000000000000\">";
             if (!s.contains(term)) return p;
             s2 = s.substring(s.indexOf(term2), s.indexOf(term));
             p.inputSpecification = getTextBody(s2, true, 1);
             term2 = "<A NAME=\"SECTION0001003000000000000000\">";
+            if (s.indexOf(term2) == -1) return p;
             s2 = s.substring(s.indexOf(term), s.indexOf(term2));
             p.outputSpecification = getTextBody(s2, true, 1);
             return p;
