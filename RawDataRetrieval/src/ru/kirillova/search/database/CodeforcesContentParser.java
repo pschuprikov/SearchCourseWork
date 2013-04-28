@@ -37,8 +37,12 @@ class CodeforcesContentParser implements ContentParser {
             problem.getContent().indexOf("<div class=\"sample-test\">"));
         String term = "<div class=\"title\">";
         p.title = getTextBody(s, s.indexOf(term), 0);
-        term = "<DIV ID=\"problem_text\">";
+        term = "<div>";
         p.condition = getTextBody(s, s.indexOf(term), 0);
+        term = "<div class=\"input-specification\">";
+        p.inputSpecification = getTextBody(s, s.indexOf(term), 1);
+        term = "<div class=\"output-specification\">";
+        p.outputSpecification = getTextBody(s, s.indexOf(term), 1);
 
         return p;
     }
