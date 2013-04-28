@@ -1,8 +1,8 @@
 package ru.chuprikov.search.gather.problemsets;
 
 import ru.chuprikov.search.gather.ProblemRawData;
-import ru.chuprikov.search.gather.loader.ProblemFetchInfo;
-import ru.chuprikov.search.gather.loader.StandardURLContentLoader;
+import ru.chuprikov.search.gather.fetcher.FetchInfo;
+import ru.chuprikov.search.gather.fetcher.StandardURLContentLoader;
 
 import java.io.IOException;
 import java.io.OutputStreamWriter;
@@ -17,7 +17,7 @@ import java.net.URLEncoder;
  * Time: 1:59 AM
  * To change this template use File | Settings | File Templates.
  */
-class UVaURLContentLoader extends StandardURLContentLoader {
+class UVaURLContentLoader extends StandardURLContentLoader<ProblemFetchInfo> {
 
     private static final String request = "http://acm.uva.es/local/online_judge/gotosearch_uva.php";
 
@@ -36,12 +36,12 @@ class UVaURLContentLoader extends StandardURLContentLoader {
     }
 
     @Override
-    public String loadContent(ProblemFetchInfo problem, Proxy proxy) throws IOException {
-        if (!problem.resource.equals("UVa"))
+    public String loadContent(FetchInfo<ProblemFetchInfo> problem, Proxy proxy) throws IOException {
+        if (!problem.get().resource.equals("UVa"))
             throw new AssertionError();
 
         StringBuilder sb = new StringBuilder();
-        sb.append("<<<").append(readFromUVa(problem, proxy)).append(">>>").append(super.loadContent(problem, proxy));
+        sb.append("<<<").append(readFromUVa(problem.get(), proxy)).append(">>>").append(super.loadContent(problem, proxy));
         return sb.toString();
     }
 }

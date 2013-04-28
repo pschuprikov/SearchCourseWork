@@ -17,7 +17,7 @@ public class ProxyFetcher implements Fetcher {
     @Override
     public <T> void fetchProblemAsync(FetchInfo<T> data, FetchCompletionHandler<T> handler) {
         System.err.println("Post fetch of " + data.toString());
-        pool.schedule(new ProxyFetchProcessor(proxies, data, handler), rng.nextInt(500) + 500, TimeUnit.MILLISECONDS);
+        pool.schedule(new ProxyFetchProcessor<>(proxies, data, handler), rng.nextInt(500) + 500, TimeUnit.MILLISECONDS);
     }
 
     @Override

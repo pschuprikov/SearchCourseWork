@@ -6,8 +6,9 @@ import ru.chuprikov.search.database.SearchDatabases;
 import ru.chuprikov.search.gather.fetcher.Fetcher;
 import ru.chuprikov.search.gather.fetcher.NoProxyProvider;
 import ru.chuprikov.search.gather.fetcher.ProxyFetcher;
-import ru.chuprikov.search.gather.loader.ProblemSetLoader;
+import ru.chuprikov.search.gather.problemsets.ProblemSetLoader;
 import ru.chuprikov.search.gather.problemsets.ProblemSets;
+import ru.chuprikov.search.gather.problemsets.SPOJProblemIDSLoader;
 
 import java.io.File;
 
@@ -24,6 +25,7 @@ public class Gather {
             System.err.println("Wrong number of arguments");
             System.exit(1);
         }
+
 
         Fetcher proxyFetcher = new ProxyFetcher(new NoProxyProvider());
         try (SearchDatabase db = SearchDatabases.openBerkeley(new File(System.getProperty("user.dir") + "/mydb"));

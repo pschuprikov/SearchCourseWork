@@ -1,7 +1,6 @@
 package ru.chuprikov.search.gather.problemsets;
 
 import ru.chuprikov.search.gather.fetcher.URLContentLoader;
-import ru.chuprikov.search.gather.loader.ProblemFetchInfo;
 
 import java.util.Iterator;
 

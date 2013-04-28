@@ -10,6 +10,6 @@ import java.net.Proxy;
  * Time: 11:56 PM
  * To change this template use File | Settings | File Templates.
  */
-public interface URLContentLoader <T> {
-    public String loadContent(T problem, Proxy proxy) throws IOException;
+public interface URLContentLoader<T> {
+    public String loadContent(FetchInfo<T> data, Proxy proxy) throws IOException;
 }

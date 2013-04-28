@@ -35,12 +35,14 @@ class ProxyFetchProcessor <T> implements Runnable {
         for (int i = 0; i < NUM_OF_RETRIES; i++) {
             try {
                 Thread.sleep(1500 + rng.nextInt(400));
-                content = data.getLoader().loadContent(data.get(), proxies.getProxy());
+                content = data.getLoader().loadContent(data, proxies.getProxy());
             } catch (IOException ex) {
                 lastException = ex;
                 continue;
             } catch (InterruptedException e) {
                 handler.fetchFailed(data.get(), e);
+                Thread.currentThread().interrupt();
+                return;
             }
             break;
         }

@@ -1,8 +1,7 @@
 package ru.chuprikov.search.gather.problemsets;
 
 import ru.chuprikov.search.gather.fetcher.URLContentLoader;
-import ru.chuprikov.search.gather.loader.ProblemFetchInfo;
-import ru.chuprikov.search.gather.loader.StandardURLContentLoader;
+import ru.chuprikov.search.gather.fetcher.StandardURLContentLoader;
 
 /**
  * Created with IntelliJ IDEA.
@@ -15,7 +14,7 @@ class TimusProblemSet implements ProblemSet {
     private final int last;
     private int current;
 
-    private static final URLContentLoader<ProblemFetchInfo> loader = new StandardURLContentLoader();
+    private static final URLContentLoader<ProblemFetchInfo> loader = new StandardURLContentLoader<>();
 
     TimusProblemSet(int first, int last) {
         this.last = last;
