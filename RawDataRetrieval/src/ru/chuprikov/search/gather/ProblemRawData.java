@@ -1,12 +1,5 @@
 package ru.chuprikov.search.gather;
 
-/**
- * Created with IntelliJ IDEA.
- * User: pasha
- * Date: 4/27/13
- * Time: 11:08 PM
- * To change this template use File | Settings | File Templates.
- */
 public class ProblemRawData {
     public final String url;
     public final String resource;
@@ -19,6 +12,10 @@ public class ProblemRawData {
         this.resource = resource;
         this.problemID = problemID;
         this.content = content;
+    }
+
+    public String getUrl() {
+        return url;
     }
 
     public String getContent() {

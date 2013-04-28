@@ -12,13 +12,6 @@ import ru.chuprikov.search.gather.problemsets.SPOJProblemIDSLoader;
 
 import java.io.File;
 
-/**
- * Created with IntelliJ IDEA.
- * User: pasha
- * Date: 4/27/13
- * Time: 5:06 PM
- * To change this template use File | Settings | File Templates.
- */
 public class Gather {
     public static void main(String[] args) {
         if (args.length != 3) {
