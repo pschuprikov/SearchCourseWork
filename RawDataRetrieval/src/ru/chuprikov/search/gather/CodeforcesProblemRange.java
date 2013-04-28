@@ -20,8 +20,8 @@ class CodeforcesProblemRange implements ProblemRange {
         this.firstRound = firstRound;
         this.lastRound = lastRound;
 
-        currentRound = firstRound;
-        currentLetter = 'A' - 1;
+        currentRound = firstRound - 1;
+        currentLetter = 'E';
     }
 
     @Override

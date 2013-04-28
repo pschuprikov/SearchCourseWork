@@ -6,6 +6,7 @@ import java.io.InputStreamReader;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLConnection;
+import java.util.Random;
 
 /**
  * Created with IntelliJ IDEA.
@@ -19,6 +20,8 @@ class ProxyFetchProcessor implements Runnable {
 
     private final ProblemFetchData problem;
     private final FetchCompletionHandler handler;
+
+    private final Random rng = new Random();
 
     private static int NUM_OF_RETRIES = 5;
 
@@ -36,10 +39,13 @@ class ProxyFetchProcessor implements Runnable {
         Exception lastException = null;
         for (int i = 0; i < NUM_OF_RETRIES; i++) {
             try {
+                Thread.currentThread().sleep(1500 + rng.nextInt(400));
                 problem.setContent(problem.range.getLoader().load(problem, proxies.getProxy()));
             } catch (IOException ex) {
                 lastException = ex;
                 continue;
+            } catch (InterruptedException e) {
+                handler.fetchFailed(problem, e);
             }
             break;
         }

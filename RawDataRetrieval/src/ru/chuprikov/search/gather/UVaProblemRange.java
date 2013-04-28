@@ -12,7 +12,7 @@ class UVaProblemRange implements ProblemRange {
     final int last;
     int current;
 
-    private static UVaProblemLoader problemLoader = new UVaProblemLoader();
+    private static ProblemLoader problemLoader = new UVaProblemLoader();
 
     UVaProblemRange(int first, int last) {
         this.first = first;

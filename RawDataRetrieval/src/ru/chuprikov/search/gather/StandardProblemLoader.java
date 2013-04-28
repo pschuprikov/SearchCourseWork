@@ -16,7 +16,8 @@ import java.net.URLConnection;
  */
 class StandardProblemLoader implements ProblemLoader {
 
-    protected static int CONNECT_TIMEOUT_MILLS = 100;
+    protected static int CONNECT_TIMEOUT_MILLS = 500;
+    protected static int READ_TIMEOUT_MILLS = 500;
 
     protected String readFromConnection(URLConnection conn) throws IOException {
         final BufferedReader contentReader = new BufferedReader(new InputStreamReader(conn.getInputStream()));
@@ -30,12 +31,16 @@ class StandardProblemLoader implements ProblemLoader {
         return contentBuilder.toString();
     }
 
+    protected URLConnection getConnection(String urlString, Proxy proxy) throws IOException {
+        URLConnection conn = new URL(urlString).openConnection(proxy);
+
+        conn.setConnectTimeout(CONNECT_TIMEOUT_MILLS);
+        conn.setReadTimeout(READ_TIMEOUT_MILLS);
+        return conn;
+    }
+
     @Override
     public String load(ProblemRawData problem, Proxy proxy) throws IOException {
-        URL url = new URL(problem.url);
-        URLConnection conn = url.openConnection(proxy);
-        conn.setConnectTimeout(CONNECT_TIMEOUT_MILLS);
-
-        return readFromConnection(conn);
+        return readFromConnection(getConnection(problem.url, proxy));
     }
 }

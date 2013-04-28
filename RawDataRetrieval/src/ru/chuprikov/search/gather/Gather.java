@@ -13,23 +13,22 @@ import java.io.File;
  * Time: 5:06 PM
  * To change this template use File | Settings | File Templates.
  */
-public class Gather implements Runnable {
-
+public class Gather {
     public static void main(String[] args) {
-         new Thread(new Gather()).start();
-    }
+        if (args.length != 3) {
+            System.err.println("Wrong number of arguments");
+            System.exit(1);
+        }
 
-    @Override
-    public void run() {
         Fetcher proxyFetcher = new ProxyFetcher(new NoProxyProvider());
         try (SearchDatabase db = SearchDatabases.openBerkeley(new File(System.getProperty("user.dir") + "/mydb"));
              FetchedDB fetchedDB = db.openFetchDB()
         ) {
             ProblemRangeLoader loader = new ProblemRangeLoader(proxyFetcher, fetchedDB);
-            loader.loadURLs(new UVaProblemRange(100, 100));
+            loader.loadURLs(ProblemRanges.getRange(args[0], Integer.parseInt(args[1]), Integer.parseInt(args[2])));
             proxyFetcher.awaitCompletion();
             System.err.println("Fetch results. Total: " + loader.getNumTotal() + "; Successful: "
-                + loader.getNumSuccessfull() + "; Already fetched: " + loader.getNumAlreadyFetched());
+                    + loader.getNumSuccessfull() + "; Already fetched: " + loader.getNumAlreadyFetched());
         } catch (InterruptedException e) {
             e.printStackTrace();
         } catch (Exception e) {
