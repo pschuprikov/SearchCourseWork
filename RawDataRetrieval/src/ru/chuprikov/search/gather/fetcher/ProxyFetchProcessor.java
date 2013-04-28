@@ -3,13 +3,6 @@ package ru.chuprikov.search.gather.fetcher;
 import java.io.IOException;
 import java.util.Random;
 
-/**
- * Created with IntelliJ IDEA.
- * User: pasha
- * Date: 4/27/13
- * Time: 4:37 PM
- * To change this template use File | Settings | File Templates.
- */
 class ProxyFetchProcessor <T> implements Runnable {
     private final ProxyProvider proxies;
 

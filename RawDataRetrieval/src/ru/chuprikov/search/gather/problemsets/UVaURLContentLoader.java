@@ -10,13 +10,6 @@ import java.net.Proxy;
 import java.net.URLConnection;
 import java.net.URLEncoder;
 
-/**
- * Created with IntelliJ IDEA.
- * User: pasha
- * Date: 4/28/13
- * Time: 1:59 AM
- * To change this template use File | Settings | File Templates.
- */
 class UVaURLContentLoader extends StandardURLContentLoader<ProblemFetchInfo> {
 
     private static final String request = "http://acm.uva.es/local/online_judge/gotosearch_uva.php";

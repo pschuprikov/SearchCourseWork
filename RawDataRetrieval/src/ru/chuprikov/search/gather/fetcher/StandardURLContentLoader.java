@@ -1,8 +1,5 @@
 package ru.chuprikov.search.gather.fetcher;
 
-import ru.chuprikov.search.gather.fetcher.FetchInfo;
-import ru.chuprikov.search.gather.fetcher.URLContentLoader;
-
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -10,13 +7,6 @@ import java.net.Proxy;
 import java.net.URL;
 import java.net.URLConnection;
 
-/**
- * Created with IntelliJ IDEA.
- * User: pasha
- * Date: 4/27/13
- * Time: 11:56 PM
- * To change this template use File | Settings | File Templates.
- */
 public class StandardURLContentLoader<T> implements URLContentLoader<T> {
 
     private static final int CONNECT_TIMEOUT_MILLS = 500;

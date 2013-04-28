@@ -3,18 +3,9 @@ package ru.chuprikov.search.gather.problemsets;
 import ru.chuprikov.search.database.FetchedDB;
 import ru.chuprikov.search.gather.fetcher.FetchCompletionHandler;
 import ru.chuprikov.search.gather.fetcher.Fetcher;
-import ru.chuprikov.search.gather.problemsets.ProblemFetchInfo;
-import ru.chuprikov.search.gather.problemsets.ProblemSet;
 
 import java.util.concurrent.atomic.AtomicInteger;
 
-/**
- * Created with IntelliJ IDEA.
- * User: pasha
- * Date: 4/27/13
- * Time: 5:26 PM
- * To change this template use File | Settings | File Templates.
- */
 public class ProblemSetLoader implements FetchCompletionHandler<ProblemFetchInfo> {
     private final Fetcher fetcher;
     private final FetchedDB fetchedDB;

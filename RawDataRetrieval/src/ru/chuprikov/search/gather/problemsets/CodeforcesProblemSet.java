@@ -1,15 +1,8 @@
 package ru.chuprikov.search.gather.problemsets;
 
-import ru.chuprikov.search.gather.fetcher.URLContentLoader;
 import ru.chuprikov.search.gather.fetcher.StandardURLContentLoader;
+import ru.chuprikov.search.gather.fetcher.URLContentLoader;
 
-/**
- * Created with IntelliJ IDEA.
- * User: pasha
- * Date: 4/27/13
- * Time: 5:17 PM
- * To change this template use File | Settings | File Templates.
- */
 class CodeforcesProblemSet implements ProblemSet {
     private final int lastRound;
 

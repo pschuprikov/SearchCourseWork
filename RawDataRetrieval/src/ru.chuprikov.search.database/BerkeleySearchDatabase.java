@@ -7,13 +7,6 @@ import com.sleepycat.je.EnvironmentConfig;
 
 import java.io.File;
 
-/**
- * Created with IntelliJ IDEA.
- * User: pasha
- * Date: 4/27/13
- * Time: 8:16 PM
- * To change this template use File | Settings | File Templates.
- */
 class BerkeleySearchDatabase implements SearchDatabase {
     private final Environment env;
 
@@ -28,6 +21,13 @@ class BerkeleySearchDatabase implements SearchDatabase {
         DatabaseConfig dbConf = new DatabaseConfig();
         dbConf.setAllowCreate(true);
         return new BerkeleyFetchedDB(env.openDatabase(null, "fetched", dbConf));
+    }
+
+    @Override
+    public ParsedDB openParseDB() throws Exception {
+        DatabaseConfig dbConf = new DatabaseConfig();
+        dbConf.setAllowCreate(true);
+        return new BerkeleyParsedDB(env.openDatabase(null, "parsed", dbConf));
     }
 
     @Override

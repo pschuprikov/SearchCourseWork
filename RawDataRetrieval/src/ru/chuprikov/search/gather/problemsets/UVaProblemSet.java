@@ -2,13 +2,6 @@ package ru.chuprikov.search.gather.problemsets;
 
 import ru.chuprikov.search.gather.fetcher.URLContentLoader;
 
-/**
- * Created with IntelliJ IDEA.
- * User: pasha
- * Date: 4/28/13
- * Time: 1:50 AM
- * To change this template use File | Settings | File Templates.
- */
 class UVaProblemSet implements ProblemSet {
     private final int last;
     private int current;

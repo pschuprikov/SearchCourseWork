@@ -3,24 +3,19 @@ package ru.chuprikov.search.gather.problemsets;
 import ru.chuprikov.search.gather.fetcher.StandardURLContentLoader;
 import ru.chuprikov.search.gather.fetcher.URLContentLoader;
 
-import java.io.*;
+import java.io.BufferedReader;
+import java.io.FileReader;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * Created with IntelliJ IDEA.
- * User: pasha
- * Date: 4/28/13
- * Time: 5:05 PM
- * To change this template use File | Settings | File Templates.
- */
 public class SPOJProblemSet implements ProblemSet {
     private final int last;
     private int current;
 
     private final List<String> ids = new ArrayList<>();
 
-    private static final URLContentLoader<ProblemFetchInfo> loader = new StandardURLContentLoader<ProblemFetchInfo>();
+    private static final URLContentLoader<ProblemFetchInfo> loader = new StandardURLContentLoader<>();
 
     SPOJProblemSet(int first, int last) throws IOException {
         try (BufferedReader br = new BufferedReader(new FileReader("spojids"))) {

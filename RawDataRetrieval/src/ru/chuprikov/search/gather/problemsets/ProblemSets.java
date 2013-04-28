@@ -2,13 +2,6 @@ package ru.chuprikov.search.gather.problemsets;
 
 import java.io.IOException;
 
-/**
- * Created with IntelliJ IDEA.
- * User: pasha
- * Date: 4/28/13
- * Time: 5:10 AM
- * To change this template use File | Settings | File Templates.
- */
 public class ProblemSets {
     public static ProblemSet getRange(String id, int first, int last) throws IOException {
         switch (id) {

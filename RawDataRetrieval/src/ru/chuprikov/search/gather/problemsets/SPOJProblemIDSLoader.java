@@ -1,10 +1,6 @@
 package ru.chuprikov.search.gather.problemsets;
 
-import ru.chuprikov.search.gather.fetcher.FetchCompletionHandler;
-import ru.chuprikov.search.gather.fetcher.FetchInfo;
-import ru.chuprikov.search.gather.fetcher.Fetcher;
-import ru.chuprikov.search.gather.fetcher.URLContentLoader;
-import ru.chuprikov.search.gather.fetcher.StandardURLContentLoader;
+import ru.chuprikov.search.gather.fetcher.*;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -13,13 +9,6 @@ import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-/**
- * Created with IntelliJ IDEA.
- * User: pasha
- * Date: 4/28/13
- * Time: 6:15 AM
- * To change this template use File | Settings | File Templates.
- */
 public class SPOJProblemIDSLoader implements FetchCompletionHandler<SPOJProblemIDSLoader.SPOJProblemList> {
 
     private final static int FIRST_PAGE = 0;

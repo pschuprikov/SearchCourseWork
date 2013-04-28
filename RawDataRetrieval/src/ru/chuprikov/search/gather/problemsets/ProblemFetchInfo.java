@@ -4,14 +4,6 @@ import ru.chuprikov.search.gather.ProblemRawData;
 import ru.chuprikov.search.gather.fetcher.FetchInfo;
 import ru.chuprikov.search.gather.fetcher.URLContentLoader;
 
-/**
- * Created with IntelliJ IDEA.
- * User: pasha
- * Date: 4/27/13
- * Time: 7:42 PM
- * To change this template use File | Settings | File Templates.
- */
-
 public class ProblemFetchInfo extends ProblemRawData implements FetchInfo<ProblemFetchInfo> {
     public final ProblemSet problemSet;
 
