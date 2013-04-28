@@ -22,7 +22,9 @@ class UVaProblemSet implements ProblemSet {
 
     @Override
     public boolean checkValid(String content) {
-        return content.contains("Input") && content.contains("Output");
+        // TODO: remove this shit.
+        return (content.contains("Input") || content.contains("input") || content.contains("INPUT")) &&
+                (content.contains("Output") || content.contains("output") || content.contains("OUTPUT"));
     }
 
     @Override
