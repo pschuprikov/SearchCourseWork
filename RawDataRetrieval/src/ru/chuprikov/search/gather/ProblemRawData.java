@@ -3,6 +3,11 @@ package ru.chuprikov.search.gather;
 public class ProblemRawData {
     public final String url;
     public final String resource;
+
+    public String getProblemID() {
+        return problemID;
+    }
+
     public final String problemID;
     public String content;
 
@@ -33,5 +38,9 @@ public class ProblemRawData {
                 "problemID='" + problemID + '\'' +
                 ", resource='" + resource + '\'' +
                 '}';
+    }
+
+    public String getResource() {
+        return resource;
     }
 }
