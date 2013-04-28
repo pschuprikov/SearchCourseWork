@@ -1,8 +1,10 @@
-package ru.chuprikov.search.gather;
+package ru.chuprikov.search.gather.loader;
 
 import ru.chuprikov.search.database.FetchedDB;
+import ru.chuprikov.search.gather.fetcher.FetchCompletionHandler;
+import ru.chuprikov.search.gather.fetcher.Fetcher;
+import ru.chuprikov.search.gather.problemsets.ProblemSet;
 
-import java.io.FileNotFoundException;
 import java.util.concurrent.atomic.AtomicInteger;
 
 /**
@@ -12,36 +14,36 @@ import java.util.concurrent.atomic.AtomicInteger;
  * Time: 5:26 PM
  * To change this template use File | Settings | File Templates.
  */
-class ProblemRangeLoader implements FetchCompletionHandler {
+public class ProblemSetLoader implements FetchCompletionHandler<ProblemFetchInfo> {
     private final Fetcher fetcher;
     private final FetchedDB fetchedDB;
 
     private int numTotal;
     private int numAlreadyFetched;
-    private AtomicInteger numSuccessfull = new AtomicInteger();
+    private final AtomicInteger numSuccessfull = new AtomicInteger();
 
-    int getNumTotal() {
+    public int getNumTotal() {
         return numTotal;
     }
 
-    int getNumSuccessfull() {
+    public int getNumSuccessfull() {
         return numSuccessfull.get();
     }
 
-    int getNumAlreadyFetched() {
+    public int getNumAlreadyFetched() {
         return numAlreadyFetched;
     }
 
-    ProblemRangeLoader(Fetcher fetcher, FetchedDB fetchedDB) {
+    public ProblemSetLoader(Fetcher fetcher, FetchedDB fetchedDB) {
         this.fetcher = fetcher;
         this.fetchedDB = fetchedDB;
     }
 
-    void loadURLs(ProblemRange range) throws Exception {
+    public void loadURLs(ProblemSet range) throws Exception {
         while (range.hasNext()) {
             numTotal++;
 
-            final ProblemFetchData currentProblem = range.next();
+            final ProblemFetchInfo currentProblem = range.next();
             if (!fetchedDB.contains(currentProblem))
                 fetcher.fetchProblemAsync(currentProblem, this);
             else {
@@ -52,14 +54,14 @@ class ProblemRangeLoader implements FetchCompletionHandler {
     }
 
     @Override
-    public void handleFetchCompletion(ProblemFetchData problem)  {
-        if (problem.range.checkValid(problem.content)) {
+    public void handleFetchCompletion(ProblemFetchInfo problem, String content)  {
+        if (problem.problemSet.checkValid(content)) {
+            problem.setContent(content);
             numSuccessfull.incrementAndGet();
+
             System.err.println("Successful fetch: " + problem);
             try {
                 fetchedDB.saveFetched(problem);
-            } catch (FileNotFoundException e) {
-                System.err.println(e.getMessage());
             } catch (Exception e) {
                 System.err.println(e.getMessage());
             }
@@ -69,7 +71,7 @@ class ProblemRangeLoader implements FetchCompletionHandler {
     }
 
     @Override
-    public void fetchFailed(ProblemFetchData problem, Exception reason) {
+    public void fetchFailed(ProblemFetchInfo problem, Exception reason) {
         System.err.println("Fetch of " + problem + " failed");
         System.err.println(reason.getMessage());
     }

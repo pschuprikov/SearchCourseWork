@@ -14,10 +14,10 @@ import java.io.File;
  * Time: 8:16 PM
  * To change this template use File | Settings | File Templates.
  */
-class BerkleySearchDatabse implements SearchDatabase {
-    final Environment env;
+class BerkeleySearchDatabase implements SearchDatabase {
+    private final Environment env;
 
-    BerkleySearchDatabse(File file) throws DatabaseException {
+    BerkeleySearchDatabase(File file) throws DatabaseException {
         EnvironmentConfig conf = new EnvironmentConfig();
         conf.setAllowCreate(true);
         env = new Environment(file, conf);

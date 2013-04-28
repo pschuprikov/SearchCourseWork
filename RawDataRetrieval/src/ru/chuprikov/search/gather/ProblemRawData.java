@@ -32,7 +32,7 @@ public class ProblemRawData {
 
     @Override
     public String toString() {
-        return "ProblemFetchData{" +
+        return "ProblemRawData{" +
                 "problemID='" + problemID + '\'' +
                 ", resource='" + resource + '\'' +
                 '}';

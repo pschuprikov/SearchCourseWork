@@ -1,4 +1,4 @@
-package ru.chuprikov.search.gather;
+package ru.chuprikov.search.gather.fetcher;
 
 import java.net.Proxy;
 
@@ -9,7 +9,7 @@ import java.net.Proxy;
  * Time: 5:04 PM
  * To change this template use File | Settings | File Templates.
  */
-class NoProxyProvider implements ProxyProvider {
+public class NoProxyProvider implements ProxyProvider {
     @Override
     public Proxy getProxy() {
         return Proxy.NO_PROXY;

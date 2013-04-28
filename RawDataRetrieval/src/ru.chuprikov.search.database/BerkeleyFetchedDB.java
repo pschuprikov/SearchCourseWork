@@ -93,7 +93,7 @@ class BerkeleyFetchedDB implements FetchedDB {
         }
     }
 
-    private static ProblemFetchDataBinding binding = new ProblemFetchDataBinding();
+    private static final ProblemFetchDataBinding binding = new ProblemFetchDataBinding();
 
     @Override
     public void saveFetched(ProblemRawData problem) throws DatabaseException {

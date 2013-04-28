@@ -1,4 +1,8 @@
-package ru.chuprikov.search.gather;
+package ru.chuprikov.search.gather.problemsets;
+
+import ru.chuprikov.search.gather.fetcher.URLContentLoader;
+import ru.chuprikov.search.gather.loader.ProblemFetchInfo;
+import ru.chuprikov.search.gather.loader.StandardURLContentLoader;
 
 /**
  * Created with IntelliJ IDEA.
@@ -7,16 +11,13 @@ package ru.chuprikov.search.gather;
  * Time: 9:42 PM
  * To change this template use File | Settings | File Templates.
  */
-class TimusProblemRange implements ProblemRange {
-
-    private final int first;
+class TimusProblemSet implements ProblemSet {
     private final int last;
     private int current;
 
-    private static ProblemLoader loader = new StandardProblemLoader();
+    private static final URLContentLoader<ProblemFetchInfo> loader = new StandardURLContentLoader();
 
-    TimusProblemRange(int first, int last) {
-        this.first = first;
+    TimusProblemSet(int first, int last) {
         this.last = last;
         current = first;
     }
@@ -27,11 +28,11 @@ class TimusProblemRange implements ProblemRange {
     }
 
     @Override
-    public ProblemFetchData next() {
+    public ProblemFetchInfo next() {
         current++;
-        return new ProblemFetchData(
-            "timus", new Integer(current).toString(),
-            new String("http://acm.timus.ru/problem.aspx?num=" + current), this
+        return new ProblemFetchInfo(
+            "timus", Integer.toString(current),
+            "http://acm.timus.ru/problem.aspx?num=" + current, this
         );
     }
 
@@ -46,7 +47,7 @@ class TimusProblemRange implements ProblemRange {
     }
 
     @Override
-    public ProblemLoader getLoader() {
+    public URLContentLoader<ProblemFetchInfo> getLoader() {
         return loader;
     }
 }

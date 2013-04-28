@@ -1,7 +1,6 @@
-package ru.chuprikov.search.gather;
+package ru.chuprikov.search.gather.fetcher;
 
 import java.io.IOException;
-import java.net.MalformedURLException;
 import java.net.Proxy;
 
 /**
@@ -11,6 +10,6 @@ import java.net.Proxy;
  * Time: 11:56 PM
  * To change this template use File | Settings | File Templates.
  */
-public interface ProblemLoader {
-    public String load(ProblemRawData problem, Proxy proxy) throws IOException;
+public interface URLContentLoader <T> {
+    public String loadContent(T problem, Proxy proxy) throws IOException;
 }

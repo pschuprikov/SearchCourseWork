@@ -1,4 +1,6 @@
-package ru.chuprikov.search.gather;
+package ru.chuprikov.search.gather.loader;
+
+import ru.chuprikov.search.gather.fetcher.URLContentLoader;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -14,10 +16,10 @@ import java.net.URLConnection;
  * Time: 11:56 PM
  * To change this template use File | Settings | File Templates.
  */
-class StandardProblemLoader implements ProblemLoader {
+public class StandardURLContentLoader implements URLContentLoader<ProblemFetchInfo> {
 
-    protected static int CONNECT_TIMEOUT_MILLS = 500;
-    protected static int READ_TIMEOUT_MILLS = 500;
+    private static final int CONNECT_TIMEOUT_MILLS = 500;
+    private static final int READ_TIMEOUT_MILLS = 500;
 
     protected String readFromConnection(URLConnection conn) throws IOException {
         final BufferedReader contentReader = new BufferedReader(new InputStreamReader(conn.getInputStream()));
@@ -40,7 +42,7 @@ class StandardProblemLoader implements ProblemLoader {
     }
 
     @Override
-    public String load(ProblemRawData problem, Proxy proxy) throws IOException {
+    public String loadContent(ProblemFetchInfo problem, Proxy proxy) throws IOException {
         return readFromConnection(getConnection(problem.url, proxy));
     }
 }

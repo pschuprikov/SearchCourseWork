@@ -1,4 +1,8 @@
-package ru.chuprikov.search.gather;
+package ru.chuprikov.search.gather.problemsets;
+
+import ru.chuprikov.search.gather.fetcher.URLContentLoader;
+import ru.chuprikov.search.gather.loader.ProblemFetchInfo;
+import ru.chuprikov.search.gather.loader.StandardURLContentLoader;
 
 /**
  * Created with IntelliJ IDEA.
@@ -7,17 +11,15 @@ package ru.chuprikov.search.gather;
  * Time: 5:17 PM
  * To change this template use File | Settings | File Templates.
  */
-class CodeforcesProblemRange implements ProblemRange {
-    final int firstRound;
-    final int lastRound;
+class CodeforcesProblemSet implements ProblemSet {
+    private final int lastRound;
 
-    int currentRound;
-    char currentLetter;
+    private int currentRound;
+    private char currentLetter;
 
-    private static ProblemLoader loader = new StandardProblemLoader();
+    private static final URLContentLoader<ProblemFetchInfo> loader = new StandardURLContentLoader();
 
-    CodeforcesProblemRange(int firstRound, int lastRound) {
-        this.firstRound = firstRound;
+    CodeforcesProblemSet(int firstRound, int lastRound) {
         this.lastRound = lastRound;
 
         currentRound = firstRound - 1;
@@ -30,7 +32,7 @@ class CodeforcesProblemRange implements ProblemRange {
     }
 
     @Override
-    public ProblemFetchData next() {
+    public ProblemFetchInfo next() {
         if (currentLetter < 'E') {
             currentLetter++;
         } else if (currentRound < lastRound) {
@@ -40,9 +42,9 @@ class CodeforcesProblemRange implements ProblemRange {
             return null;
         }
 
-        return new ProblemFetchData(
-            "codeforces", new String("" + currentRound + currentLetter),
-            new String("http://www.codeforces.ru/problemset/problem/" + currentRound + "/" + currentLetter), this
+        return new ProblemFetchInfo(
+            "codeforces", "" + currentRound + currentLetter,
+            "http://www.codeforces.ru/problemset/problem/" + currentRound + "/" + currentLetter, this
         );
     }
 
@@ -57,7 +59,7 @@ class CodeforcesProblemRange implements ProblemRange {
     }
 
     @Override
-    public ProblemLoader getLoader() {
+    public URLContentLoader<ProblemFetchInfo> getLoader() {
         return loader;
     }
 }
