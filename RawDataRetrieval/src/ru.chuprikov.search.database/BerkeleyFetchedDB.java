@@ -8,13 +8,6 @@ import ru.chuprikov.search.gather.ProblemRawData;
 
 import java.util.Iterator;
 
-/**
- * Created with IntelliJ IDEA.
- * User: pasha
- * Date: 4/27/13
- * Time: 8:32 PM
- * To change this template use File | Settings | File Templates.
- */
 class BerkeleyFetchedDB implements FetchedDB {
     private final Database db;
 
