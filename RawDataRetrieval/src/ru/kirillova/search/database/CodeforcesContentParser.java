@@ -32,18 +32,22 @@ class CodeforcesContentParser implements ContentParser {
 
     public ParsedProblem parseContent(ProblemRawData problem) {
         ParsedProblem p = new ParsedProblem(problem);
-
+        if (!problem.getContent().contains("<div class=\"problem-statement\">")) return p;
+        if (!problem.getContent().contains("<div class=\"sample-test\">")) return p;
         String s = problem.getContent().substring(problem.getContent().indexOf("<div class=\"problem-statement\">"),
             problem.getContent().indexOf("<div class=\"sample-test\">"));
         String term = "<div class=\"title\">";
+        if (!s.contains(term)) return p;
         p.title = getTextBody(s, s.indexOf(term), 0);
         term = "<div>";
+        if (!s.contains(term)) return p;
         p.condition = getTextBody(s, s.indexOf(term), 0);
         term = "<div class=\"input-specification\">";
+        if (!s.contains(term)) return p;
         p.inputSpecification = getTextBody(s, s.indexOf(term), 1);
         term = "<div class=\"output-specification\">";
+        if (!s.contains(term)) return p;
         p.outputSpecification = getTextBody(s, s.indexOf(term), 1);
-
         return p;
     }
 }

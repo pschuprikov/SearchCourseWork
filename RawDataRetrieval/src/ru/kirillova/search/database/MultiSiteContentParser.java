@@ -11,7 +11,7 @@ class MultiSiteContentParser implements ContentParser {
     MultiSiteContentParser() {
         parsers.put("UVa", new UvaContentParser());
         parsers.put("spoj", new SpojContentParser());
-        parsers.put("eolump", new EolimpContentParser());
+        parsers.put("eolimp", new EolimpContentParser());
         parsers.put("timus", new TimusContentParser());
         parsers.put("codeforces", new CodeforcesContentParser());
     }

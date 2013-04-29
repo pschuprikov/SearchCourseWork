@@ -28,21 +28,39 @@ class EolimpContentParser implements ContentParser {
 
         public ParsedProblem parseContent(ProblemRawData problem) {
             ParsedProblem p = new ParsedProblem(problem);
-            String s = problem.getContent().substring(problem.getContent().indexOf("href='problems-print"),
-                    problem.getContent().indexOf("<h2>Информация о задаче</h2>"));
+            if (!problem.getContent().contains("href='problems-print")) return p;
+            String s = problem.getContent().substring(problem.getContent().indexOf("href='problems-print"));
             String term = "<h1>";
             s = s.replaceAll("&nbsp;", " ");
             s = s.replaceAll("&ndash;", "-");
+            if (!s.contains(term)) return p;
             p.title = getTextBody(s.substring(s.indexOf(term)), false, 0);
             term = "<div class='condition'>";
             String term2 = "<h2>Технические условия</h2>";
+            if (!s.contains(term2)) {
+                term2 = "<h2>Specifications</h2>";
+                if (!s.contains(term2)) return p;
+            }
             String s2 = s.substring(s.indexOf(term), s.indexOf(term2));
             p.condition = getTextBody(s2, true, 0);
             term =  "<strong>Входные данные</strong>";
+            if (!s.contains(term)) {
+                term = "<strong>Input</strong>";
+                if (!s.contains(term)) return p;
+            }
             term2 = "<strong>Выходные данные</strong>";
+            if (!s.contains(term2)) {
+                term2 = "<strong>Output</strong>";
+                if (!s.contains(term2)) return p;
+            }
             s2 = s.substring(s.indexOf(term), s.indexOf(term2));
             p.inputSpecification = getTextBody(s2, true, 1);
-            s2 = s.substring(s.indexOf(term2));
+            term = "<h2>Информация о задаче</h2>";
+            if (!s.contains(term)) {
+                term = "<h2>Problem information</h2>";
+                if (!s.contains(term)) return p;
+            }
+            s2 = s.substring(s.indexOf(term2), s.indexOf(term));
             p.outputSpecification = getTextBody(s2, true, 1);
             return p;
         }

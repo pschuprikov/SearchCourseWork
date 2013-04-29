@@ -20,7 +20,7 @@ class SpojContentParser implements ContentParser {
                         }
                         continue;
                     }
-                    for (; s.charAt(i) != '>'; ++i)
+                    for (; (i < s.length()) && (s.charAt(i) != '>'); ++i)
                         ;
                     continue;
                 }
@@ -33,7 +33,7 @@ class SpojContentParser implements ContentParser {
 
         public ParsedProblem parseContent(ProblemRawData problem) {
             ParsedProblem p = new ParsedProblem(problem);
-
+            if (!problem.getContent().contains(("<meta property=\"og:type\" content=\"spoj-pl:problem\"/> "))) return p;
             String s = problem.getContent().substring(
                     problem.getContent().indexOf("<meta property=\"og:type\" content=\"spoj-pl:problem\"/> "));
             s = s.toLowerCase();
@@ -44,13 +44,14 @@ class SpojContentParser implements ContentParser {
             term = "<p align=\"justify\">";
             String term2 = "<h3>input</h3>";
             if (!s.contains(term2)) return p;
+            if (!s.contains(term)) return p;
             s2 = s.substring(s.indexOf(term), s.indexOf(term2));
             p.condition = getTextBody(s2, true, 0);
             term = "<h3>output</h3>";
             if (!s.contains(term)) return p;
             s2 = s.substring(s.indexOf(term2), s.indexOf(term));
             p.inputSpecification = getTextBody(s2, true, 1);
-            term2 = "example";
+            term2 = "<h3>example</h3>";
             if (s.indexOf(term2, s.indexOf(term) + 1) == -1) return p;
             s2 = s.substring(s.indexOf(term), s.indexOf(term2, s.indexOf(term) + 1));
             p.outputSpecification = getTextBody(s2, true, 1);

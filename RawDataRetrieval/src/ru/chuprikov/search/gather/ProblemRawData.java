@@ -13,9 +13,9 @@ public class ProblemRawData {
 
 
     public ProblemRawData(String resource, String problemID, String url, String content) {
-        this.url = url;
         this.resource = resource;
         this.problemID = problemID;
+        this.url = url;
         this.content = content;
     }
 
