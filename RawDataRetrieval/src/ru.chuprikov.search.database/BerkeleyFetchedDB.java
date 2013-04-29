@@ -6,8 +6,6 @@ import com.sleepycat.bind.tuple.TupleTupleBinding;
 import com.sleepycat.je.*;
 import ru.chuprikov.search.gather.ProblemRawData;
 
-import java.util.Iterator;
-
 class BerkeleyFetchedDB implements FetchedDB {
     private final Database db;
 
@@ -16,16 +14,16 @@ class BerkeleyFetchedDB implements FetchedDB {
     }
 
     @Override
-    public Iterator<ProblemRawData> iterator() {
+    public CloseableIterator<ProblemRawData> openIterator() {
         try {
-            return new ProblemDataIterator<>(this.db.openCursor(null, CursorConfig.DEFAULT));
+            return new ProblemDataIterator(this.db.openCursor(null, CursorConfig.DEFAULT));
         } catch (DatabaseException e) {
             e.printStackTrace();
         }
         return null;
     }
 
-    private static class ProblemDataIterator<String> implements Iterator<ProblemRawData> {
+    private static class ProblemDataIterator implements CloseableIterator<ProblemRawData> {
         private final Cursor cursor;
         private DatabaseEntry keyEntry = new DatabaseEntry();
         private DatabaseEntry dataEntry = new DatabaseEntry();
@@ -45,6 +43,16 @@ class BerkeleyFetchedDB implements FetchedDB {
 
         @Override
         public ProblemRawData next() {
+            if (hasNext()) {
+                ProblemRawData res = binding.entryToObject(keyEntry, dataEntry);
+                advance();
+                return res;
+            } else {
+                return null;
+            }
+        }
+
+        private void advance() {
             try {
                 if (cursor.getNext(keyEntry, dataEntry, LockMode.DEFAULT) == OperationStatus.NOTFOUND) {
                     keyEntry = null;
@@ -54,13 +62,16 @@ class BerkeleyFetchedDB implements FetchedDB {
                 keyEntry = null;
                 dataEntry = null;
             }
-
-            return hasNext() ? binding.entryToObject(keyEntry, dataEntry) : null;
         }
 
         @Override
         public void remove() {
             throw new UnsupportedOperationException();
+        }
+
+        @Override
+        public void close() throws Exception {
+            cursor.close();
         }
     }
 
@@ -68,11 +79,8 @@ class BerkeleyFetchedDB implements FetchedDB {
 
         @Override
         public ProblemRawData entryToObject(TupleInput keyInput, TupleInput dataInput) {
-            String resource = keyInput.readString();
-            String problemID = keyInput.readString();
-            String url = dataInput.readString();
-            String content = dataInput.readString();
-            return new ProblemRawData(resource, problemID, url, content);
+            return new ProblemRawData(keyInput.readString(), keyInput.readString(), dataInput.readString(),
+                dataInput.readString());
         }
 
         @Override

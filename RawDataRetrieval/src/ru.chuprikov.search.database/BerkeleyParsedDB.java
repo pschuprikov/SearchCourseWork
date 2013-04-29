@@ -6,8 +6,6 @@ import com.sleepycat.bind.tuple.TupleTupleBinding;
 import com.sleepycat.je.*;
 import ru.kirillova.search.database.ParsedProblem;
 
-import java.util.Iterator;
-
 class BerkeleyParsedDB implements ParsedDB {
     private final Database db;
 
@@ -16,7 +14,7 @@ class BerkeleyParsedDB implements ParsedDB {
     }
 
     @Override
-    public Iterator<ParsedProblem> iterator() {
+    public CloseableIterator<ParsedProblem> openIterator() {
         try {
             return new ProblemDataIterator(this.db.openCursor(null, CursorConfig.DEFAULT));
         } catch (DatabaseException e) {
@@ -25,7 +23,7 @@ class BerkeleyParsedDB implements ParsedDB {
         return null;
     }
 
-    private static class ProblemDataIterator implements Iterator<ParsedProblem> {
+    private static class ProblemDataIterator implements CloseableIterator<ParsedProblem> {
         private final Cursor cursor;
         private DatabaseEntry keyEntry = new DatabaseEntry();
         private DatabaseEntry dataEntry = new DatabaseEntry();
@@ -61,6 +59,11 @@ class BerkeleyParsedDB implements ParsedDB {
         @Override
         public void remove() {
             throw new UnsupportedOperationException();
+        }
+
+        @Override
+        public void close() throws Exception {
+            cursor.close();
         }
     }
 
