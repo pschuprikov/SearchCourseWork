@@ -14,9 +14,15 @@ public class Parsing {
             ParsedDB parsedDB = searchDB.openParseDB();
             CloseableIterator<ProblemRawData> it = fetchDB.openIterator();
         ) {
+            int totalErrors = 0;
             while (it.hasNext()) {
-                parsedDB.saveParsed(parser.parseContent(it.next()));
+                try {
+                    parsedDB.saveParsed(parser.parseContent(it.next()));
+                } catch (Exception e) {
+
+                }
             }
+            System.err.println("Parsing... total errors: " + totalErrors);
         } catch (Exception e) {
             e.printStackTrace();
         }
