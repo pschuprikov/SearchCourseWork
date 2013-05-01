@@ -1,0 +1,24 @@
+package ru.chuprikov.search.database.datatypes;
+
+option java_outer_classname = "Datatypes";
+
+message Posting {
+    required uint64 documentID = 1;
+    enum PositionType {
+        PLAIN_TEXT = 0;
+        TITLE = 1;
+        INPUT_SPEC = 2;
+        OUTPUT_SPEC = 3;
+    }
+    message Position {
+        required PositionType type = 1;
+        required uint32 index = 2;
+    }
+    repeated Position positions = 2;
+}
+
+message Document {
+    required string url = 1;
+    required string resource = 2;
+    required string problemid = 3;
+}

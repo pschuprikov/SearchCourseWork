@@ -1,5 +1,7 @@
 package ru.chuprikov.search.database;
 
+import ru.chuprikov.search.database.berkeley.BerkeleySearchDatabase;
+
 import java.io.File;
 
 public class SearchDatabases {

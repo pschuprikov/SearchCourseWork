@@ -1,6 +1,6 @@
 package ru.chuprikov.search.database;
 
-import ru.chuprikov.search.gather.ProblemRawData;
+import ru.chuprikov.search.database.datatypes.ProblemRawData;
 
 public interface FetchedDB extends AutoCloseable {
     void saveFetched(ProblemRawData problem) throws Exception;

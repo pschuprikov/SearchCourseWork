@@ -1,4 +1,4 @@
-package ru.chuprikov.search.gather;
+package ru.chuprikov.search.database.datatypes;
 
 public class ProblemRawData {
     public final String url;

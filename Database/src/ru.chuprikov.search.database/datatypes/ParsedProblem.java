@@ -1,6 +1,4 @@
-package ru.kirillova.search.database;
-
-import ru.chuprikov.search.gather.ProblemRawData;
+package ru.chuprikov.search.database.datatypes;
 
 public class ParsedProblem {
 
@@ -12,7 +10,6 @@ public class ParsedProblem {
     public String outputSpecification;
     public String condition;
 
-    //TODO: consider decoupling
     public ParsedProblem(ProblemRawData raw) {
         this.resource = raw.getResource();
         this.problemID = raw.getProblemID();

@@ -1,7 +1,7 @@
 package ru.kirillova.search.database;
 
 import ru.chuprikov.search.database.*;
-import ru.chuprikov.search.gather.ProblemRawData;
+import ru.chuprikov.search.database.datatypes.ProblemRawData;
 
 import java.io.File;
 
@@ -12,14 +12,15 @@ public class Parsing {
             SearchDatabase searchDB = SearchDatabases.openBerkeley(new File(System.getProperty("user.dir") + "/mydb"));
             FetchedDB fetchDB = searchDB.openFetchDB();
             ParsedDB parsedDB = searchDB.openParseDB();
-            CloseableIterator<ProblemRawData> it = fetchDB.openIterator();
+            CloseableIterator<ProblemRawData> it = fetchDB.openIterator()
         ) {
             int totalErrors = 0;
             while (it.hasNext()) {
                 try {
                     parsedDB.saveParsed(parser.parseContent(it.next()));
                 } catch (Exception e) {
-
+                    System.err.println(e.getMessage());
+                    totalErrors++;
                 }
             }
             System.err.println("Parsing... total errors: " + totalErrors);

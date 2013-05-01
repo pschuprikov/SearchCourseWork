@@ -1,16 +1,20 @@
-package ru.chuprikov.search.database;
+package ru.chuprikov.search.database.berkeley;
 
 import com.sleepycat.bind.tuple.TupleInput;
 import com.sleepycat.bind.tuple.TupleOutput;
 import com.sleepycat.bind.tuple.TupleTupleBinding;
 import com.sleepycat.je.*;
-import ru.chuprikov.search.gather.ProblemRawData;
+import ru.chuprikov.search.database.CloseableIterator;
+import ru.chuprikov.search.database.FetchedDB;
+import ru.chuprikov.search.database.datatypes.ProblemRawData;
 
 class BerkeleyFetchedDB implements FetchedDB {
     private final Database db;
 
-    BerkeleyFetchedDB(Database db) {
-        this.db = db;
+    BerkeleyFetchedDB(Environment env) throws DatabaseException {
+        DatabaseConfig dbConf = new DatabaseConfig();
+        dbConf.setAllowCreate(true);
+        this.db = env.openDatabase(null, "fetched", dbConf);
     }
 
     @Override

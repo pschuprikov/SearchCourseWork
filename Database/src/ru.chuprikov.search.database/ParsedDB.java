@@ -1,6 +1,6 @@
 package ru.chuprikov.search.database;
 
-import ru.kirillova.search.database.ParsedProblem;
+import ru.chuprikov.search.database.datatypes.ParsedProblem;
 
 public interface ParsedDB extends AutoCloseable {
     void saveParsed(ParsedProblem parsedProblem) throws Exception;

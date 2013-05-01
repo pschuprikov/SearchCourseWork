@@ -1,5 +1,7 @@
 package ru.kirillova.search.database;
-import ru.chuprikov.search.gather.ProblemRawData;
+
+import ru.chuprikov.search.database.datatypes.ParsedProblem;
+import ru.chuprikov.search.database.datatypes.ProblemRawData;
 
 class TimusContentParser implements ContentParser {
     private String getTextBody(String s, boolean flag) {

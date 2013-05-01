@@ -1,16 +1,20 @@
-package ru.chuprikov.search.database;
+package ru.chuprikov.search.database.berkeley;
 
 import com.sleepycat.bind.tuple.TupleInput;
 import com.sleepycat.bind.tuple.TupleOutput;
 import com.sleepycat.bind.tuple.TupleTupleBinding;
 import com.sleepycat.je.*;
-import ru.kirillova.search.database.ParsedProblem;
+import ru.chuprikov.search.database.CloseableIterator;
+import ru.chuprikov.search.database.ParsedDB;
+import ru.chuprikov.search.database.datatypes.ParsedProblem;
 
 class BerkeleyParsedDB implements ParsedDB {
     private final Database db;
 
-    BerkeleyParsedDB(Database db) {
-        this.db = db;
+    BerkeleyParsedDB(Environment env) throws DatabaseException {
+        DatabaseConfig dbConf = new DatabaseConfig();
+        dbConf.setAllowCreate(true);
+        this.db = env.openDatabase(null, "parsed", dbConf);
     }
 
     @Override
@@ -43,6 +47,16 @@ class BerkeleyParsedDB implements ParsedDB {
 
         @Override
         public ParsedProblem next() {
+            if (hasNext()) {
+                ParsedProblem res = binding.entryToObject(keyEntry, dataEntry);
+                advance();
+                return res;
+            } else {
+                return null;
+            }
+        }
+
+        private void advance() {
             try {
                 if (cursor.getNext(keyEntry, dataEntry, LockMode.DEFAULT) == OperationStatus.NOTFOUND) {
                     keyEntry = null;
@@ -52,8 +66,6 @@ class BerkeleyParsedDB implements ParsedDB {
                 keyEntry = null;
                 dataEntry = null;
             }
-
-            return hasNext() ? binding.entryToObject(keyEntry, dataEntry) : null;
         }
 
         @Override
@@ -88,7 +100,7 @@ class BerkeleyParsedDB implements ParsedDB {
         @Override
         public void objectToData(ParsedProblem object, TupleOutput output) {
             output.writeString(object.url).writeString(object.title).writeString(object.condition)
-                    .writeString(object.inputSpecification).writeString(object.outputSpecification);
+                .writeString(object.inputSpecification).writeString(object.outputSpecification);
         }
     }
 
