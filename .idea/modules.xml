@@ -5,6 +5,7 @@
       <module fileurl="file://$PROJECT_DIR$/Database/Database.iml" filepath="$PROJECT_DIR$/Database/Database.iml" />
       <module fileurl="file://$PROJECT_DIR$/Indexer/Indexer.iml" filepath="$PROJECT_DIR$/Indexer/Indexer.iml" />
       <module fileurl="file://$PROJECT_DIR$/RawDataRetrieval/RawDataRetrieval.iml" filepath="$PROJECT_DIR$/RawDataRetrieval/RawDataRetrieval.iml" />
+      <module fileurl="file://$PROJECT_DIR$/WebFace/WebFace.iml" filepath="$PROJECT_DIR$/WebFace/WebFace.iml" />
     </modules>
   </component>
 </project>

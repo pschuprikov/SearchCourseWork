@@ -2,14 +2,17 @@ package ru.chuprikov.search.database.datatypes;
 
 public class ParsedProblem {
 
-    public final String resource;
-    public final String problemID;
-    public final String url;
+    public String resource;
+    public String problemID;
+    public String url;
     public String title;
     public String inputSpecification;
     public String outputSpecification;
     public String condition;
 
+    public ParsedProblem() {
+
+    }
     public ParsedProblem(ProblemRawData raw) {
         this.resource = raw.getResource();
         this.problemID = raw.getProblemID();

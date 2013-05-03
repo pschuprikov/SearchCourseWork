@@ -1,10 +1,18 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <module type="JAVA_MODULE" version="4">
   <component name="FacetManager">
-    <facet type="protobuf" name="Protobuf Facet">
+    <facet type="web" name="Web">
       <configuration>
-        <option name="COMPILER_OUTPUT_SOURCE_DIRECTORY" value="$MODULE_DIR$/src/" />
+        <descriptors>
+          <deploymentDescriptor name="web.xml" url="file://$MODULE_DIR$/web/WEB-INF/web.xml" />
+        </descriptors>
+        <webroots>
+          <root url="file://$MODULE_DIR$/web" relative="/" />
+        </webroots>
       </configuration>
+      <facet type="jsf" name="JSF">
+        <configuration />
+      </facet>
     </facet>
   </component>
   <component name="NewModuleRootManager" inherit-compiler-output="true">
@@ -14,9 +22,10 @@
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
-    <orderEntry type="library" name="je" level="project" />
-    <orderEntry type="library" name="protobuf" level="project" />
+    <orderEntry type="library" name="Tomcat 7.0" level="application_server_libraries" />
     <orderEntry type="library" name="jsf-2.0.1-FCS" level="project" />
+    <orderEntry type="module" module-name="Database" />
+    <orderEntry type="library" name="jsf/primefaces-3.4.1" level="project" />
   </component>
 </module>
 

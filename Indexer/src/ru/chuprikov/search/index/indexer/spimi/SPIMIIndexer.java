@@ -60,7 +60,7 @@ public class SPIMIIndexer implements Indexer {
     }
 
     private void processPostings(String term, PriorityQueue<PostingsListReader> postings) throws Exception {
-        try (PostingsWriter writer = indexDB.getPostingsWriter(termDB.addTerm(term))) {
+        try (PostingsWriter writer = indexDB.getPostingsWriter(termDB.add(term))) {
             while (!postings.isEmpty()) {
                 final PostingsListReader currentReader = postings.poll();
                 writer.appendPosting(currentReader.getCurrentPosting());

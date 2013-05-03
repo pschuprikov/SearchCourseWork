@@ -32,8 +32,28 @@ public class BerkeleySearchDatabase implements SearchDatabase {
     }
 
     @Override
+    public void truncateIndexDB() throws Exception {
+        env.truncateDatabase(null, "index", false);
+    }
+
+    @Override
     public TermDB openTermDB() throws Exception {
         return new BerkeleyTermDB(env);
+    }
+
+    @Override
+    public void truncateTermDB() throws Exception {
+        env.truncateDatabase(null, "term", false);
+    }
+
+    @Override
+    public DocumentDB openDocumentDB() throws Exception {
+        return new BerkeleyDocumentDB(env);
+    }
+
+    @Override
+    public void truncateDocumentDB() throws Exception {
+        env.truncateDatabase(null, "document", false);
     }
 
     @Override
