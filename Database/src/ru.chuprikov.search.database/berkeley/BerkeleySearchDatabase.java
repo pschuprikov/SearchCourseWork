@@ -22,8 +22,18 @@ public class BerkeleySearchDatabase implements SearchDatabase {
     }
 
     @Override
+    public void truncateFetchDB() throws Exception {
+        env.truncateDatabase(null, "fetched", false);
+    }
+
+    @Override
     public ParsedDB openParseDB() throws Exception {
         return new BerkeleyParsedDB(env);
+    }
+
+    @Override
+    public void truncateParseDB() throws Exception {
+        env.truncateDatabase(null, "parsed", false);
     }
 
     @Override

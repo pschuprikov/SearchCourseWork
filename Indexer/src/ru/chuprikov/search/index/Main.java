@@ -31,7 +31,7 @@ public class Main {
             IndexDB indexDB = searchDB.openIndexDB(1000000);
             TermDB termDB = searchDB.openTermDB();
             DocumentDB documentDB = searchDB.openDocumentDB();
-            CloseableIterator<ParsedProblem> parsedIter = parsedDB.openIterator();
+            CloseableIterator<ParsedProblem> parsedIter = parsedDB.iterator();
             Indexer indexer = new SPIMIIndexer(new File(System.getProperty("user.dir") + "/spimi"), indexDB, termDB, 1000000);
         ) {
             while (parsedIter.hasNext()) {
@@ -40,8 +40,8 @@ public class Main {
 
                 try {
                     long documentID = documentDB.addDocument(Datatypes.Document.newBuilder().
-                            setProblemid(parsedProblem.problemID).setResource(parsedProblem.resource)
-                            .setUrl(parsedProblem.url).build());
+                            setProblemid(parsedProblem.problemID.getProblemID()).setResource(parsedProblem.problemID.getResource())
+                                .setUrl(parsedProblem.url).build());
                     splitWithType(documentPostings, parsedProblem.title, documentID, Datatypes.Posting.PositionType.TITLE);
                     splitWithType(documentPostings, parsedProblem.inputSpecification, documentID, Datatypes.Posting.PositionType.INPUT_SPEC);
                     splitWithType(documentPostings, parsedProblem.outputSpecification, documentID, Datatypes.Posting.PositionType.OUTPUT_SPEC);

@@ -1,0 +1,11 @@
+<component name="ArtifactManager">
+  <artifact type="jar" build-on-make="true" name="RawDataRetrieval:jar">
+    <output-path>$PROJECT_DIR$/out/artifacts/RawDataRetrieval_jar</output-path>
+    <root id="archive" name="RawDataRetrieval.jar">
+      <element id="module-output" name="RawDataRetrieval" />
+      <element id="artifact" artifact-name="Database:jar" />
+      <element id="library" level="project" name="je" />
+      <element id="library" level="project" name="protobuf" />
+    </root>
+  </artifact>
+</component>

@@ -1,5 +1,6 @@
 package ru.chuprikov.search.gather.problemsets;
 
+import ru.chuprikov.search.database.datatypes.ProblemID;
 import ru.chuprikov.search.gather.fetcher.StandardURLContentLoader;
 import ru.chuprikov.search.gather.fetcher.URLContentLoader;
 
@@ -35,7 +36,7 @@ class CodeforcesProblemSet implements ProblemSet {
         }
 
         return new ProblemFetchInfo(
-            "codeforces", "" + currentRound + currentLetter,
+            new ProblemID(ProblemSets.ProblemSetName.CF.toString(), "" + currentRound + currentLetter),
             "http://www.codeforces.ru/problemset/problem/" + currentRound + "/" + currentLetter, this
         );
     }

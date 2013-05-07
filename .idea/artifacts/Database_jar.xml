@@ -1,13 +1,10 @@
 <component name="ArtifactManager">
-  <artifact type="jar" name="Database:jar">
+  <artifact type="jar" build-on-make="true" name="Database:jar">
     <output-path>$PROJECT_DIR$/out/artifacts/Database_jar</output-path>
     <root id="archive" name="Database.jar">
       <element id="module-output" name="Database" />
+      <element id="extracted-dir" path="$USER_HOME$/Downloads/je-5.0.73/lib/je-5.0.73.jar" path-in-jar="/" />
       <element id="extracted-dir" path="/usr/share/protobuf/lib/protobuf.jar" path-in-jar="/" />
-      <element id="extracted-dir" path="$PROJECT_DIR$/lib/jsf-api.jar" path-in-jar="/" />
-      <element id="extracted-dir" path="$PROJECT_DIR$/lib/jsf-impl.jar" path-in-jar="/" />
-      <element id="extracted-dir" path="$PROJECT_DIR$/lib/jstl-1.1.0.jar" path-in-jar="/" />
-      <element id="extracted-dir" path="/usr/share/db-je-3.3/lib/je.jar" path-in-jar="/" />
     </root>
   </artifact>
 </component>

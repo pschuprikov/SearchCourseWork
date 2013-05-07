@@ -14,14 +14,12 @@ import java.net.URL;
 @ManagedBean
 @SessionScoped
 public class Terms implements Serializable {
-
     TermInfo[] lastInfos;
     private static final int CHUNK_SIZE = 20;
 
     private final static QName qname = new QName("http://terms.web.search.chuprikov.ru/", "WebTermDBImplService");
 
     private WebTermDB wsdb;
-
 
     public String getRequest() {
         return request;

@@ -29,7 +29,7 @@ class BerkeleyTermDB extends AbstractBerkeleyDB implements TermDB {
     }
 
     @Override
-    public long getID(String term) throws Exception {
+    public long get(String term) throws Exception {
         return contains(term) ? LongBinding.entryToLong(valueEntry.get()) : -1;
     }
 

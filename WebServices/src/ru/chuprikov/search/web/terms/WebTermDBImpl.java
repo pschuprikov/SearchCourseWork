@@ -41,7 +41,7 @@ public class WebTermDBImpl implements WebTermDB {
         TermInfo result = new TermInfo();
         try {
             result.setTerm(term);
-            result.setId(termDB.getID(term));
+            result.setId(termDB.get(term));
         } catch (Exception e) {
             e.printStackTrace();
         }

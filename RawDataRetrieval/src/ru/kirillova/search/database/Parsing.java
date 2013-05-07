@@ -12,7 +12,7 @@ public class Parsing {
             SearchDatabase searchDB = SearchDatabases.openBerkeley(new File(System.getProperty("user.dir") + "/mydb"));
             FetchedDB fetchDB = searchDB.openFetchDB();
             ParsedDB parsedDB = searchDB.openParseDB();
-            CloseableIterator<ProblemRawData> it = fetchDB.openIterator()
+            CloseableIterator<ProblemRawData> it = fetchDB.iterator()
         ) {
             int totalErrors = 0;
             while (it.hasNext()) {

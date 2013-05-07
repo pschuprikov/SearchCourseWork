@@ -5,11 +5,19 @@
 <html xmlns="http://www.w3.org/1999/xhtml"
       xmlns:c="http://java.sun.com/jsf/composite/chuprikov"
       xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
       xml:lang="en" lang="en">
 <h:head>
     <title>Control</title>
 </h:head>
 <h:body>
-    <c:fetch/>
+    <p:tabView>
+        <p:tab id="fetchTab" title="fetch control">
+            <c:fetch/>
+        </p:tab>
+        <p:tab id="fetchDBTab" title="fetch data">
+            <c:fetchdb/>
+        </p:tab>
+    </p:tabView>
 </h:body>
 </html>

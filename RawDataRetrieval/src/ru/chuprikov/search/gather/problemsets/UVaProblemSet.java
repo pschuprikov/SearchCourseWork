@@ -1,5 +1,6 @@
 package ru.chuprikov.search.gather.problemsets;
 
+import ru.chuprikov.search.database.datatypes.ProblemID;
 import ru.chuprikov.search.gather.fetcher.URLContentLoader;
 
 class UVaProblemSet implements ProblemSet {
@@ -33,7 +34,7 @@ class UVaProblemSet implements ProblemSet {
     @Override
     public ProblemFetchInfo next() {
         current++;
-        return new ProblemFetchInfo("UVa", Integer.toString(current),
+        return new ProblemFetchInfo(new ProblemID(ProblemSets.ProblemSetName.UVA.toString(), Integer.toString(current)),
                 "http://uva.onlinejudge.org/external/" + Integer.toString(current / 100) + "/" +
                 current + ".html", this);
     }

@@ -1,88 +1,57 @@
 package ru.chuprikov.search.database.berkeley;
 
+import com.sleepycat.bind.tuple.TupleBinding;
 import com.sleepycat.bind.tuple.TupleInput;
 import com.sleepycat.bind.tuple.TupleOutput;
 import com.sleepycat.bind.tuple.TupleTupleBinding;
-import com.sleepycat.je.*;
-import ru.chuprikov.search.database.CloseableIterator;
+import com.sleepycat.collections.StoredIterator;
+import com.sleepycat.collections.StoredSortedMap;
+import com.sleepycat.je.Database;
+import com.sleepycat.je.DatabaseConfig;
+import com.sleepycat.je.DatabaseException;
+import com.sleepycat.je.Environment;
+import ru.chuprikov.search.database.CloseableListIterator;
 import ru.chuprikov.search.database.ParsedDB;
 import ru.chuprikov.search.database.datatypes.ParsedProblem;
+import ru.chuprikov.search.database.datatypes.ProblemID;
 
 class BerkeleyParsedDB implements ParsedDB {
     private final Database db;
+    private final StoredSortedMap<ProblemID, ParsedProblem> storedMap;
 
     BerkeleyParsedDB(Environment env) throws DatabaseException {
         DatabaseConfig dbConf = new DatabaseConfig();
         dbConf.setAllowCreate(true);
         this.db = env.openDatabase(null, "parsed", dbConf);
+        storedMap = new StoredSortedMap<>(db, problemIDBinding, problemParseDataBinding, true);
     }
 
     @Override
-    public CloseableIterator<ParsedProblem> openIterator() {
-        try {
-            return new ProblemDataIterator(this.db.openCursor(null, CursorConfig.DEFAULT));
-        } catch (DatabaseException e) {
-            e.printStackTrace();
-        }
-        return null;
+    public CloseableListIterator<ParsedProblem> iterator() {
+        return new BerkeleyCloseableStoredIterator<>((StoredIterator<ParsedProblem>) storedMap.values().iterator());
     }
 
-    private static class ProblemDataIterator implements CloseableIterator<ParsedProblem> {
-        private final Cursor cursor;
-        private DatabaseEntry keyEntry = new DatabaseEntry();
-        private DatabaseEntry dataEntry = new DatabaseEntry();
-
-        ProblemDataIterator(Cursor cursor) throws DatabaseException {
-            this.cursor = cursor;
-            if (cursor.getFirst(keyEntry, dataEntry, LockMode.DEFAULT) == OperationStatus.NOTFOUND) {
-                keyEntry = null;
-                dataEntry = null;
-            }
-        }
-
-        @Override
-        public boolean hasNext() {
-            return keyEntry != null;
-        }
-
-        @Override
-        public ParsedProblem next() {
-            if (hasNext()) {
-                ParsedProblem res = binding.entryToObject(keyEntry, dataEntry);
-                advance();
-                return res;
-            } else {
-                return null;
-            }
-        }
-
-        private void advance() {
-            try {
-                if (cursor.getNext(keyEntry, dataEntry, LockMode.DEFAULT) == OperationStatus.NOTFOUND) {
-                    keyEntry = null;
-                    dataEntry = null;
-                }
-            } catch (DatabaseException e) {
-                keyEntry = null;
-                dataEntry = null;
-            }
-        }
-
-        @Override
-        public void remove() {
-            throw new UnsupportedOperationException();
-        }
-
-        @Override
-        public void close() throws Exception {
-            cursor.close();
-        }
+    @Override
+    public CloseableListIterator<ParsedProblem> upperBound(ProblemID problemID) {
+        return new BerkeleyCloseableStoredIterator<ParsedProblem>((StoredIterator<ParsedProblem>) storedMap.tailMap(problemID).values().iterator());
     }
 
-    private static class ProblemParseDataBinding extends TupleTupleBinding<ParsedProblem> {
+    private static TupleBinding<ProblemID> problemIDBinding = new TupleBinding<ProblemID>() {
+        @Override
+        public ProblemID entryToObject(TupleInput input) {
+            return new ProblemID(input.readString(), input.readString());
+        }
+
+        @Override
+        public void objectToEntry(ProblemID object, TupleOutput output) {
+            output.writeString(object.getResource()).writeString(object.getProblemID());
+        }
+    };
+
+    private static TupleTupleBinding<ParsedProblem> problemParseDataBinding = new TupleTupleBinding<ParsedProblem>() {
         @Override
         public ParsedProblem entryToObject(TupleInput keyInput, TupleInput dataInput) {
-            ParsedProblem result = new ParsedProblem(keyInput.readString(), keyInput.readString(), dataInput.readString());
+            ParsedProblem result = new ParsedProblem(problemIDBinding.entryToObject(keyInput), dataInput.readString());
 
             result.title = dataInput.readString();
             result.condition = dataInput.readString();
@@ -94,7 +63,7 @@ class BerkeleyParsedDB implements ParsedDB {
 
         @Override
         public void objectToKey(ParsedProblem object, TupleOutput output) {
-            output.writeString(object.resource).writeString(object.problemID);
+            problemIDBinding.objectToEntry(object.problemID, output);
         }
 
         @Override
@@ -102,25 +71,21 @@ class BerkeleyParsedDB implements ParsedDB {
             output.writeString(object.url).writeString(object.title).writeString(object.condition)
                 .writeString(object.inputSpecification).writeString(object.outputSpecification);
         }
-    }
-
-    private static final ProblemParseDataBinding binding = new ProblemParseDataBinding();
+    };
 
     @Override
     public void saveParsed(ParsedProblem problem) throws DatabaseException {
-        final DatabaseEntry theKey = new DatabaseEntry();
-        final DatabaseEntry theData = new DatabaseEntry();
-        binding.objectToKey(problem, theKey);
-        binding.objectToData(problem, theData);
-
-        db.put(null, theKey, theData);
+        storedMap.put(problem.problemID, problem);
     }
 
     @Override
-    public boolean contains(ParsedProblem problem) throws DatabaseException {
-        final DatabaseEntry theKey = new DatabaseEntry();
-        binding.objectToKey(problem, theKey);
-        return db.get(null, theKey, new DatabaseEntry(), LockMode.DEFAULT) == OperationStatus.SUCCESS;
+    public boolean contains(ProblemID problemID) throws DatabaseException {
+        return storedMap.containsKey(problemID);
+    }
+
+    @Override
+    public ParsedProblem get(ProblemID problemID) {
+        return storedMap.get(problemID);
     }
 
     @Override

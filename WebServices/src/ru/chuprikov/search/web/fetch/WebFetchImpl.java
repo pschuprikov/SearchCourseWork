@@ -1,8 +1,11 @@
 package ru.chuprikov.search.web.fetch;
 
+import ru.chuprikov.search.database.CloseableIterator;
 import ru.chuprikov.search.database.FetchedDB;
 import ru.chuprikov.search.database.SearchDatabase;
 import ru.chuprikov.search.database.SearchDatabases;
+import ru.chuprikov.search.database.datatypes.ProblemID;
+import ru.chuprikov.search.database.datatypes.ProblemRawData;
 import ru.chuprikov.search.gather.fetcher.Fetcher;
 import ru.chuprikov.search.gather.fetcher.NoProxyProvider;
 import ru.chuprikov.search.gather.fetcher.ProxyFetcher;
@@ -13,9 +16,10 @@ import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
 import javax.jws.WebService;
 import java.io.File;
+import java.util.ArrayList;
 
 @WebService(endpointInterface = "ru.chuprikov.search.web.fetch.WebFetch")
-public class WebFetchImpl implements WebFetch {
+public class WebFetchImpl implements WebFetch{
     private SearchDatabase searchDB;
     private FetchedDB fetchedDB;
 
@@ -31,6 +35,7 @@ public class WebFetchImpl implements WebFetch {
 
     @PreDestroy
     private void closeDatabaseConnections() {
+        System.err.println("bye");
         try {
             fetchedDB.close();
             searchDB.close();
@@ -52,5 +57,36 @@ public class WebFetchImpl implements WebFetch {
         response.setNumSuccessful(loader.getNumSuccessfull());
         response.setNumAlreadyFetched(loader.getNumAlreadyFetched());
         return response;
+    }
+
+    @Override
+    public void clearFetches() throws Exception {
+        fetchedDB.close();
+        searchDB.truncateFetchDB();
+        fetchedDB = searchDB.openFetchDB();
+    }
+
+    @Override
+    public ProblemRawData getProblemRawData(ProblemID problemID) {
+        return fetchedDB.get(problemID);
+    }
+
+    @Override
+    public ProblemRawData getFirstProblemRawData() throws Exception {
+        try (CloseableIterator<ProblemRawData> it = fetchedDB.iterator()) {
+            ProblemRawData res = it.hasNext() ? it.next() : null;
+            return res;
+        }
+    }
+
+    @Override
+    public ProblemRawData[] getNextProblemRawDatas(ProblemID problemID, int count) throws Exception {
+        ArrayList<ProblemRawData> result = new ArrayList<>();
+        try (CloseableIterator<ProblemRawData> it = fetchedDB.upperBound(problemID)) {
+            while (it.hasNext() && result.size() < count) {
+                result.add(it.next());
+            }
+        }
+        return result.toArray(new ProblemRawData[result.size()]);
     }
 }

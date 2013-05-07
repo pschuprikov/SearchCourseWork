@@ -1,5 +1,6 @@
 package ru.chuprikov.search.gather.problemsets;
 
+import ru.chuprikov.search.database.datatypes.ProblemID;
 import ru.chuprikov.search.gather.fetcher.StandardURLContentLoader;
 import ru.chuprikov.search.gather.fetcher.URLContentLoader;
 
@@ -49,7 +50,7 @@ public class SPOJProblemSet implements ProblemSet {
     @Override
     public ProblemFetchInfo next() {
         current++;
-        return new ProblemFetchInfo("spoj", ids.get(Math.min(current, ids.size() - 1)),
+        return new ProblemFetchInfo(new ProblemID(ProblemSets.ProblemSetName.SPOJ.toString(), ids.get(Math.min(current, ids.size() - 1))),
             "http://www.spoj.com/problems/" + ids.get(Math.min(current, ids.size() - 1)), this
         );
     }

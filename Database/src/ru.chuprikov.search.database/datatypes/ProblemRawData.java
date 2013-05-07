@@ -1,19 +1,17 @@
 package ru.chuprikov.search.database.datatypes;
 
-public class ProblemRawData {
-    public final String url;
-    public final String resource;
+import javax.xml.bind.annotation.XmlRootElement;
 
-    public String getProblemID() {
-        return problemID;
+@XmlRootElement
+public class ProblemRawData {
+    private String url = "";
+    private String content = "";
+    private ProblemID problemID = new ProblemID();
+
+    public ProblemRawData() {
     }
 
-    public final String problemID;
-    public String content;
-
-
-    public ProblemRawData(String resource, String problemID, String url, String content) {
-        this.resource = resource;
+    public ProblemRawData(ProblemID problemID, String url, String content) {
         this.problemID = problemID;
         this.url = url;
         this.content = content;
@@ -21,6 +19,10 @@ public class ProblemRawData {
 
     public String getUrl() {
         return url;
+    }
+
+    public void setUrl(String url) {
+        this.url = url;
     }
 
     public String getContent() {
@@ -31,16 +33,19 @@ public class ProblemRawData {
         this.content = content;
     }
 
+    public ProblemID getProblemID() {
+        return problemID;
+    }
+
+    public void setProblemID(ProblemID problemID) {
+        this.problemID = problemID;
+    }
 
     @Override
     public String toString() {
         return "ProblemRawData{" +
                 "problemID='" + problemID + '\'' +
-                ", resource='" + resource + '\'' +
                 '}';
     }
 
-    public String getResource() {
-        return resource;
-    }
 }

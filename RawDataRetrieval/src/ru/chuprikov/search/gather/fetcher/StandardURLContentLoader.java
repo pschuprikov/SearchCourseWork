@@ -34,6 +34,6 @@ public class StandardURLContentLoader<T> implements URLContentLoader<T> {
 
     @Override
     public String loadContent(FetchInfo<T> data, Proxy proxy) throws IOException {
-        return readFromConnection(getConnection(data.getURL(), proxy));
+        return readFromConnection(getConnection(data.getUrl(), proxy));
     }
 }

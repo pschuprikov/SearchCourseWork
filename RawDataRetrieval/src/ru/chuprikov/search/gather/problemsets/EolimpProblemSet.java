@@ -1,5 +1,6 @@
 package ru.chuprikov.search.gather.problemsets;
 
+import ru.chuprikov.search.database.datatypes.ProblemID;
 import ru.chuprikov.search.gather.fetcher.StandardURLContentLoader;
 import ru.chuprikov.search.gather.fetcher.URLContentLoader;
 
@@ -33,7 +34,7 @@ class EolimpProblemSet implements ProblemSet {
     @Override
     public ProblemFetchInfo next() {
         current++;
-        return new ProblemFetchInfo("eolimp", Integer.toString(current),
+        return new ProblemFetchInfo(new ProblemID(ProblemSets.ProblemSetName.EOLIMP.toString(), Integer.toString(current)),
                 "http://www.e-olimp.com/en/problems/" + current, this
         );
     }

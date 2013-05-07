@@ -36,7 +36,7 @@ public class ProblemSetLoader implements FetchCompletionHandler<ProblemFetchInfo
             numTotal++;
 
             final ProblemFetchInfo currentProblem = range.next();
-            if (!fetchedDB.contains(currentProblem))
+            if (!fetchedDB.contains(currentProblem.getProblemID()))
                 fetcher.fetchProblemAsync(currentProblem, this);
             else {
                 numAlreadyFetched++;

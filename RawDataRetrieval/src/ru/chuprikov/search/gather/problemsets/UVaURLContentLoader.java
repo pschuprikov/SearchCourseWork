@@ -18,7 +18,7 @@ class UVaURLContentLoader extends StandardURLContentLoader<ProblemFetchInfo> {
         URLConnection connection = getConnection(request, proxy);
         connection.setDoOutput(true);
 
-        String data = URLEncoder.encode("p", "UTF-8") + "=" + URLEncoder.encode(problem.problemID, "UTF-8");
+        String data = URLEncoder.encode("p", "UTF-8") + "=" + URLEncoder.encode(problem.getProblemID().getProblemID(), "UTF-8");
         data += "&" + URLEncoder.encode("info", "UTF-8") + "=" + URLEncoder.encode("Info", "UTF-8");
 
         try (OutputStreamWriter wr = new OutputStreamWriter(connection.getOutputStream())) {
@@ -30,7 +30,7 @@ class UVaURLContentLoader extends StandardURLContentLoader<ProblemFetchInfo> {
 
     @Override
     public String loadContent(FetchInfo<ProblemFetchInfo> problem, Proxy proxy) throws IOException {
-        if (!problem.get().resource.equals("UVa"))
+        if (!problem.get().getProblemID().getResource().equals("UVa"))
             throw new AssertionError();
 
         StringBuilder sb = new StringBuilder();

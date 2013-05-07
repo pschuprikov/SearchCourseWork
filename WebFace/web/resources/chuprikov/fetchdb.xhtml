@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html
+        PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:c="http://java.sun.com/jsf/composite"
+      xml:lang="en" lang="en">
+<h:head><title>Guess Number App</title></h:head>
+<h:body>
+    <c:interface name="fetchdb"/>
+    <c:implementation>
+        <h:form>
+            <p:panel header="Fetched problems">
+                <p:dataTable id="fetchesTable" var="_term" value = "#{fetches.lastDatas}">
+                    <p:column headerText="Resource" style="width: 10%">
+                        #{_term.problemID.resource}
+                    </p:column>
+                    <p:column headerText="Problem ID" style="width: 10%">
+                        #{_term.problemID.problemID}
+                    </p:column>
+                    <p:column headerText="URL">
+                        <a href="#{_term.url}">#{_term.url}</a>
+                    </p:column>
+                </p:dataTable>
+                <p:commandButton update="fetchesTable" actionListener="#{fetches.advance()}" value="Next"/>
+                <p:commandButton update="fetchesTable" actionListener="#{fetches.reset()}" value="Reset"/>
+                <p:commandButton update="fetchesTable" actionListener="#{fetches.clear()}" value="Truncate DB"/>
+            </p:panel>
+            <p:panel header="Search">
+                <p:panelGrid columns="2">
+                    <h:outputText value="resource"/><p:inputText value="#{fetches.requestResource}"/>
+                    <h:outputText value="problemID"/><p:inputText value="#{fetches.requestProblemID}"/>
+                </p:panelGrid>
+                <p:commandButton update="fetchesTable" actionListener="#{fetches.resetWith}" value="Search"/>
+            </p:panel>
+        </h:form>
+    </c:implementation>
+</h:body>
+
+</html>

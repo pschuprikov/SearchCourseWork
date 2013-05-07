@@ -87,7 +87,7 @@ public class SPOJProblemIDSLoader implements FetchCompletionHandler<SPOJProblemI
         }
 
         @Override
-        public String getURL() {
+        public String getUrl() {
             return url;
         }
     }

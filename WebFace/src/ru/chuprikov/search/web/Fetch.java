@@ -9,12 +9,13 @@ import javax.faces.bean.SessionScoped;
 import javax.faces.context.FacesContext;
 import javax.xml.namespace.QName;
 import javax.xml.ws.Service;
+import java.io.Serializable;
 import java.net.MalformedURLException;
 import java.net.URL;
 
 @ManagedBean
 @SessionScoped
-public class Fetch {
+public class Fetch implements Serializable {
     private final static QName qname = new QName("http://fetch.web.search.chuprikov.ru/", "WebFetchImplService");
     private static URL url;
 

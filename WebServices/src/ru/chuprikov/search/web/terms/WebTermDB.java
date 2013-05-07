@@ -5,7 +5,9 @@ import javax.jws.WebService;
 
 @WebService
 public interface WebTermDB {
-    @WebMethod TermInfo getTermInfo(String term);
-    @WebMethod TermInfo getFirstTermInfo();
+    @WebMethod
+    TermInfo getTermInfo(String term);
+    @WebMethod
+    TermInfo getFirstTermInfo();
     @WebMethod TermInfo[] getNextTermInfos(String term, int length);
 }
