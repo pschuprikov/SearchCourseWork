@@ -1,10 +1,8 @@
-package ru.chuprikov.search.database.web;
+package ru.chuprikov.search.web.terms;
 
-import javax.faces.bean.ManagedBean;
 import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlRootElement;
 
-@ManagedBean
 @XmlRootElement
 public class TermInfo {
     private String term;

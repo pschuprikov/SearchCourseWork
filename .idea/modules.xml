@@ -6,6 +6,7 @@
       <module fileurl="file://$PROJECT_DIR$/Indexer/Indexer.iml" filepath="$PROJECT_DIR$/Indexer/Indexer.iml" />
       <module fileurl="file://$PROJECT_DIR$/RawDataRetrieval/RawDataRetrieval.iml" filepath="$PROJECT_DIR$/RawDataRetrieval/RawDataRetrieval.iml" />
       <module fileurl="file://$PROJECT_DIR$/WebFace/WebFace.iml" filepath="$PROJECT_DIR$/WebFace/WebFace.iml" />
+      <module fileurl="file://$PROJECT_DIR$/WebServices/WebServices.iml" filepath="$PROJECT_DIR$/WebServices/WebServices.iml" />
     </modules>
   </component>
 </project>

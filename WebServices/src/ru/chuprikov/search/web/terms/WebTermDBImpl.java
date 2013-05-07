@@ -1,6 +1,5 @@
-package ru.chuprikov.search.database.web;
+package ru.chuprikov.search.web.terms;
 
-import ru.chuprikov.search.database.CloseableIterator;
 import ru.chuprikov.search.database.SearchDatabase;
 import ru.chuprikov.search.database.SearchDatabases;
 import ru.chuprikov.search.database.TermDB;
@@ -10,9 +9,10 @@ import javax.annotation.PreDestroy;
 import javax.jws.WebService;
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Iterator;
 
-@WebService(endpointInterface = "ru.chuprikov.search.database.web.WebSearchDB")
-public class WebSearchDBImpl implements WebSearchDB {
+@WebService(endpointInterface = "ru.chuprikov.search.web.terms.WebTermDB")
+public class WebTermDBImpl implements WebTermDB {
     private SearchDatabase searchDB;
     private TermDB termDB;
 
@@ -37,16 +37,6 @@ public class WebSearchDBImpl implements WebSearchDB {
     }
 
     @Override
-    public long size() {
-        try {
-            return termDB.size();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return 0;
-    }
-
-    @Override
     public TermInfo getTermInfo(String term) {
         TermInfo result = new TermInfo();
         try {
@@ -61,9 +51,8 @@ public class WebSearchDBImpl implements WebSearchDB {
     @Override
     public TermInfo getFirstTermInfo() {
         TermInfo result = new TermInfo();
-        try (CloseableIterator<String> iter = termDB.iterator()) {
-            result.setTerm(iter.next());
-            result.setId(termDB.getID(result.getTerm()));
+        try {
+            return getTermInfo(termDB.iterator().next());
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -71,20 +60,14 @@ public class WebSearchDBImpl implements WebSearchDB {
     }
 
     @Override
-    public TermInfo[] getNextTermInfos(String str, int length) {
+    public TermInfo[] getNextTermInfos(String term, int length) {
         ArrayList<TermInfo> result = new ArrayList<>();
-        try (CloseableIterator<String> it = termDB.upperBound(str)) {
-            while (it.hasNext() && result.size() < length) {
-                TermInfo ti = new TermInfo();
-                ti.setTerm(it.next());
-                ti.setId(termDB.getID(ti.getTerm()));
-                result.add(ti);
-            }
-
+        try {
+            for (Iterator<String> it = termDB.upperBound(term); it.hasNext() && result.size() < length;)
+                result.add(getTermInfo(it.next()));
         } catch (Exception e) {
             e.printStackTrace();
         }
-        TermInfo[] resultArray =  result.toArray(new TermInfo[result.size()]);
-        return resultArray;
+        return result.toArray(new TermInfo[result.size()]);
     }
 }

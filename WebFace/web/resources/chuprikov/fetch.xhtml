@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html
+        PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:c="http://java.sun.com/jsf/composite"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xml:lang="en" lang="en">
+<h:head>
+    <title>Fetcher</title>
+</h:head>
+<h:body>
+    <c:interface></c:interface>
+    <c:implementation>
+    <h:form>
+        <p:panel header="Fetch">
+            <p:messages id="message" showDetail="true"/>
+            <p:panelGrid columns="2">
+            <h:outputText value="Resource:"/><p:inputText id="resource" value="#{fetch.resource}" label="resource"/>
+            <h:outputText value="From:"/><p:inputText id="from" value="#{fetch.from}" label="from"/>
+            <h:outputText value="To:"/><p:inputText id="to" value="#{fetch.to}" label="to"/>
+            </p:panelGrid>
+            <p:commandButton id="fetchButton" update="message" actionListener="#{fetch.fetch()}" value="Fetch"/>
+        </p:panel>
+    </h:form>
+    </c:implementation>
+</h:body>
+</html>

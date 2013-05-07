@@ -3,36 +3,29 @@ package ru.chuprikov.search.database.berkeley;
 import com.sleepycat.bind.tuple.IntegerBinding;
 import com.sleepycat.bind.tuple.LongBinding;
 import com.sleepycat.bind.tuple.StringBinding;
+import com.sleepycat.collections.StoredSortedMap;
 import com.sleepycat.je.*;
-import ru.chuprikov.search.database.CloseableIterator;
 import ru.chuprikov.search.database.TermDB;
 
-class BerkeleyTermDB implements TermDB {
-    private final Database dictionaryDB;
+import java.util.Iterator;
 
-    private final ThreadLocal<DatabaseEntry> keyEntry = new ThreadLocal<DatabaseEntry>() {
-        @Override
-        protected DatabaseEntry initialValue() {
-            return new DatabaseEntry();
-        }
-    };
-    private final ThreadLocal<DatabaseEntry> valueEntry = new ThreadLocal<DatabaseEntry>() {
-        @Override
-        protected DatabaseEntry initialValue() {
-            return new DatabaseEntry();
-        }
-    };
-    private final ThreadLocal<Sequence> idSequence = new ThreadLocal<>();
+class BerkeleyTermDB extends AbstractBerkeleyDB implements TermDB {
+    private final Database dictionaryDB;
+    private final StoredSortedMap<String, Long> storedSortedMap;
+
+    private final Sequence idSequence;
 
     BerkeleyTermDB(Environment env) throws Exception {
         DatabaseConfig dictionaryDatabaseConfig = new DatabaseConfig();
         dictionaryDatabaseConfig.setAllowCreate(true);
         dictionaryDB = env.openDatabase(null, "term", dictionaryDatabaseConfig);
 
+        storedSortedMap = new StoredSortedMap<>(dictionaryDB, new StringBinding(), new LongBinding(), false);
+
         SequenceConfig dictionaryIDSequenceConfig = new SequenceConfig();
         dictionaryIDSequenceConfig.setAllowCreate(true);
         IntegerBinding.intToEntry(0, keyEntry.get());
-        idSequence.set(dictionaryDB.openSequence(null, keyEntry.get(), dictionaryIDSequenceConfig));
+        idSequence = dictionaryDB.openSequence(null, keyEntry.get(), dictionaryIDSequenceConfig);
     }
 
     @Override
@@ -46,7 +39,7 @@ class BerkeleyTermDB implements TermDB {
             return LongBinding.entryToLong(valueEntry.get());
         else {
             StringBinding.stringToEntry(term, keyEntry.get());
-            final long id = idSequence.get().get(null, 1);
+            final long id = idSequence.get(null, 1);
             LongBinding.longToEntry(id, valueEntry.get());
             dictionaryDB.put(null, keyEntry.get(), valueEntry.get());
             return id;
@@ -60,84 +53,18 @@ class BerkeleyTermDB implements TermDB {
     }
 
     @Override
-    public long size() throws Exception {
-        return dictionaryDB.count();
+    public Iterator<String> iterator() throws Exception {
+        return storedSortedMap.keySet().iterator();
     }
 
     @Override
-    public CloseableIterator<String> iterator() throws Exception {
-        return new TermCloseableIterator(dictionaryDB);
-    }
-
-    private class TermCloseableIterator implements CloseableIterator<String> {
-        private Cursor cursor;
-        private DatabaseEntry keyEntry = new DatabaseEntry();
-        private DatabaseEntry valueEntry = new DatabaseEntry();
-
-        TermCloseableIterator(Database db) throws DatabaseException {
-
-            cursor = db.openCursor(null, CursorConfig.DEFAULT);
-            if (cursor.getFirst(keyEntry, valueEntry, LockMode.DEFAULT) == OperationStatus.NOTFOUND) {
-                keyEntry = null;
-                valueEntry = null;
-            }
-        }
-
-        TermCloseableIterator(Database db, String first) throws DatabaseException {
-            keyEntry = new DatabaseEntry();
-            valueEntry = new DatabaseEntry();
-
-            cursor = db.openCursor(null, CursorConfig.DEFAULT);
-            StringBinding.stringToEntry(first, keyEntry);
-            if (cursor.getSearchKey(keyEntry, valueEntry, LockMode.DEFAULT) == OperationStatus.NOTFOUND) {
-                keyEntry = null;
-                valueEntry = null;
-            }
-        }
-
-        @Override
-        public void close() throws Exception {
-            cursor.close();
-        }
-
-        @Override
-        public boolean hasNext() {
-            return keyEntry != null;
-        }
-
-        @Override
-        public String next() {
-            String result = StringBinding.entryToString(keyEntry);
-            advance();
-            return result;
-        }
-
-        private void advance() {
-            if (hasNext()) {
-                try {
-                    if (cursor.getNext(keyEntry, valueEntry, LockMode.DEFAULT) == OperationStatus.NOTFOUND) {
-                        keyEntry = null;
-                        valueEntry = null;
-                    }
-                } catch (DatabaseException e) {
-                    e.printStackTrace();
-                }
-            }
-        }
-
-        @Override
-        public void remove() {
-            throw new UnsupportedOperationException();
-        }
-    }
-
-    @Override
-    public CloseableIterator<String> upperBound(String first) throws Exception {
-        return new TermCloseableIterator(dictionaryDB, first);
+    public Iterator<String> upperBound(String first) throws Exception {
+        return storedSortedMap.tailMap(first).keySet().iterator();
     }
 
     @Override
     public void close() throws Exception {
+        idSequence.close();
         dictionaryDB.close();
     }
 }
