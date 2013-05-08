@@ -1,13 +1,11 @@
 package ru.chuprikov.search.database;
 
-import ru.chuprikov.search.database.datatypes.Datatypes;
-
-import java.util.Iterator;
+import ru.chuprikov.search.database.datatypes.Document;
 
 public interface DocumentDB extends AutoCloseable {
-    long addDocument(Datatypes.Document document) throws Exception;
-    Datatypes.Document getDocument(long documentID) throws Exception;
+    long addDocument(Document document) throws Exception;
 
-    Iterator<Long> iterator() throws Exception;
-    Iterator<Long> upperBound(long first) throws Exception;
+    Document get(long documentID) throws Exception;
+    CloseableIterator<Document> iterator() throws Exception;
+    CloseableIterator<Document> upperBound(long documentID) throws Exception;
 }

@@ -3,8 +3,8 @@
     <output-path>$PROJECT_DIR$/out/artifacts/Database_jar</output-path>
     <root id="archive" name="Database.jar">
       <element id="module-output" name="Database" />
-      <element id="extracted-dir" path="$USER_HOME$/Downloads/je-5.0.73/lib/je-5.0.73.jar" path-in-jar="/" />
-      <element id="extracted-dir" path="/usr/share/protobuf/lib/protobuf.jar" path-in-jar="/" />
+      <element id="library" level="project" name="je" />
+      <element id="library" level="project" name="protobuf" />
     </root>
   </artifact>
 </component>
