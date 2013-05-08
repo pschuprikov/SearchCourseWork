@@ -6,8 +6,8 @@ import javax.jws.WebService;
 @WebService
 public interface WebIndexDB {
     @WebMethod
-    byte[] readFirstPosting(long termID) throws Exception;
+    PostingInfo readFirstPosting(long termID) throws Exception;
 
     @WebMethod
-    byte[][] readNextPostings(long termID, long documentID, int count) throws Exception;
+    PostingInfo[] readNextPostings(long termID, long documentID, int count) throws Exception;
 }

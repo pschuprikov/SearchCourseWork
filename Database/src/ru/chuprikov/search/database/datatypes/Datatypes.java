@@ -55,13 +55,13 @@ public final class Datatypes {
     
     public enum PositionType
         implements com.google.protobuf.ProtocolMessageEnum {
-      PLAIN_TEXT(0, 1),
+      CONDITION(0, 1),
       TITLE(1, 2),
       INPUT_SPEC(2, 3),
       OUTPUT_SPEC(3, 4),
       ;
       
-      public static final int PLAIN_TEXT_VALUE = 1;
+      public static final int CONDITION_VALUE = 1;
       public static final int TITLE_VALUE = 2;
       public static final int INPUT_SPEC_VALUE = 3;
       public static final int OUTPUT_SPEC_VALUE = 4;
@@ -71,7 +71,7 @@ public final class Datatypes {
       
       public static PositionType valueOf(int value) {
         switch (value) {
-          case 1: return PLAIN_TEXT;
+          case 1: return CONDITION;
           case 2: return TITLE;
           case 3: return INPUT_SPEC;
           case 4: return OUTPUT_SPEC;
@@ -105,7 +105,7 @@ public final class Datatypes {
       }
       
       private static final PositionType[] VALUES = {
-        PLAIN_TEXT, TITLE, INPUT_SPEC, OUTPUT_SPEC, 
+        CONDITION, TITLE, INPUT_SPEC, OUTPUT_SPEC, 
       };
       
       public static PositionType valueOf(
@@ -189,7 +189,7 @@ public final class Datatypes {
       }
       
       private void initFields() {
-        type_ = ru.chuprikov.search.database.datatypes.Datatypes.Posting.PositionType.PLAIN_TEXT;
+        type_ = ru.chuprikov.search.database.datatypes.Datatypes.Posting.PositionType.CONDITION;
         index_ = 0;
       }
       private byte memoizedIsInitialized = -1;
@@ -357,7 +357,7 @@ public final class Datatypes {
         
         public Builder clear() {
           super.clear();
-          type_ = ru.chuprikov.search.database.datatypes.Datatypes.Posting.PositionType.PLAIN_TEXT;
+          type_ = ru.chuprikov.search.database.datatypes.Datatypes.Posting.PositionType.CONDITION;
           bitField0_ = (bitField0_ & ~0x00000001);
           index_ = 0;
           bitField0_ = (bitField0_ & ~0x00000002);
@@ -491,7 +491,7 @@ public final class Datatypes {
         private int bitField0_;
         
         // required .ru.chuprikov.search.database.datatypes.Posting.PositionType type = 1;
-        private ru.chuprikov.search.database.datatypes.Datatypes.Posting.PositionType type_ = ru.chuprikov.search.database.datatypes.Datatypes.Posting.PositionType.PLAIN_TEXT;
+        private ru.chuprikov.search.database.datatypes.Datatypes.Posting.PositionType type_ = ru.chuprikov.search.database.datatypes.Datatypes.Posting.PositionType.CONDITION;
         public boolean hasType() {
           return ((bitField0_ & 0x00000001) == 0x00000001);
         }
@@ -509,7 +509,7 @@ public final class Datatypes {
         }
         public Builder clearType() {
           bitField0_ = (bitField0_ & ~0x00000001);
-          type_ = ru.chuprikov.search.database.datatypes.Datatypes.Posting.PositionType.PLAIN_TEXT;
+          type_ = ru.chuprikov.search.database.datatypes.Datatypes.Posting.PositionType.CONDITION;
           onChanged();
           return this;
         }
@@ -1150,14 +1150,14 @@ public final class Datatypes {
   static {
     java.lang.String[] descriptorData = {
       "\n\017Datatypes.proto\022&ru.chuprikov.search.d" +
-      "atabase.datatypes\"\235\002\n\007Posting\022\022\n\ndocumen" +
+      "atabase.datatypes\"\234\002\n\007Posting\022\022\n\ndocumen" +
       "tID\030\001 \002(\004\022K\n\tpositions\030\002 \003(\01328.ru.chupri" +
       "kov.search.database.datatypes.Posting.Po" +
       "sition\032e\n\010Position\022J\n\004type\030\001 \002(\0162<.ru.ch" +
       "uprikov.search.database.datatypes.Postin" +
-      "g.PositionType\022\r\n\005index\030\002 \002(\r\"J\n\014Positio" +
-      "nType\022\016\n\nPLAIN_TEXT\020\001\022\t\n\005TITLE\020\002\022\016\n\nINPU" +
-      "T_SPEC\020\003\022\017\n\013OUTPUT_SPEC\020\004B\013B\tDatatypes"
+      "g.PositionType\022\r\n\005index\030\002 \002(\r\"I\n\014Positio" +
+      "nType\022\r\n\tCONDITION\020\001\022\t\n\005TITLE\020\002\022\016\n\nINPUT" +
+      "_SPEC\020\003\022\017\n\013OUTPUT_SPEC\020\004B\013B\tDatatypes"
     };
     com.google.protobuf.Descriptors.FileDescriptor.InternalDescriptorAssigner assigner =
       new com.google.protobuf.Descriptors.FileDescriptor.InternalDescriptorAssigner() {

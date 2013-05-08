@@ -30,20 +30,20 @@ public class WebIndexDBImpl implements WebIndexDB{
     }
 
     @Override
-    public byte[] readFirstPosting(long termID) throws Exception {
+    public PostingInfo readFirstPosting(long termID) throws Exception {
         try(CloseableIterator<Datatypes.Posting> it = indexDB.iterator(termID)) {
-            return it.hasNext() ? it.next().toByteArray() : null;
+            return it.hasNext() ? new PostingInfo(it.next()) : null;
         }
     }
 
     @Override
-    public byte[][] readNextPostings(long termID, long documentID, int count) throws Exception {
-        ArrayList<byte[]> result = new ArrayList<>();
+    public PostingInfo[] readNextPostings(long termID, long documentID, int count) throws Exception {
+        ArrayList<PostingInfo> result = new ArrayList<>();
         try (CloseableIterator<Datatypes.Posting> it = indexDB.upperBound(termID, documentID)) {
             while (it.hasNext() && result.size() < count) {
-                result.add(it.next().toByteArray());
+                result.add(new PostingInfo(it.next()));
             }
         }
-        return result.toArray(new byte[result.size()][]);
+        return result.toArray(new PostingInfo[result.size()]);
     }
 }

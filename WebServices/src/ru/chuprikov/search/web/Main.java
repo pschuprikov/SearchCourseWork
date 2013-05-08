@@ -37,7 +37,7 @@ public class Main {
             final URL fetchURL = new URL("http://localhost:8081/WS/fetch");
             final URL parseURL = new URL("http://localhost:8081/WS/parse");
             final URL indexerURL = new URL("http://localhost:8081/WS/index");
-            final URL indexURL = new URL("http://localhost:8081/WS/index");
+            final URL indexURL = new URL("http://localhost:8081/WS/indexdb");
 
             exec.execute(getPublisher(Endpoint.create(new WebTermDBImpl()), termsURL));
             Thread.sleep(1000);

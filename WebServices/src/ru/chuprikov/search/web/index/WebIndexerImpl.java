@@ -72,9 +72,9 @@ public class WebIndexerImpl implements WebIndexer {
                 try { //TODO: What the hell? Why is this try block here?
                     long documentID = documentDB.addDocument(new Document(parsedProblem.getProblemID(), parsedProblem.getUrl()));
                     splitWithType(documentPostings, parsedProblem.getTitle(), documentID, Datatypes.Posting.PositionType.TITLE);
+                    splitWithType(documentPostings, parsedProblem.getCondition(), documentID, Datatypes.Posting.PositionType.CONDITION);
                     splitWithType(documentPostings, parsedProblem.getInputSpecification(), documentID, Datatypes.Posting.PositionType.INPUT_SPEC);
                     splitWithType(documentPostings, parsedProblem.getOutputSpecification(), documentID, Datatypes.Posting.PositionType.OUTPUT_SPEC);
-                    splitWithType(documentPostings, parsedProblem.getCondition(), documentID, Datatypes.Posting.PositionType.PLAIN_TEXT);
                 } catch (Exception e) {
                     continue;
                 }
@@ -106,7 +106,7 @@ public class WebIndexerImpl implements WebIndexer {
                     splitWithType(documentPostings, parsedProblem.getTitle(), documentID, Datatypes.Posting.PositionType.TITLE);
                     splitWithType(documentPostings, parsedProblem.getInputSpecification(), documentID, Datatypes.Posting.PositionType.INPUT_SPEC);
                     splitWithType(documentPostings, parsedProblem.getOutputSpecification(), documentID, Datatypes.Posting.PositionType.OUTPUT_SPEC);
-                    splitWithType(documentPostings, parsedProblem.getCondition(), documentID, Datatypes.Posting.PositionType.PLAIN_TEXT);
+                    splitWithType(documentPostings, parsedProblem.getCondition(), documentID, Datatypes.Posting.PositionType.CONDITION);
                 } catch (Exception e) {
                     e.printStackTrace();
                 }

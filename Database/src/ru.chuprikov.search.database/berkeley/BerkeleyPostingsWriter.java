@@ -60,6 +60,7 @@ class BerkeleyPostingsWriter implements PostingsWriter {
 
     private void flush() throws DatabaseException {
         TupleOutput tupleOutput = new TupleOutput();
+        tupleOutput.writeLong(currentDocumenID);
         tupleOutput.writeFast(outputStream.toByteArray());
         valueEntry.setData(tupleOutput.toByteArray());
         indexDB.put(null, keyEntry, valueEntry);

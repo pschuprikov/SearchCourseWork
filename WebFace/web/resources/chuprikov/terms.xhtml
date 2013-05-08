@@ -20,6 +20,9 @@
                     <p:column headerText="Term">
                         #{_term.term}
                     </p:column>
+                    <p:column headerText="Postings">
+                        <p:commandButton value="Show postings" ajax="false" action="#{postings.show(_term.id)}"/>
+                    </p:column>
                 </p:dataTable>
                 <p:commandButton update="trous" actionListener="#{terms.advance()}" value="Next"/>
                 <p:commandButton update="trous" actionListener="#{terms.reset()}" value="Reset"/>

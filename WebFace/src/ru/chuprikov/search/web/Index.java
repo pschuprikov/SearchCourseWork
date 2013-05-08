@@ -76,7 +76,7 @@ public class Index implements Serializable {
             new FacesMessage("Index result", webIndexer.index(problemIDFrom, problemIDTo, maxMemoryUsage, maxPostingsChunkSize).getMessage()));
     }
 
-    public void indexAll(long maxMemoryUsage, int maxPostingsChunkSize) throws Exception {
+    public void indexAll() throws Exception {
         FacesContext.getCurrentInstance().addMessage("index",
                 new FacesMessage("Index result", webIndexer.indexAll(maxMemoryUsage, maxPostingsChunkSize).getMessage()));
     }
