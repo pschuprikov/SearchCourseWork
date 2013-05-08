@@ -63,6 +63,7 @@ public class Kgramm {
 			ListIterator<String> e = term.listIterator();
 			while (e.hasNext()) {
 				String str = e.next();
+                if (Math.abs(str.length() - s.length()) > 2) continue;
 				if (words.containsKey(str)) {
 					words.put(str, words.get(str) + 1);
 				} else {

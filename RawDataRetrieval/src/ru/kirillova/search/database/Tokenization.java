@@ -23,7 +23,7 @@ public class Tokenization {
 						}
 					}
 				} while ((i < str.length() && Character.isLetter(str.charAt(i))));
-				result.add(word.toString());
+				result.add(word.toString().toLowerCase());
 			}
 		}
 		return result;
