@@ -11,7 +11,7 @@
     <title>Control</title>
 </h:head>
 <h:body>
-    <p:tabView activeIndex="#{control.activeIdx}">
+    <p:tabView activeIndex="#{control.activeIdx}" style="border: 0px">
         <p:tab id="fetchTab" title="fetch control">
             <c:fetch/>
         </p:tab>
@@ -26,6 +26,9 @@
         </p:tab>
         <p:tab id="termsTab" title="terms data">
             <c:terms/>
+        </p:tab>
+        <p:tab id="indexTab" title="index control">
+            <c:index/>
         </p:tab>
     </p:tabView>
 </h:body>

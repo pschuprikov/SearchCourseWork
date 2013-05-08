@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html
+        PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:c="http://java.sun.com/jsf/composite"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xml:lang="en" lang="en">
+
+<c:interface name="index"/>
+<c:implementation>
+    <h:form>
+        <p:panel header="Index">
+            <p:messages id="resp" showDetail="true"/>
+            <p:panel header="From">
+                <p:panelGrid columns="2">
+                    <h:outputText value="Resource:"/><p:inputText value="#{index.problemIDFrom.resource}"/>
+                    <h:outputText value="ProblemID:"/><p:inputText value="#{index.problemIDFrom.problemID}"/>
+                </p:panelGrid>
+            </p:panel>
+            <p:panel header="To">
+                <p:panelGrid columns="2">
+                    <h:outputText value="Resource:"/><p:inputText value="#{index.problemIDTo.resource}"/>
+                    <h:outputText value="ProblemID:"/><p:inputText value="#{index.problemIDTo.problemID}"/>
+                </p:panelGrid>
+            </p:panel>
+            <p:panel header="Parameters">
+                <p:panelGrid columns="2">
+                    <h:outputText value="Max memory usage:"/><p:spinner value="#{index.maxMemoryUsage}"/>
+                    <h:outputText value="Max postings chunk size:"/><p:spinner value="#{index.maxPostingsChunkSize}"/>
+                </p:panelGrid>
+            </p:panel>
+            <p:commandButton update="resp" value="Index range" action="#{index.index}"/>
+            <p:commandButton update="resp" value="Index all" action="#{index.indexAll}"/>
+        </p:panel>
+    </h:form>
+</c:implementation>
+
+</html>

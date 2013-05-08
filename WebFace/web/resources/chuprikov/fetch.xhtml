@@ -7,23 +7,18 @@
       xmlns:h="http://java.sun.com/jsf/html"
       xmlns:p="http://primefaces.org/ui"
       xml:lang="en" lang="en">
-<h:head>
-    <title>Fetcher</title>
-</h:head>
-<h:body>
     <c:interface name="fetch"/>
     <c:implementation>
-    <h:form>
-        <p:panel header="Fetch">
-            <p:messages id="resp" showDetail="true"/>
-            <p:panelGrid columns="2">
-                <h:outputText value="Resource:"/><p:inputText id="resource" value="#{fetch.resource}" label="resource"/>
-                <h:outputText value="From:"/><p:inputText id="from" value="#{fetch.from}" label="from"/>
-                <h:outputText value="To:"/><p:inputText id="to" value="#{fetch.to}" label="to"/>
-            </p:panelGrid>
-            <p:commandButton id="fetchButton" update="resp" value="Fetch" action="#{fetch.fetch()}"/>
-        </p:panel>
-    </h:form>
+        <h:form>
+            <p:panel header="Fetch">
+                <p:messages id="resp" showDetail="true"/>
+                <p:panelGrid columns="2">
+                    <h:outputText value="Resource:"/><p:inputText id="resource" value="#{fetch.resource}" label="resource"/>
+                    <h:outputText value="From:"/><p:inputText id="from" value="#{fetch.from}" label="from"/>
+                    <h:outputText value="To:"/><p:inputText id="to" value="#{fetch.to}" label="to"/>
+                </p:panelGrid>
+                <p:commandButton id="fetchButton" update="resp" value="Fetch" action="#{fetch.fetch()}"/>
+            </p:panel>
+        </h:form>
     </c:implementation>
-</h:body>
 </html>

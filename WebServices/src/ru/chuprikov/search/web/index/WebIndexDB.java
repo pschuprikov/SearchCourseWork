@@ -1,4 +1,4 @@
-package ru.chuprikov.search.web.indexer;
+package ru.chuprikov.search.web.index;
 
 import javax.jws.WebMethod;
 import javax.jws.WebService;

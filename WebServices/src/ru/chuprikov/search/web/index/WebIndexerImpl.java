@@ -1,4 +1,4 @@
-package ru.chuprikov.search.web.indexer;
+package ru.chuprikov.search.web.index;
 
 import ru.chuprikov.search.database.*;
 import ru.chuprikov.search.database.datatypes.Datatypes;
@@ -7,6 +7,7 @@ import ru.chuprikov.search.database.datatypes.ParsedProblem;
 import ru.chuprikov.search.database.datatypes.ProblemID;
 import ru.chuprikov.search.index.indexer.Indexer;
 import ru.chuprikov.search.index.indexer.spimi.SPIMIIndexer;
+import ru.chuprikov.search.web.fetch.ProcessStatistics;
 
 import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
@@ -15,7 +16,7 @@ import java.io.File;
 import java.util.HashMap;
 import java.util.Map;
 
-@WebService(endpointInterface = "ru.chuprikov.search.web.indexer.WebIndexer")
+@WebService(endpointInterface = "ru.chuprikov.search.web.index.WebIndexer")
 public class WebIndexerImpl implements WebIndexer {
     private SearchDatabase searchDB;
     private DocumentDB documentDB;
@@ -54,7 +55,9 @@ public class WebIndexerImpl implements WebIndexer {
 
 
     @Override
-    public void index(ProblemID from, ProblemID to, long maxMemoryUsage, int maxPostingsChunkSize) throws Exception {
+    public ProcessStatistics index(ProblemID from, ProblemID to, long maxMemoryUsage, int maxPostingsChunkSize) throws Exception {
+        int total = 0;
+        int successful = 0;
         try (IndexDB indexDB = searchDB.openIndexDB(maxPostingsChunkSize);
              Indexer indexer = new SPIMIIndexer(new File(System.getProperty("user.dir") + "/spimi"), indexDB, termDB, maxMemoryUsage);
              CloseableIterator<ParsedProblem> parsedIter = parsedDB.upperBound(from)) {
@@ -64,6 +67,7 @@ public class WebIndexerImpl implements WebIndexer {
                 if (parsedProblem.getProblemID().compareTo(to) > 0)
                     break;
 
+                total++;
                 Map<String, Datatypes.Posting.Builder> documentPostings = new HashMap<>();
                 try { //TODO: What the hell? Why is this try block here?
                     long documentID = documentDB.addDocument(new Document(parsedProblem.getProblemID(), parsedProblem.getUrl()));
@@ -73,17 +77,22 @@ public class WebIndexerImpl implements WebIndexer {
                     splitWithType(documentPostings, parsedProblem.getCondition(), documentID, Datatypes.Posting.PositionType.PLAIN_TEXT);
                 } catch (Exception e) {
                     e.printStackTrace();
+                    continue;
                 }
 
                 for (Map.Entry<String, Datatypes.Posting.Builder> e : documentPostings.entrySet()) {
                     indexer.addToIndex(e.getKey(), e.getValue().build());
                 }
+                successful++;
             }
         }
+        return new ProcessStatistics(total, successful, 0);
     }
 
     @Override //TODO: remove code duplication
-    public void indexAll(long maxMemoryUsage, int maxPostingsChunkSize) throws Exception {
+    public ProcessStatistics indexAll(long maxMemoryUsage, int maxPostingsChunkSize) throws Exception {
+        int total = 0;
+        int successful = 0;
         try (IndexDB indexDB = searchDB.openIndexDB(maxPostingsChunkSize);
              Indexer indexer = new SPIMIIndexer(new File(System.getProperty("user.dir") + "/spimi"), indexDB, termDB, maxMemoryUsage);
              CloseableIterator<ParsedProblem> parsedIter = parsedDB.iterator()) {
@@ -91,6 +100,7 @@ public class WebIndexerImpl implements WebIndexer {
             while (parsedIter.hasNext()) {
                 final ParsedProblem parsedProblem = parsedIter.next();
 
+                total++;
                 Map<String, Datatypes.Posting.Builder> documentPostings = new HashMap<>();
                 try { //TODO: What the hell? Why is this try block here?
                     long documentID = documentDB.addDocument(new Document(parsedProblem.getProblemID(), parsedProblem.getUrl()));
@@ -105,7 +115,9 @@ public class WebIndexerImpl implements WebIndexer {
                 for (Map.Entry<String, Datatypes.Posting.Builder> e : documentPostings.entrySet()) {
                     indexer.addToIndex(e.getKey(), e.getValue().build());
                 }
+                successful++;
             }
         }
+        return new ProcessStatistics(total, successful, 0);
     }
 }

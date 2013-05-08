@@ -1,4 +1,4 @@
-package ru.chuprikov.search.web.indexer;
+package ru.chuprikov.search.web.index;
 
 import ru.chuprikov.search.database.CloseableIterator;
 import ru.chuprikov.search.database.IndexDB;
@@ -12,7 +12,7 @@ import javax.jws.WebService;
 import java.io.File;
 import java.util.ArrayList;
 
-@WebService(endpointInterface = "ru.chuprikov.search.web.indexer.WebIndexDB")
+@WebService(endpointInterface = "ru.chuprikov.search.web.index.WebIndexDB")
 public class WebIndexDBImpl implements WebIndexDB{
     private SearchDatabase searchDB;
     private IndexDB indexDB;

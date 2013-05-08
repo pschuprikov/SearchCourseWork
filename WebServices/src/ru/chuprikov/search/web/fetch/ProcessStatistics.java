@@ -8,6 +8,16 @@ public class ProcessStatistics {
     private int numSuccessful;
     private int numAlreadyFetched;
 
+    public ProcessStatistics() {
+
+    }
+
+    public ProcessStatistics(int numTotal, int numSuccessful, int numAlreadyFetched) {
+        this.numTotal = numTotal;
+        this.numSuccessful = numSuccessful;
+        this.numAlreadyFetched = numAlreadyFetched;
+    }
+
     public String getMessage() {
         return "total: " + this.getNumTotal() + "; succ: " + this.getNumSuccessful() + " already: " + this.getNumAlreadyFetched();
     }
