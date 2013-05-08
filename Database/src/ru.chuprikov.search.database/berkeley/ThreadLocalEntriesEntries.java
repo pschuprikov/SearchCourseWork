@@ -2,7 +2,7 @@ package ru.chuprikov.search.database.berkeley;
 
 import com.sleepycat.je.DatabaseEntry;
 
-abstract class AbstractBerkeleyDB {
+abstract class ThreadLocalEntriesEntries {
 
     final ThreadLocal<DatabaseEntry> keyEntry = new ThreadLocal<DatabaseEntry>() {
         @Override

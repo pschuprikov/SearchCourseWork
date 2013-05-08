@@ -12,7 +12,7 @@ import ru.chuprikov.search.database.DocumentDB;
 import ru.chuprikov.search.database.datatypes.Document;
 import ru.chuprikov.search.database.datatypes.ProblemID;
 
-class BerkeleyDocumentDB extends AbstractBerkeleyDB implements DocumentDB {
+class BerkeleyDocumentDB extends ThreadLocalEntriesEntries implements DocumentDB {
     private final Database documentDB;
     private final Sequence documentIDSequence;
     private final StoredSortedMap<Long, Document> storedSortedMap;

@@ -9,7 +9,7 @@ import com.sleepycat.je.*;
 import ru.chuprikov.search.database.CloseableIterator;
 import ru.chuprikov.search.database.TermDB;
 
-class BerkeleyTermDB extends AbstractBerkeleyDB implements TermDB {
+class BerkeleyTermDB extends ThreadLocalEntriesEntries implements TermDB {
     private final Database dictionaryDB;
     private final StoredSortedMap<String, Long> storedSortedMap;
 

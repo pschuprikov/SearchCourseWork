@@ -1,6 +1,7 @@
 package ru.chuprikov.search.database.berkeley;
 
 import com.sleepycat.bind.tuple.LongBinding;
+import com.sleepycat.bind.tuple.TupleOutput;
 import com.sleepycat.je.*;
 import ru.chuprikov.search.database.PostingsWriter;
 import ru.chuprikov.search.database.datatypes.Datatypes;
@@ -15,6 +16,7 @@ class BerkeleyPostingsWriter implements PostingsWriter {
     private final DatabaseEntry valueEntry = new DatabaseEntry();
     private final ByteArrayOutputStream outputStream;
     private final int maxPostingsChunkSizeBytes;
+    private long currentDocumenID;
 
     BerkeleyPostingsWriter(Database indexDB, long termID, int maxPostingsChunkSizeBytes) throws DatabaseException, IOException {
         this.indexDB = indexDB;
@@ -50,15 +52,16 @@ class BerkeleyPostingsWriter implements PostingsWriter {
         }
 
         if (outputStream.size() == 0) {
-            LongBinding.longToEntry(posting.getDocumentID(), valueEntry);
-            outputStream.write(valueEntry.getData());
+            currentDocumenID = posting.getDocumentID();
         }
 
         posting.writeDelimitedTo(outputStream);
     }
 
     private void flush() throws DatabaseException {
-        valueEntry.setData(outputStream.toByteArray());
+        TupleOutput tupleOutput = new TupleOutput();
+        tupleOutput.writeFast(outputStream.toByteArray());
+        valueEntry.setData(tupleOutput.toByteArray());
         indexDB.put(null, keyEntry, valueEntry);
         outputStream.reset();
     }
