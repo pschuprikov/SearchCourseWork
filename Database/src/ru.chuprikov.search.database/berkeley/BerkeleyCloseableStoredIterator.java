@@ -3,7 +3,7 @@ package ru.chuprikov.search.database.berkeley;
 import com.sleepycat.collections.StoredIterator;
 import ru.chuprikov.search.database.CloseableListIterator;
 
-public class BerkeleyCloseableStoredIterator<E> implements CloseableListIterator<E> {
+class BerkeleyCloseableStoredIterator<E> implements CloseableListIterator<E> {
     private final StoredIterator<E> berkeleyIterator;
 
     BerkeleyCloseableStoredIterator(StoredIterator<E> berkeleyIterator) {

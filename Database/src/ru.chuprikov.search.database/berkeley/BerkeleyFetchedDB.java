@@ -36,7 +36,7 @@ class BerkeleyFetchedDB implements FetchedDB {
         return new BerkeleyCloseableStoredIterator<>(((StoredValueSet<ProblemRawData>) storedMap.tailMap(problemID).values()).storedIterator());
     }
 
-    private static TupleBinding<ProblemID> problemIDBinding = new TupleBinding<ProblemID>() {
+    private static final TupleBinding<ProblemID> problemIDBinding = new TupleBinding<ProblemID>() {
         @Override
         public ProblemID entryToObject(TupleInput input) {
             return new ProblemID(input.readString(), input.readString());
@@ -48,7 +48,7 @@ class BerkeleyFetchedDB implements FetchedDB {
         }
     };
 
-    private static TupleTupleBinding<ProblemRawData> problemRawDataBinding = new  TupleTupleBinding<ProblemRawData>() {
+    private static final TupleTupleBinding<ProblemRawData> problemRawDataBinding = new  TupleTupleBinding<ProblemRawData>() {
 
         @Override
         public ProblemRawData entryToObject(TupleInput keyInput, TupleInput dataInput) {

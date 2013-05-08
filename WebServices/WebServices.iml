@@ -11,6 +11,7 @@
     <orderEntry type="module" module-name="RawDataRetrieval" />
     <orderEntry type="module" module-name="Database" />
     <orderEntry type="library" name="protobuf" level="project" />
+    <orderEntry type="module" module-name="Indexer" />
   </component>
 </module>
 

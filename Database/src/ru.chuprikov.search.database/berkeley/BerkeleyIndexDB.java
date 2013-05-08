@@ -1,23 +1,20 @@
 package ru.chuprikov.search.database.berkeley;
 
-import com.sleepycat.je.*;
+import com.sleepycat.je.Database;
+import com.sleepycat.je.DatabaseConfig;
+import com.sleepycat.je.DatabaseException;
+import com.sleepycat.je.Environment;
 import ru.chuprikov.search.database.IndexDB;
 import ru.chuprikov.search.database.PostingsWriter;
 
 import java.io.IOException;
 
-class BerkeleyIndexDB implements IndexDB {
+class BerkeleyIndexDB extends AbstractBerkeleyDB implements IndexDB {
     private final Database indexDB;
-
-    private final ThreadLocal<DatabaseEntry> keyEntry = new ThreadLocal<>();
-    private final ThreadLocal<DatabaseEntry> valueEntry = new ThreadLocal<>();
 
     private final int maxPostingsChunkSizeBytes;
 
     BerkeleyIndexDB(Environment env, int maxPostingsChunkSizeBytes) throws DatabaseException {
-        keyEntry.set(new DatabaseEntry());
-        valueEntry.set(new DatabaseEntry());
-
         this.maxPostingsChunkSizeBytes = maxPostingsChunkSizeBytes;
 
         DatabaseConfig indexDatabaseConfig = new DatabaseConfig();

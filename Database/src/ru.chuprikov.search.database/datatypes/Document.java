@@ -32,6 +32,11 @@ public class Document {
 
     }
 
+    public Document(ProblemID problemID, String url) {
+        this.problemID = problemID;
+        this.url = url;
+    }
+
     public Document(long documentID, ProblemID problemID, String url) {
         this.documentID = documentID;
         this.problemID = problemID;

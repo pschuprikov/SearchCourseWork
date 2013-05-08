@@ -33,10 +33,10 @@ class BerkeleyParsedDB implements ParsedDB {
 
     @Override
     public CloseableListIterator<ParsedProblem> upperBound(ProblemID problemID) {
-        return new BerkeleyCloseableStoredIterator<ParsedProblem>(((StoredValueSet<ParsedProblem>)storedMap.tailMap(problemID).values()).storedIterator());
+        return new BerkeleyCloseableStoredIterator<>(((StoredValueSet<ParsedProblem>)storedMap.tailMap(problemID).values()).storedIterator());
     }
 
-    private static TupleBinding<ProblemID> problemIDBinding = new TupleBinding<ProblemID>() {
+    private static final TupleBinding<ProblemID> problemIDBinding = new TupleBinding<ProblemID>() {
         @Override
         public ProblemID entryToObject(TupleInput input) {
             return new ProblemID(input.readString(), input.readString());
@@ -48,7 +48,7 @@ class BerkeleyParsedDB implements ParsedDB {
         }
     };
 
-    private static TupleTupleBinding<ParsedProblem> problemParseDataBinding = new TupleTupleBinding<ParsedProblem>() {
+    private static final TupleTupleBinding<ParsedProblem> problemParseDataBinding = new TupleTupleBinding<ParsedProblem>() {
         @Override
         public ParsedProblem entryToObject(TupleInput keyInput, TupleInput dataInput) {
             ParsedProblem result = new ParsedProblem(problemIDBinding.entryToObject(keyInput), dataInput.readString());

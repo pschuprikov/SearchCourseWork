@@ -1,8 +1,10 @@
 package ru.chuprikov.search.web;
 
 
+import ru.chuprikov.search.web.documents.WebDocumentDBImpl;
 import ru.chuprikov.search.web.fetch.WebFetchImpl;
 import ru.chuprikov.search.web.fetch.WebParseImpl;
+import ru.chuprikov.search.web.indexer.WebIndexerImpl;
 import ru.chuprikov.search.web.terms.WebTermDBImpl;
 
 import javax.xml.ws.Endpoint;
@@ -15,8 +17,8 @@ import java.util.concurrent.Executors;
 
 public class Main {
 
-    static ArrayList<Endpoint> endpoints = new ArrayList<>();
-    static Runnable getPublisher(final Endpoint endpoint, final URL url) {
+    private static final ArrayList<Endpoint> endpoints = new ArrayList<>();
+    private static Runnable getPublisher(final Endpoint endpoint, final URL url) {
         endpoints.add(endpoint);
         return new Runnable() {
             @Override
@@ -33,6 +35,7 @@ public class Main {
             final URL documentsURL = new URL("http://localhost:8081/WS/documents");
             final URL fetchURL = new URL("http://localhost:8081/WS/fetch");
             final URL parseURL = new URL("http://localhost:8081/WS/parse");
+            final URL indexerURL = new URL("http://localhost:8081/WS/indexer");
             exec.execute(getPublisher(Endpoint.create(new WebTermDBImpl()), termsURL));
             Thread.sleep(1000);
             exec.execute(getPublisher(Endpoint.create(new WebDocumentDBImpl()), documentsURL));
@@ -40,11 +43,15 @@ public class Main {
             exec.execute(getPublisher(Endpoint.create(new WebFetchImpl()), fetchURL));
             Thread.sleep(1000);
             exec.execute(getPublisher(Endpoint.create(new WebParseImpl()), parseURL));
+            Thread.sleep(1000);
+            exec.execute(getPublisher(Endpoint.create(new WebIndexerImpl()), indexerURL));
+
             Scanner scanner = new Scanner(System.in);
             while (true) {
                 if (scanner.next().equals("exit"))
                     break;
             }
+
             exec.shutdown();
         } catch (MalformedURLException e) {
             e.printStackTrace();

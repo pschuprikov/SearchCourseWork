@@ -5,9 +5,13 @@ import javax.jws.WebService;
 
 @WebService
 public interface WebTermDB {
+
     @WebMethod
-    TermInfo getTermInfo(String term);
+    TermInfo getTermInfo(String term) throws Exception;
+
     @WebMethod
-    TermInfo getFirstTermInfo();
-    @WebMethod TermInfo[] getNextTermInfos(String term, int length);
+    TermInfo getFirstTermInfo() throws Exception;
+
+    @WebMethod
+    TermInfo[] getNextTermInfos(String term, int length);
 }

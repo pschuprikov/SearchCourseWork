@@ -15,7 +15,7 @@ import java.net.URL;
 @ManagedBean
 @SessionScoped
 public class Fetches implements Serializable {
-    ProblemRawData[] lastDatas;
+    private ProblemRawData[] lastDatas;
     private static final int CHUNK_SIZE = 20;
 
     private final static QName qname = new QName("http://fetch.web.search.chuprikov.ru/", "WebFetchImplService");

@@ -26,15 +26,16 @@ class BerkeleyPostingsWriter implements PostingsWriter {
         try {
             cursor = indexDB.openCursor(null, CursorConfig.DEFAULT);
             LongBinding.longToEntry(termID + 1, keyEntry);
+
             OperationStatus status;
-            if (cursor.getSearchKeyRange(keyEntry, valueEntry, LockMode.DEFAULT) == OperationStatus.SUCCESS) {
+            if (cursor.getSearchKeyRange(keyEntry, valueEntry, LockMode.DEFAULT) == OperationStatus.SUCCESS)
                 status = cursor.getPrev(keyEntry, valueEntry, LockMode.DEFAULT);
-            } else {
+            else
                 status = cursor.getLast(keyEntry, valueEntry, LockMode.DEFAULT);
-            }
-            if (status == OperationStatus.SUCCESS && LongBinding.entryToLong(keyEntry) == termID) {
+
+            if (status == OperationStatus.SUCCESS && LongBinding.entryToLong(keyEntry) == termID)
                 outputStream.write(valueEntry.getData());
-            }
+
             LongBinding.longToEntry(termID, keyEntry);
         } finally {
             if (cursor != null)

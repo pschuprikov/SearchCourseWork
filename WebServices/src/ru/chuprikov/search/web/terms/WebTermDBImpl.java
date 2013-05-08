@@ -1,5 +1,6 @@
 package ru.chuprikov.search.web.terms;
 
+import ru.chuprikov.search.database.CloseableIterator;
 import ru.chuprikov.search.database.SearchDatabase;
 import ru.chuprikov.search.database.SearchDatabases;
 import ru.chuprikov.search.database.TermDB;
@@ -13,6 +14,7 @@ import java.util.Iterator;
 
 @WebService(endpointInterface = "ru.chuprikov.search.web.terms.WebTermDB")
 public class WebTermDBImpl implements WebTermDB {
+
     private SearchDatabase searchDB;
     private TermDB termDB;
 
@@ -37,26 +39,15 @@ public class WebTermDBImpl implements WebTermDB {
     }
 
     @Override
-    public TermInfo getTermInfo(String term) {
-        TermInfo result = new TermInfo();
-        try {
-            result.setTerm(term);
-            result.setId(termDB.get(term));
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return result;
+    public TermInfo getTermInfo(String term) throws Exception {
+        return new TermInfo(termDB.get(term), term);
     }
 
     @Override
-    public TermInfo getFirstTermInfo() {
-        TermInfo result = new TermInfo();
-        try {
-            return getTermInfo(termDB.iterator().next());
-        } catch (Exception e) {
-            e.printStackTrace();
+    public TermInfo getFirstTermInfo() throws Exception {
+        try (CloseableIterator<String> it = termDB.iterator()) {
+            return it.hasNext() ? getTermInfo(it.next()) : null;
         }
-        return result;
     }
 
     @Override

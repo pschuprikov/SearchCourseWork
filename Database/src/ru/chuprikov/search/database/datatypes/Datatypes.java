@@ -3,6 +3,7 @@
 
 package ru.chuprikov.search.database.datatypes;
 
+@SuppressWarnings("ALL")
 public final class Datatypes {
   private Datatypes() {}
   public static void registerAllExtensions(
