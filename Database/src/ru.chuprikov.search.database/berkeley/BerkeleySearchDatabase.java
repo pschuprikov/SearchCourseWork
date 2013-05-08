@@ -1,19 +1,20 @@
 package ru.chuprikov.search.database.berkeley;
 
-import com.sleepycat.je.DatabaseException;
-import com.sleepycat.je.Environment;
-import com.sleepycat.je.EnvironmentConfig;
+import com.sleepycat.je.*;
 import ru.chuprikov.search.database.*;
 
 import java.io.File;
 
 public class BerkeleySearchDatabase implements SearchDatabase {
     private final Environment env;
+    private final Database sequencesDB;
 
     public BerkeleySearchDatabase(File file) throws DatabaseException {
         EnvironmentConfig conf = new EnvironmentConfig();
         conf.setAllowCreate(true);
         env = new Environment(file, conf);
+
+        sequencesDB = env.openDatabase(null, "seqs", DatabaseConfig.DEFAULT.setAllowCreate(true));
     }
 
     @Override
@@ -48,7 +49,7 @@ public class BerkeleySearchDatabase implements SearchDatabase {
 
     @Override
     public TermDB openTermDB() throws Exception {
-        return new BerkeleyTermDB(env);
+        return new BerkeleyTermDB(env, sequencesDB);
     }
 
     @Override
@@ -58,7 +59,7 @@ public class BerkeleySearchDatabase implements SearchDatabase {
 
     @Override
     public DocumentDB openDocumentDB() throws Exception {
-        return new BerkeleyDocumentDB(env);
+        return new BerkeleyDocumentDB(env, sequencesDB);
     }
 
     @Override
@@ -68,6 +69,7 @@ public class BerkeleySearchDatabase implements SearchDatabase {
 
     @Override
     public void close() throws Exception {
+        sequencesDB.close();
         env.close();
     }
 }

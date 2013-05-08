@@ -9,6 +9,7 @@ import javax.faces.bean.SessionScoped;
 import javax.xml.namespace.QName;
 import javax.xml.ws.Service;
 import java.io.Serializable;
+import java.net.MalformedURLException;
 import java.net.URL;
 
 @ManagedBean
@@ -28,10 +29,16 @@ public class Terms implements Serializable {
     private String request = "";
 
     @PostConstruct
-    private void init() throws Exception {
-        URL url = new URL("http://localhost:8081/WS/terms?wsdl");
-        webTermDB = Service.create(url, qname).getPort(WebTermDB.class);
-        reset();
+    private void init() {
+        try {
+            URL url = new URL("http://localhost:8081/WS/terms?wsdl");
+            webTermDB = Service.create(url, qname).getPort(WebTermDB.class);
+            reset();
+        } catch (MalformedURLException e) {
+            e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+        } catch (Exception e) {
+            e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+        }
     }
 
     public void setRequest(String request) {

@@ -27,16 +27,19 @@ class BerkeleyIndexDB extends ThreadLocalEntriesEntries implements IndexDB {
 
     @Override
     public PostingsWriter getPostingsWriter(long termID) throws DatabaseException, IOException {
+        if (maxPostingsChunkSizeBytes == 0)
+            // TODO: make this option clear through new constructors with reduced parameter;
+            throw new UnsupportedOperationException();
         return new BerkeleyPostingsWriter(indexDB, termID, maxPostingsChunkSizeBytes);
     }
 
     @Override
-    public CloseableIterator<Datatypes.Posting> getPostingsList(long termID) throws Exception {
+    public CloseableIterator<Datatypes.Posting> iterator(long termID) throws Exception {
         return new BerkeleyPostingsIterator(indexDB, termID);
     }
 
     @Override
-    public CloseableIterator<Datatypes.Posting> getPostingsList(long termID, long documentID) throws Exception {
+    public CloseableIterator<Datatypes.Posting> upperBound(long termID, long documentID) throws Exception {
         return new BerkeleyPostingsIterator(indexDB, termID, documentID);
     }
 

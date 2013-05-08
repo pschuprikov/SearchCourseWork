@@ -1,9 +1,6 @@
 package ru.chuprikov.search.database.berkeley;
 
-import com.sleepycat.bind.tuple.LongBinding;
-import com.sleepycat.bind.tuple.TupleInput;
-import com.sleepycat.bind.tuple.TupleOutput;
-import com.sleepycat.bind.tuple.TupleTupleBinding;
+import com.sleepycat.bind.tuple.*;
 import com.sleepycat.collections.StoredSortedMap;
 import com.sleepycat.collections.StoredValueSet;
 import com.sleepycat.je.*;
@@ -17,7 +14,7 @@ class BerkeleyDocumentDB extends ThreadLocalEntriesEntries implements DocumentDB
     private final Sequence documentIDSequence;
     private final StoredSortedMap<Long, Document> storedSortedMap;
 
-    BerkeleyDocumentDB(Environment env) throws DatabaseException {
+    BerkeleyDocumentDB(Environment env, Database sequencesDB) throws DatabaseException {
         DatabaseConfig documentDBConfig = new DatabaseConfig();
         documentDBConfig.setAllowCreate(true);
         documentDB = env.openDatabase(null, "document", documentDBConfig);
@@ -28,8 +25,8 @@ class BerkeleyDocumentDB extends ThreadLocalEntriesEntries implements DocumentDB
         documentIDSequenceConfig.setInitialValue(1);
         documentIDSequenceConfig.setAllowCreate(true);
         documentIDSequenceConfig.setCacheSize(100);
-        LongBinding.longToEntry(0, keyEntry.get());
-        documentIDSequence = documentDB.openSequence(null, keyEntry.get(), documentIDSequenceConfig);
+        StringBinding.stringToEntry("document", keyEntry.get());
+        documentIDSequence = sequencesDB.openSequence(null, keyEntry.get(), documentIDSequenceConfig);
     }
 
     private static final TupleTupleBinding<Document> documentBinding = new TupleTupleBinding<Document>() {

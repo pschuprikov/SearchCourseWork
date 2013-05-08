@@ -1,6 +1,5 @@
 package ru.chuprikov.search.database.berkeley;
 
-import com.sleepycat.bind.tuple.IntegerBinding;
 import com.sleepycat.bind.tuple.LongBinding;
 import com.sleepycat.bind.tuple.StringBinding;
 import com.sleepycat.collections.StoredKeySet;
@@ -15,18 +14,18 @@ class BerkeleyTermDB extends ThreadLocalEntriesEntries implements TermDB {
 
     private final Sequence idSequence;
 
-    BerkeleyTermDB(Environment env) {
+    BerkeleyTermDB(Environment env, Database sequencesDB) {
         DatabaseConfig dictionaryDatabaseConfig = new DatabaseConfig();
         dictionaryDatabaseConfig.setAllowCreate(true);
         dictionaryDB = env.openDatabase(null, "term", dictionaryDatabaseConfig);
 
-        storedSortedMap = new StoredSortedMap<>(dictionaryDB, new StringBinding(), new LongBinding(), false);
+        storedSortedMap = new StoredSortedMap<>(dictionaryDB, new StringBinding(), new LongBinding(), true);
 
         SequenceConfig dictionaryIDSequenceConfig = new SequenceConfig();
         dictionaryIDSequenceConfig.setAllowCreate(true);
         dictionaryIDSequenceConfig.setInitialValue(1);
-        IntegerBinding.intToEntry(0, keyEntry.get());
-        idSequence = dictionaryDB.openSequence(null, keyEntry.get(), dictionaryIDSequenceConfig);
+        StringBinding.stringToEntry("term", keyEntry.get());
+        idSequence = sequencesDB.openSequence(null, keyEntry.get(), dictionaryIDSequenceConfig);
     }
 
     @Override
