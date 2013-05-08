@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html
+        PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xml:lang="en" lang="en">
+<f:metadata>
+</f:metadata>
+<h:head><title>Parsed problem</title></h:head>
+<h:body>
+    <h:form>
+        <p:panel header="#{parsed.resource} : #{parsed.problemID} - #{parsed.problem.title}">
+            <p:panel header="Condition">
+                #{parsed.problem.condition}
+            </p:panel>
+            <p:panel header="Input">
+                #{parsed.problem.inputSpecification}
+            </p:panel>
+            <p:panel header="Output">
+                #{parsed.problem.outputSpecification}
+            </p:panel>
+        </p:panel>
+        <p:commandButton value="Back" ajax="false" action="control"/>
+    </h:form>
+</h:body>
+
+</html>

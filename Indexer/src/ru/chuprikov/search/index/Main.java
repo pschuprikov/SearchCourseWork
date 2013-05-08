@@ -40,12 +40,12 @@ public class Main {
 
                 try {
                     long documentID = documentDB.addDocument(Datatypes.Document.newBuilder().
-                            setProblemid(parsedProblem.problemID.getProblemID()).setResource(parsedProblem.problemID.getResource())
-                                .setUrl(parsedProblem.url).build());
-                    splitWithType(documentPostings, parsedProblem.title, documentID, Datatypes.Posting.PositionType.TITLE);
-                    splitWithType(documentPostings, parsedProblem.inputSpecification, documentID, Datatypes.Posting.PositionType.INPUT_SPEC);
-                    splitWithType(documentPostings, parsedProblem.outputSpecification, documentID, Datatypes.Posting.PositionType.OUTPUT_SPEC);
-                    splitWithType(documentPostings, parsedProblem.condition, documentID, Datatypes.Posting.PositionType.PLAIN_TEXT);
+                            setProblemid(parsedProblem.getProblemID().getProblemID()).setResource(parsedProblem.getProblemID().getResource())
+                                .setUrl(parsedProblem.getUrl()).build());
+                    splitWithType(documentPostings, parsedProblem.getTitle(), documentID, Datatypes.Posting.PositionType.TITLE);
+                    splitWithType(documentPostings, parsedProblem.getInputSpecification(), documentID, Datatypes.Posting.PositionType.INPUT_SPEC);
+                    splitWithType(documentPostings, parsedProblem.getOutputSpecification(), documentID, Datatypes.Posting.PositionType.OUTPUT_SPEC);
+                    splitWithType(documentPostings, parsedProblem.getCondition(), documentID, Datatypes.Posting.PositionType.PLAIN_TEXT);
                 } catch (Exception e) {
                     e.printStackTrace();
                 }

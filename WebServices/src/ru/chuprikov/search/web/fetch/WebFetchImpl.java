@@ -45,14 +45,14 @@ public class WebFetchImpl implements WebFetch{
     }
 
     @Override
-    public FetchStatistics fetch(String resource, int from, int to) throws Exception {
+    public ProcessStatistics fetch(String resource, int from, int to) throws Exception {
         Fetcher proxyFetcher = new ProxyFetcher(new NoProxyProvider());
         ProblemSetLoader loader = new ProblemSetLoader(proxyFetcher, fetchedDB);
 
         loader.loadURLs(ProblemSets.getRange(ProblemSets.ProblemSetName.valueOf(resource), from, to));
         proxyFetcher.awaitCompletion();
 
-        FetchStatistics response = new FetchStatistics();
+        ProcessStatistics response = new ProcessStatistics();
         response.setNumTotal(loader.getNumTotal());
         response.setNumSuccessful(loader.getNumSuccessfull());
         response.setNumAlreadyFetched(loader.getNumAlreadyFetched());

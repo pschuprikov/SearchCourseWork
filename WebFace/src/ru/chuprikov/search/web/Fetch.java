@@ -1,6 +1,6 @@
 package ru.chuprikov.search.web;
 
-import ru.chuprikov.search.web.fetch.FetchStatistics;
+import ru.chuprikov.search.web.fetch.ProcessStatistics;
 import ru.chuprikov.search.web.fetch.WebFetch;
 
 import javax.faces.application.FacesMessage;
@@ -61,17 +61,17 @@ public class Fetch implements Serializable {
         this.to = to;
     }
 
-    public FetchStatistics getStat() {
+    public ProcessStatistics getStat() {
         return stat;
     }
 
-    private FetchStatistics stat = new FetchStatistics();
+    private ProcessStatistics stat = new ProcessStatistics();
 
     public void fetch() {
         try {
             stat = webFetchService.fetch(resource, from, to);
-            FacesContext.getCurrentInstance().addMessage("response", new FacesMessage(FacesMessage.SEVERITY_INFO, "Fetch result",
-                "total: " + stat.getNumTotal() + "; succ: " + stat.getNumSuccessful() + " already: " + stat.getNumAlreadyFetched()));
+            FacesContext.getCurrentInstance().addMessage("fetch_response", new FacesMessage(FacesMessage.SEVERITY_INFO,
+                "Fetch result", stat.getMessage()));
         } catch (Exception e) {
             e.printStackTrace();
         }

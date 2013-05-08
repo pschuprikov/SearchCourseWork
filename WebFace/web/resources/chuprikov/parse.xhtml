@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html
+        PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:c="http://java.sun.com/jsf/composite"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xml:lang="en" lang="en">
+<h:head>
+    <title>Parser</title>
+</h:head>
+<h:body>
+    <c:interface name="parse"/>
+    <c:implementation>
+        <h:form>
+            <p:panel header="parse">
+                <p:messages id="resp" showDetail="true"/>
+                <p:panelGrid columns="4">
+                    <h:outputText value="Resource from:"/><p:inputText id="resourceFrom" value="#{parser.requestResourceFrom}"/>
+                    <h:outputText value="ProblemID from:"/><p:inputText id="problemIDFrom"  value="#{parser.requestProblemIDFrom}"/>
+                    <h:outputText value="Resource to:"/><p:inputText id="resourceTo" value="#{parser.requestResourceTo}"/>
+                    <h:outputText value="ProblemID to:"/><p:inputText id="problemIDTo"  value="#{parser.requestProblemIDTo}"/>
+
+                    <p:commandButton id="parseAllButton" update="resp" value="Parse all" action="#{parser.parseAll}"/>
+                    <p:commandButton id="parseRange" update="resp" value="Parse range" action="#{parser.parse}"/>
+                </p:panelGrid>
+            </p:panel>
+        </h:form>
+    </c:implementation>
+</h:body>
+</html>

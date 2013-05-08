@@ -10,10 +10,10 @@
         </element>
         <element id="directory" name="lib">
           <element id="library" level="project" name="jsf-2.0.1-FCS" />
-          <element id="library" level="project" name="jsf/primefaces-3.4.1" />
           <element id="library" level="project" name="protobuf" />
           <element id="artifact" artifact-name="WebServices:jar" />
           <element id="file-copy" path="$USER_HOME$/Downloads/je-5.0.73/lib/je-5.0.73.jar" />
+          <element id="library" level="project" name="jsf/primefaces-3.4.1" />
         </element>
       </element>
       <element id="javaee-facet-resources" facet="WebFace/web/Web" />

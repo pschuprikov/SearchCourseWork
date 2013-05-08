@@ -1,9 +1,10 @@
 package ru.chuprikov.search.database.datatypes;
 
 import javax.xml.bind.annotation.XmlRootElement;
+import java.io.Serializable;
 
 @XmlRootElement
-public class ProblemID {
+public class ProblemID implements Comparable<ProblemID>, Serializable {
     @Override
     public String toString() {
         return "ProblemID{" +
@@ -37,5 +38,14 @@ public class ProblemID {
 
     public void setProblemID(String problemID) {
         this.problemID = problemID;
+    }
+
+    @Override
+    public int compareTo(ProblemID o) {
+        if (!getResource().equals(o.getResource())) {
+            return getResource().compareTo(o.getResource());
+        } else {
+            return getProblemID().compareTo(o.getProblemID());
+        }
     }
 }

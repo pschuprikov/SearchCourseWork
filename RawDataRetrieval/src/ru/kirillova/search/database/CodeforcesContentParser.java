@@ -39,16 +39,16 @@ class CodeforcesContentParser implements ContentParser {
             problem.getContent().indexOf("<div class=\"sample-test\">"));
         String term = "<div class=\"title\">";
         if (!s.contains(term)) return p;
-        p.title = getTextBody(s, s.indexOf(term), 0);
+        p.setTitle(getTextBody(s, s.indexOf(term), 0));
         term = "<div>";
         if (!s.contains(term)) return p;
-        p.condition = getTextBody(s, s.indexOf(term), 0);
+        p.setCondition(getTextBody(s, s.indexOf(term), 0));
         term = "<div class=\"input-specification\">";
         if (!s.contains(term)) return p;
-        p.inputSpecification = getTextBody(s, s.indexOf(term), 1);
+        p.setInputSpecification(getTextBody(s, s.indexOf(term), 1));
         term = "<div class=\"output-specification\">";
         if (!s.contains(term)) return p;
-        p.outputSpecification = getTextBody(s, s.indexOf(term), 1);
+        p.setOutputSpecification(getTextBody(s, s.indexOf(term), 1));
         return p;
     }
 }

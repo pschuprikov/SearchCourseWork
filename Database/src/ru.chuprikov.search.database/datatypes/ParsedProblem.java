@@ -1,13 +1,65 @@
 package ru.chuprikov.search.database.datatypes;
 
-public class ParsedProblem {
+import javax.xml.bind.annotation.XmlRootElement;
+import java.io.Serializable;
 
-    public ProblemID problemID;
-    public String url;
-    public String title;
-    public String inputSpecification;
-    public String outputSpecification;
-    public String condition;
+@XmlRootElement
+public class ParsedProblem implements Serializable {
+
+    public ProblemID getProblemID() {
+        return problemID;
+    }
+
+    public void setProblemID(ProblemID problemID) {
+        this.problemID = problemID;
+    }
+
+    public String getUrl() {
+        return url;
+    }
+
+    public void setUrl(String url) {
+        this.url = url;
+    }
+
+    public String getTitle() {
+        return title;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
+    }
+
+    public String getInputSpecification() {
+        return inputSpecification;
+    }
+
+    public void setInputSpecification(String inputSpecification) {
+        this.inputSpecification = inputSpecification;
+    }
+
+    public String getOutputSpecification() {
+        return outputSpecification;
+    }
+
+    public void setOutputSpecification(String outputSpecification) {
+        this.outputSpecification = outputSpecification;
+    }
+
+    public String getCondition() {
+        return condition;
+    }
+
+    public void setCondition(String condition) {
+        this.condition = condition;
+    }
+
+    private ProblemID problemID;
+    private String url;
+    private String title;
+    private String inputSpecification;
+    private String outputSpecification;
+    private String condition;
 
     public ParsedProblem() {
 

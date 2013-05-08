@@ -7,10 +7,10 @@ import ru.chuprikov.search.gather.problemsets.ProblemSets;
 import java.util.HashMap;
 import java.util.Map;
 
-class MultiSiteContentParser implements ContentParser {
+public class MultiSiteContentParser implements ContentParser {
     private static final Map<String, ContentParser> parsers = new HashMap<>();
 
-    MultiSiteContentParser() {
+    public MultiSiteContentParser() {
         parsers.put(ProblemSets.ProblemSetName.UVA.toString(), new UvaContentParser());
         parsers.put(ProblemSets.ProblemSetName.SPOJ.toString(), new SpojContentParser());
         parsers.put(ProblemSets.ProblemSetName.EOLIMP.toString(), new EolimpContentParser());

@@ -9,7 +9,8 @@ import javax.jws.WebService;
 
 @WebService
 public interface WebFetch {
-    @WebMethod FetchStatistics fetch(String resourceID, int from, int to) throws Exception;
+    @WebMethod
+    ProcessStatistics fetch(String resourceID, int from, int to) throws Exception;
 
     @WebMethod void clearFetches() throws Exception;
 

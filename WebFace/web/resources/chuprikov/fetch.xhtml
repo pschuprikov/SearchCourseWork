@@ -15,13 +15,13 @@
     <c:implementation>
     <h:form>
         <p:panel header="Fetch">
-            <p:messages id="message" showDetail="true"/>
+            <p:messages id="resp" showDetail="true"/>
             <p:panelGrid columns="2">
-            <h:outputText value="Resource:"/><p:inputText id="resource" value="#{fetch.resource}" label="resource"/>
-            <h:outputText value="From:"/><p:inputText id="from" value="#{fetch.from}" label="from"/>
-            <h:outputText value="To:"/><p:inputText id="to" value="#{fetch.to}" label="to"/>
+                <h:outputText value="Resource:"/><p:inputText id="resource" value="#{fetch.resource}" label="resource"/>
+                <h:outputText value="From:"/><p:inputText id="from" value="#{fetch.from}" label="from"/>
+                <h:outputText value="To:"/><p:inputText id="to" value="#{fetch.to}" label="to"/>
             </p:panelGrid>
-            <p:commandButton id="fetchButton" update="message" actionListener="#{fetch.fetch()}" value="Fetch"/>
+            <p:commandButton id="fetchButton" update="resp" value="Fetch" action="#{fetch.fetch()}"/>
         </p:panel>
     </h:form>
     </c:implementation>

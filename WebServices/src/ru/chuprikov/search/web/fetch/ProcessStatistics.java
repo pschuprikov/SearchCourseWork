@@ -3,10 +3,14 @@ package ru.chuprikov.search.web.fetch;
 import javax.xml.bind.annotation.XmlRootElement;
 
 @XmlRootElement
-public class FetchStatistics {
+public class ProcessStatistics {
     private int numTotal;
     private int numSuccessful;
     private int numAlreadyFetched;
+
+    public String getMessage() {
+        return "total: " + this.getNumTotal() + "; succ: " + this.getNumSuccessful() + " already: " + this.getNumAlreadyFetched();
+    }
 
     public int getNumTotal() {
         return numTotal;

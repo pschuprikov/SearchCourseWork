@@ -4,8 +4,8 @@ import com.sleepycat.bind.tuple.TupleBinding;
 import com.sleepycat.bind.tuple.TupleInput;
 import com.sleepycat.bind.tuple.TupleOutput;
 import com.sleepycat.bind.tuple.TupleTupleBinding;
-import com.sleepycat.collections.StoredIterator;
 import com.sleepycat.collections.StoredSortedMap;
+import com.sleepycat.collections.StoredValueSet;
 import com.sleepycat.je.Database;
 import com.sleepycat.je.DatabaseConfig;
 import com.sleepycat.je.DatabaseException;
@@ -28,12 +28,12 @@ class BerkeleyParsedDB implements ParsedDB {
 
     @Override
     public CloseableListIterator<ParsedProblem> iterator() {
-        return new BerkeleyCloseableStoredIterator<>((StoredIterator<ParsedProblem>) storedMap.values().iterator());
+        return new BerkeleyCloseableStoredIterator<>(((StoredValueSet<ParsedProblem>)storedMap.values()).storedIterator());
     }
 
     @Override
     public CloseableListIterator<ParsedProblem> upperBound(ProblemID problemID) {
-        return new BerkeleyCloseableStoredIterator<ParsedProblem>((StoredIterator<ParsedProblem>) storedMap.tailMap(problemID).values().iterator());
+        return new BerkeleyCloseableStoredIterator<ParsedProblem>(((StoredValueSet<ParsedProblem>)storedMap.tailMap(problemID).values()).storedIterator());
     }
 
     private static TupleBinding<ProblemID> problemIDBinding = new TupleBinding<ProblemID>() {
@@ -53,29 +53,29 @@ class BerkeleyParsedDB implements ParsedDB {
         public ParsedProblem entryToObject(TupleInput keyInput, TupleInput dataInput) {
             ParsedProblem result = new ParsedProblem(problemIDBinding.entryToObject(keyInput), dataInput.readString());
 
-            result.title = dataInput.readString();
-            result.condition = dataInput.readString();
-            result.inputSpecification = dataInput.readString();
-            result.outputSpecification = dataInput.readString();
+            result.setTitle(dataInput.readString());
+            result.setCondition(dataInput.readString());
+            result.setInputSpecification(dataInput.readString());
+            result.setOutputSpecification(dataInput.readString());
 
             return result;
         }
 
         @Override
         public void objectToKey(ParsedProblem object, TupleOutput output) {
-            problemIDBinding.objectToEntry(object.problemID, output);
+            problemIDBinding.objectToEntry(object.getProblemID(), output);
         }
 
         @Override
         public void objectToData(ParsedProblem object, TupleOutput output) {
-            output.writeString(object.url).writeString(object.title).writeString(object.condition)
-                .writeString(object.inputSpecification).writeString(object.outputSpecification);
+            output.writeString(object.getUrl()).writeString(object.getTitle()).writeString(object.getCondition())
+                .writeString(object.getInputSpecification()).writeString(object.getOutputSpecification());
         }
     };
 
     @Override
     public void saveParsed(ParsedProblem problem) throws DatabaseException {
-        storedMap.put(problem.problemID, problem);
+        storedMap.put(problem.getProblemID(), problem);
     }
 
     @Override

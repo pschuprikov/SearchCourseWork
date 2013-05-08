@@ -35,7 +35,7 @@ class EolimpContentParser implements ContentParser {
             s = s.replaceAll("&nbsp;", " ");
             s = s.replaceAll("&ndash;", "-");
             if (!s.contains(term)) return p;
-            p.title = getTextBody(s.substring(s.indexOf(term)), false, 0);
+            p.setTitle(getTextBody(s.substring(s.indexOf(term)), false, 0));
             term = "<div class='condition'>";
             String term2 = "<h2>Технические условия</h2>";
             if (!s.contains(term2)) {
@@ -43,7 +43,7 @@ class EolimpContentParser implements ContentParser {
                 if (!s.contains(term2)) return p;
             }
             String s2 = s.substring(s.indexOf(term), s.indexOf(term2));
-            p.condition = getTextBody(s2, true, 0);
+            p.setCondition(getTextBody(s2, true, 0));
             term =  "<strong>Входные данные</strong>";
             if (!s.contains(term)) {
                 term = "<strong>Input</strong>";
@@ -55,14 +55,14 @@ class EolimpContentParser implements ContentParser {
                 if (!s.contains(term2)) return p;
             }
             s2 = s.substring(s.indexOf(term), s.indexOf(term2));
-            p.inputSpecification = getTextBody(s2, true, 1);
+            p.setInputSpecification(getTextBody(s2, true, 1));
             term = "<h2>Информация о задаче</h2>";
             if (!s.contains(term)) {
                 term = "<h2>Problem information</h2>";
                 if (!s.contains(term)) return p;
             }
             s2 = s.substring(s.indexOf(term2), s.indexOf(term));
-            p.outputSpecification = getTextBody(s2, true, 1);
+            p.setOutputSpecification(getTextBody(s2, true, 1));
             return p;
         }
 }

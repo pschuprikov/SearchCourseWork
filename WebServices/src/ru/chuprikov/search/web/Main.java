@@ -2,6 +2,7 @@ package ru.chuprikov.search.web;
 
 
 import ru.chuprikov.search.web.fetch.WebFetchImpl;
+import ru.chuprikov.search.web.fetch.WebParseImpl;
 import ru.chuprikov.search.web.terms.WebTermDBImpl;
 
 import javax.xml.ws.Endpoint;
@@ -31,11 +32,14 @@ public class Main {
             final URL termsURL = new URL("http://localhost:8081/WS/terms");
             final URL documentsURL = new URL("http://localhost:8081/WS/documents");
             final URL fetchURL = new URL("http://localhost:8081/WS/fetch");
-            exec.execute(getPublisher(Endpoint.create(new WebTermDBImpl()), documentsURL));
+            final URL parseURL = new URL("http://localhost:8081/WS/parse");
+            exec.execute(getPublisher(Endpoint.create(new WebTermDBImpl()), termsURL));
             Thread.sleep(1000);
             exec.execute(getPublisher(Endpoint.create(new WebDocumentDBImpl()), documentsURL));
             Thread.sleep(1000);
             exec.execute(getPublisher(Endpoint.create(new WebFetchImpl()), fetchURL));
+            Thread.sleep(1000);
+            exec.execute(getPublisher(Endpoint.create(new WebParseImpl()), parseURL));
             Scanner scanner = new Scanner(System.in);
             while (true) {
                 if (scanner.next().equals("exit"))
