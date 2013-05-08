@@ -76,7 +76,6 @@ public class WebIndexerImpl implements WebIndexer {
                     splitWithType(documentPostings, parsedProblem.getOutputSpecification(), documentID, Datatypes.Posting.PositionType.OUTPUT_SPEC);
                     splitWithType(documentPostings, parsedProblem.getCondition(), documentID, Datatypes.Posting.PositionType.PLAIN_TEXT);
                 } catch (Exception e) {
-                    e.printStackTrace();
                     continue;
                 }
 

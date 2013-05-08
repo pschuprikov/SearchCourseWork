@@ -35,9 +35,9 @@ public class Terms implements Serializable {
             webTermDB = Service.create(url, qname).getPort(WebTermDB.class);
             reset();
         } catch (MalformedURLException e) {
-            e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+            e.printStackTrace();
         } catch (Exception e) {
-            e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+            e.printStackTrace();
         }
     }
 

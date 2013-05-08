@@ -12,16 +12,24 @@
     <c:interface name="terms"/>
     <c:implementation>
         <h:form>
-            <p:dataTable id="trous" var="_term" value = "#{terms.lastInfos}">
-                <p:column headerText="ID" style="width: 20%">
-                    #{_term.id}
-                </p:column>
-                <p:column headerText="Term">
-                    #{_term.term}
-                </p:column>
-            </p:dataTable>
-            <p:commandButton update="trous" actionListener="#{terms.advance()}" value="Next"/>
-            <p:commandButton update="trous" actionListener="#{terms.reset()}" value="Reset"/>4
+            <p:panel header="terms">
+                <p:dataTable id="trous" var="_term" value = "#{terms.lastInfos}">
+                    <p:column headerText="ID" style="width: 20%">
+                        #{_term.id}
+                    </p:column>
+                    <p:column headerText="Term">
+                        #{_term.term}
+                    </p:column>
+                </p:dataTable>
+                <p:commandButton update="trous" actionListener="#{terms.advance()}" value="Next"/>
+                <p:commandButton update="trous" actionListener="#{terms.reset()}" value="Reset"/>
+            </p:panel>
+            <p:panel header="Search">
+                <p:panelGrid columns="2">
+                    <h:outputText value="Term"/><p:inputText value="#{terms.request}"/>
+                </p:panelGrid>
+                <p:commandButton update="trous" actionListener="#{terms.resetWith}" value="Search"/>
+            </p:panel>
         </h:form>
     </c:implementation>
 </h:body>

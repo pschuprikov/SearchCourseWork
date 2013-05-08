@@ -35,13 +35,17 @@ public class SPIMIIndexer implements Indexer {
     public void addToIndex(String term, Datatypes.Posting posting) throws IOException {
         checkClosed();
         if (chunkIndexer.isFull()) {
-            try(DataOutputStream stream = getOutStream(chunkIdx)) {
-                chunkIndexer.writeToTemporary(stream);
-            }
-            chunkIndexer = new SPIMIChunkIndexer(maxMemoryUsage);
-            chunkIdx++;
+            advanceChunkIndexer();
         }
         chunkIndexer.addToIndex(term, posting);
+    }
+
+    private void advanceChunkIndexer() throws IOException {
+        try(DataOutputStream stream = getOutStream(chunkIdx)) {
+            chunkIndexer.writeToTemporary(stream);
+        }
+        chunkIndexer = new SPIMIChunkIndexer(maxMemoryUsage);
+        chunkIdx++;
     }
 
     private void checkClosed() {
@@ -74,6 +78,7 @@ public class SPIMIIndexer implements Indexer {
 
     @Override
     public void close() throws Exception {
+        advanceChunkIndexer();
         checkClosed();
         closed = true;
 
