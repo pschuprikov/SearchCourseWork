@@ -10,7 +10,6 @@ import javax.annotation.PreDestroy;
 import javax.jws.WebService;
 import java.io.File;
 import java.util.ArrayList;
-import java.util.Iterator;
 
 @WebService(endpointInterface = "ru.chuprikov.search.web.terms.WebTermDB")
 public class WebTermDBImpl implements WebTermDB {
@@ -54,7 +53,7 @@ public class WebTermDBImpl implements WebTermDB {
     public TermInfo[] getNextTermInfos(String term, int length) {
         ArrayList<TermInfo> result = new ArrayList<>();
         try {
-            for (Iterator<String> it = termDB.upperBound(term); it.hasNext() && result.size() < length;)
+            for (CloseableIterator<String> it = termDB.upperBound(term); it.hasNext() && result.size() < length;)
                 result.add(getTermInfo(it.next()));
         } catch (Exception e) {
             e.printStackTrace();
