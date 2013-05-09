@@ -26,6 +26,17 @@ public class Postings implements Serializable {
     @ManagedProperty(value = "#{control}")
     private Control control;
 
+    @ManagedProperty(value = "#{documents}")
+    private Documents documents;
+
+    public Documents getDocuments() {
+        return documents;
+    }
+
+    public void setDocuments(Documents documents) {
+        this.documents = documents;
+    }
+
     @PostConstruct
     private void init() {
         try {
@@ -85,4 +96,10 @@ public class Postings implements Serializable {
         }
     }
 
+    public String findDocument(long documentID) throws Exception {
+        documents.setRequestDocumentID(documentID);
+        documents.resetWith();
+        control.setActiveIdx(6);
+        return "control";
+    }
 }

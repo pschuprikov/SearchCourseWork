@@ -1,11 +1,11 @@
 package ru.chuprikov.search.database;
 
 public interface SearchDatabase extends AutoCloseable {
-    FetchedDB openFetchDB() throws Exception;
-    void truncateFetchDB() throws Exception;
+    FetchedDB openFetchedDB() throws Exception;
+    void truncateFetchedDB() throws Exception;
 
-    ParsedDB openParseDB() throws Exception;
-    void truncateParseDB() throws Exception;
+    ParsedDB openParsedDB() throws Exception;
+    void truncateParsedDB() throws Exception;
 
     IndexDB openIndexDB(int maxPostingsChunkSizeBytes) throws Exception;
     void truncateIndexDB() throws Exception;

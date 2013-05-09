@@ -8,11 +8,11 @@ import javax.jws.WebService;
 @WebService
 public interface WebDocumentDB {
     @WebMethod
-    Document getDocumentInfo(long documentID) throws Exception;
+    Document getDocument(long documentID) throws Exception;
 
     @WebMethod
-    Document getFirstDocumentInfo() throws Exception;
+    Document getFirstDocument() throws Exception;
 
     @WebMethod
-    Document[] getNextDocumentInfos(long documentID, int length) throws Exception;
+    Document[] getNextDocuments(long documentID, int length) throws Exception;
 }

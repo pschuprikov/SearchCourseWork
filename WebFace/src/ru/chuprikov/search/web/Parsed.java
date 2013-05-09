@@ -14,16 +14,6 @@ public class Parsed {
 
     @ManagedProperty(value = "#{parser}")
     private Parser parser;
-    @ManagedProperty(value = "#{control}")
-    private Control control;
-
-    public Control getControl() {
-        return control;
-    }
-
-    public void setControl(Control control) {
-        this.control = control;
-    }
 
     public Parser getParser() {
         return parser;
@@ -38,6 +28,7 @@ public class Parsed {
 
     @ManagedProperty(value="#{param.problemID}")
     private String problemID;
+
 
     public String getResource() {
         return resource;
@@ -64,7 +55,6 @@ public class Parsed {
     @PostConstruct
     public void init() {
         problem = parser.getWebParse().getProblemParsed(new ProblemID(resource, problemID));
-        control.setActiveIdx(2);
     }
 
 }

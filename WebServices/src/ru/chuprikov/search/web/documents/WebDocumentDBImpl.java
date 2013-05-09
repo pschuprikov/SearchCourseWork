@@ -38,19 +38,19 @@ public class WebDocumentDBImpl implements WebDocumentDB {
     }
 
     @Override
-    public Document getDocumentInfo(long id) throws Exception {
+    public Document getDocument(long id) throws Exception {
         return documentDB.get(id);
     }
 
     @Override
-    public Document getFirstDocumentInfo() throws Exception {
+    public Document getFirstDocument() throws Exception {
         try (CloseableIterator<Document> it = documentDB.iterator()) {
             return it.hasNext() ?  it.next() : null;
         }
     }
 
     @Override
-    public Document[] getNextDocumentInfos(long documentID, int length) throws Exception {
+    public Document[] getNextDocuments(long documentID, int length) throws Exception {
         ArrayList<Document> result = new ArrayList<>();
         try (CloseableIterator<Document> it = documentDB.upperBound(documentID)) {
             while (it.hasNext() && result.size() < length) {

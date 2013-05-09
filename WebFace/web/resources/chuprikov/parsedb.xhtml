@@ -5,32 +5,32 @@
 <html xmlns="http://www.w3.org/1999/xhtml"
       xmlns:h="http://java.sun.com/jsf/html"
       xmlns:p="http://primefaces.org/ui"
-      xmlns:c="http://java.sun.com/jsf/composite" xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:c="http://java.sun.com/jsf/composite"
+      xmlns:f="http://java.sun.com/jsf/core"
       xml:lang="en" lang="en">
-<h:head><title>Guess Number App</title></h:head>
-<h:body>
+
     <c:interface name="parsedb"/>
     <c:implementation>
         <h:form>
             <p:panel header="Parsed problems">
-                <p:dataTable id="parsedTable" var="_term" value = "#{parser.lastDatas}">
+                <p:dataTable id="parsedTable" var="_fprob" value = "#{parser.lastDatas}">
                     <p:column headerText="Resource" style="width: 10%">
-                        #{_term.problemID.resource}
+                        #{_fprob.problemID.resource}
                     </p:column>
                     <p:column headerText="Problem ID" style="width: 10%">
-                        #{_term.problemID.problemID}
+                        #{_fprob.problemID.problemID}
                     </p:column>
                     <p:column headerText="Title" style="width: 10%">
-                        #{_term.title}
+                        #{_fprob.title}
                     </p:column>
                     <p:column headerText="Content">
-                        <p:commandButton value="Show content" ajax="false" action="parsedProblem">
-                            <f:param name="resource" value="#{_term.problemID.resource}"/>
-                            <f:param name="problemID" value="#{_term.problemID.problemID}"/>
+                        <p:commandButton value="Show content" ajax="false" action="#{parser.showContent()}">
+                            <f:param name="resource" value="#{_fprob.problemID.resource}"/>
+                            <f:param name="problemID" value="#{_fprob.problemID.problemID}"/>
                         </p:commandButton>
                     </p:column>
                     <p:column headerText="URL">
-                        <a href="#{_term.url}">#{_term.url}</a>
+                        <a href="#{_fprob.url}">#{_fprob.url}</a>
                     </p:column>
                 </p:dataTable>
                 <p:commandButton update="parsedTable" actionListener="#{parser.advance()}" value="Next"/>
@@ -46,6 +46,6 @@
             </p:panel>
         </h:form>
     </c:implementation>
-</h:body>
+
 
 </html>

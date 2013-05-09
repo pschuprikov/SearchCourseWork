@@ -64,7 +64,7 @@ class BerkeleyPostingsIterator implements CloseableIterator<Datatypes.Posting> {
         try {
             result = Datatypes.Posting.parseDelimitedFrom(inputStream);
         } catch (IOException e) {
-            throw new AssertionError("unexpected empty input stream");
+            throw new AssertionError(e.getMessage());
         }
 
         advance();

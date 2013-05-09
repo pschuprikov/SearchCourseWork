@@ -23,8 +23,8 @@ public class WebParseImpl implements WebParse {
         try {
 
             searchDB = SearchDatabases.openBerkeley(new File(System.getProperty("user.dir") + "/mydb"));
-            parsedDB = searchDB.openParseDB();
-            fetchedDB = searchDB.openFetchDB();
+            parsedDB = searchDB.openParsedDB();
+            fetchedDB = searchDB.openFetchedDB();
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -101,7 +101,7 @@ public class WebParseImpl implements WebParse {
 
     @Override
     public void clearParsed() throws Exception {
-        searchDB.openParseDB();
+        searchDB.openParsedDB();
     }
 
     @Override

@@ -7,6 +7,7 @@ import ru.chuprikov.search.web.fetch.WebParse;
 
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
+import javax.faces.bean.ManagedProperty;
 import javax.faces.bean.SessionScoped;
 import javax.faces.context.FacesContext;
 import javax.xml.namespace.QName;
@@ -22,6 +23,17 @@ public class Parser implements Serializable {
     private static final int CHUNK_SIZE = 20;
 
     private final static QName qname = new QName("http://fetch.web.search.chuprikov.ru/", "WebParseImplService");
+
+    @ManagedProperty(value="#{control}")
+    private Control control;
+
+    public Control getControl() {
+        return control;
+    }
+
+    public void setControl(Control control) {
+        this.control = control;
+    }
 
     private WebParse webParse;
 
@@ -134,5 +146,10 @@ public class Parser implements Serializable {
 
     public void clear() throws Exception {
         webParse.clearParsed();
+    }
+
+    public String showContent() throws Exception {
+        control.setActiveIdx(3);
+        return "parsedProblem";
     }
 }

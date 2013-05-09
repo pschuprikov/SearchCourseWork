@@ -41,7 +41,7 @@ public class WebIndexerImpl implements WebIndexer {
         searchDB = SearchDatabases.openBerkeley(new File(System.getProperty("user.dir") + "/mydb"));
         documentDB = searchDB.openDocumentDB();
         termDB = searchDB.openTermDB();
-        parsedDB = searchDB.openParseDB();
+        parsedDB = searchDB.openParsedDB();
     }
 
     @PreDestroy

@@ -13,15 +13,15 @@
     <c:implementation>
         <h:form>
             <p:panel header="Fetched problems">
-                <p:dataTable id="fetchesTable" var="_term" value = "#{fetches.lastDatas}">
+                <p:dataTable id="fetchesTable" var="_fprob" value = "#{fetches.lastDatas}">
                     <p:column headerText="Resource" style="width: 10%">
-                        #{_term.problemID.resource}
+                        #{_fprob.problemID.resource}
                     </p:column>
                     <p:column headerText="Problem ID" style="width: 10%">
-                        #{_term.problemID.problemID}
+                        #{_fprob.problemID.problemID}
                     </p:column>
                     <p:column headerText="URL">
-                        <a href="#{_term.url}">#{_term.url}</a>
+                        <a href="#{_fprob.url}">#{_fprob.url}</a>
                     </p:column>
                 </p:dataTable>
                 <p:commandButton update="fetchesTable" actionListener="#{fetches.advance()}" value="Next"/>

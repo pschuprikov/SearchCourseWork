@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html
+        PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:c="http://java.sun.com/jsf/composite"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xml:lang="en" lang="en">
+<c:interface name="documents"/>
+<c:implementation>
+    <h:form>
+        <p:panel header="documents">
+            <p:dataTable id="docsTable" var="_doc" value = "#{documents.lastDocuments}">
+                <p:column headerText="ID" style="width: 20%">
+                    #{_doc.documentID}
+                </p:column>
+                <p:column headerText="Resource">
+                    #{_doc.problemID.resource}
+                </p:column>
+                <p:column headerText="ProblemID">
+                    #{_doc.problemID.problemID}
+                </p:column>
+                <p:column headerText="Content">
+                    <p:commandButton value="Show content" ajax="false" action="#{documents.showContent()}">
+                        <f:param name="resource" value="#{_doc.problemID.resource}"/>
+                        <f:param name="problemID" value="#{_doc.problemID.problemID}"/>
+                    </p:commandButton>
+                </p:column>
+                <p:column headerText="url">
+                    <a href="#{_doc.url}">#{_doc.url}</a>
+                </p:column>
+            </p:dataTable>
+            <p:commandButton update="docsTable" actionListener="#{documents.advance()}" value="Next"/>
+            <p:commandButton update="docsTable" actionListener="#{documents.reset()}" value="Reset"/>
+        </p:panel>
+        <p:panel header="Search">
+            <p:panelGrid columns="2">
+                <h:outputText value="Document ID"/><p:inputText value="#{documents.requestDocumentID}"/>
+            </p:panelGrid>
+            <p:commandButton update="docsTable" actionListener="#{documents.resetWith}" value="Search"/>
+        </p:panel>
+    </h:form>
+</c:implementation>
+
+</html>

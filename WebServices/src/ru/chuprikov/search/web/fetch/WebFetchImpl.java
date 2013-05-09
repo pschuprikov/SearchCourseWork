@@ -27,7 +27,7 @@ public class WebFetchImpl implements WebFetch{
     private void openDatabaseConnections() {
         try {
             searchDB = SearchDatabases.openBerkeley(new File(System.getProperty("user.dir") + "/mydb"));
-            fetchedDB = searchDB.openFetchDB();
+            fetchedDB = searchDB.openFetchedDB();
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -62,8 +62,8 @@ public class WebFetchImpl implements WebFetch{
     @Override
     public void clearFetches() throws Exception {
         fetchedDB.close();
-        searchDB.truncateFetchDB();
-        fetchedDB = searchDB.openFetchDB();
+        searchDB.truncateFetchedDB();
+        fetchedDB = searchDB.openFetchedDB();
     }
 
     @Override

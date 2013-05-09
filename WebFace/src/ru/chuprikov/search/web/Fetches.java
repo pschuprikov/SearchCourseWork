@@ -20,8 +20,7 @@ public class Fetches implements Serializable {
 
     private final static QName qname = new QName("http://fetch.web.search.chuprikov.ru/", "WebFetchImplService");
 
-    private WebFetch webFetch;
-
+    transient private WebFetch webFetch;
 
     private String requestResource = "";
     private String requestProblemID = "";
