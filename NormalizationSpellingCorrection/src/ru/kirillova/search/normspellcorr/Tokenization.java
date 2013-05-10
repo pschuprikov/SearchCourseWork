@@ -6,7 +6,7 @@ import java.util.List;
 
 public class Tokenization {
 	
-	public List <String> getTokens(String str) {
+	public static List <String> getTokens(String str) {
 		List <String> result = new ArrayList <>();
 		for(int i = 0; i < str.length(); ++i) {
 			if (Character.isLetter(str.charAt(i))) {

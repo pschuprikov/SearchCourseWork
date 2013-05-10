@@ -10,6 +10,7 @@
           <element id="module-output" name="WebServices" />
           <element id="module-output" name="Indexer" />
           <element id="module-output" name="NormalizationSpellingCorrection" />
+          <element id="module-output" name="Search" />
         </element>
         <element id="directory" name="lib">
           <element id="file-copy" path="$USER_HOME$/Downloads/je-5.0.73/lib/je-5.0.73.jar" />

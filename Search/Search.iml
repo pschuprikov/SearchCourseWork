@@ -8,6 +8,8 @@
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="module" module-name="Database" />
+    <orderEntry type="module" module-name="NormalizationSpellingCorrection" />
+    <orderEntry type="library" name="protobuf" level="project" />
   </component>
 </module>
 

@@ -13,6 +13,7 @@
     <orderEntry type="library" name="protobuf" level="project" />
     <orderEntry type="module" module-name="Indexer" />
     <orderEntry type="module" module-name="NormalizationSpellingCorrection" />
+    <orderEntry type="module" module-name="Search" />
   </component>
 </module>
 

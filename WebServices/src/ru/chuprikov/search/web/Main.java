@@ -6,6 +6,7 @@ import ru.chuprikov.search.web.fetch.WebFetchImpl;
 import ru.chuprikov.search.web.fetch.WebParseImpl;
 import ru.chuprikov.search.web.index.WebIndexDBImpl;
 import ru.chuprikov.search.web.index.WebIndexerImpl;
+import ru.chuprikov.search.web.search.WebSearchImpl;
 import ru.chuprikov.search.web.terms.WebTermDBImpl;
 
 import javax.xml.ws.Endpoint;
@@ -38,6 +39,7 @@ class Main {
             final URL parseURL = new URL("http://localhost:8081/WS/parse");
             final URL indexerURL = new URL("http://localhost:8081/WS/index");
             final URL indexURL = new URL("http://localhost:8081/WS/indexdb");
+            final URL searchURL = new URL("http://localhost:8081/WS/search");
 
             exec.execute(getPublisher(Endpoint.create(new WebTermDBImpl()), termsURL));
             Thread.sleep(1000);
@@ -50,6 +52,8 @@ class Main {
             exec.execute(getPublisher(Endpoint.create(new WebIndexerImpl()), indexerURL));
             Thread.sleep(1000);
             exec.execute(getPublisher(Endpoint.create(new WebIndexDBImpl()), indexURL));
+            Thread.sleep(1000);
+            exec.execute(getPublisher(Endpoint.create(new WebSearchImpl()), searchURL));
 
             Scanner scanner = new Scanner(System.in);
             while (true) {

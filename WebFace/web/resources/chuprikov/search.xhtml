@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html
+        PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:c="http://java.sun.com/jsf/composite"
+      xml:lang="en" lang="en">
+<h:body>
+    <c:interface name="search"/>
+    <c:implementation>
+        <h:form>
+            <p:panel header="Search">
+                <p:inputText value="#{search.request}"/>
+                <p:commandButton update="searchResultTable" actionListener="#{search.search}" value="Search"/>
+            </p:panel>
+            <p:panel header="Search result">
+                <p:dataTable id="searchResultTable" var="_fsrch" value = "#{search.searchResult}">
+                    <p:column headerText="DocID" style="width: 10%">
+                        #{_fsrch}
+                    </p:column>
+                </p:dataTable>
+            </p:panel>
+        </h:form>
+    </c:implementation>
+</h:body>
+
+</html>
