@@ -1,5 +1,7 @@
 package ru.chuprikov.search.search;
 
+import ru.chuprikov.search.search.joiners.Joiner;
+
 import java.util.Iterator;
 
 public class Merger implements Iterator<PostingInfo> {
@@ -23,7 +25,9 @@ public class Merger implements Iterator<PostingInfo> {
 
     @Override
     public PostingInfo next() {
-        return next;
+        PostingInfo result =  next;
+        advance();
+        return result;
     }
 
     @Override
@@ -31,33 +35,42 @@ public class Merger implements Iterator<PostingInfo> {
         throw new UnsupportedOperationException();
     }
 
-    void advance() {
-        PostingInfo firstInfo = null;
-        PostingInfo secondInfo = null;
-        while(true) {
-            if (!fst.hasNext() && firstInfo == null || !snd.hasNext() && secondInfo == null) {
-                firstInfo = null;
-                secondInfo = null;
+    private void advance() {
+        while (true) {
+
+            PostingInfo firstInfo = null;
+            PostingInfo secondInfo = null;
+            while(true) {
+                if (!fst.hasNext() && firstInfo == null || !snd.hasNext() && secondInfo == null) {
+                    firstInfo = null;
+                    secondInfo = null;
+                    break;
+                }
+                if (firstInfo == null) {
+                    firstInfo = fst.next();
+                }
+                if (secondInfo == null) {
+                    secondInfo = snd.next();
+                }
+                if (secondInfo.compareTo(firstInfo) == 0)
+                    break;
+                else if (secondInfo.compareTo(firstInfo) < 0)
+                    secondInfo = null;
+                else
+                    firstInfo = null;
+            }
+
+            if (firstInfo == null || secondInfo == null) {
+                next = null;
                 break;
+            } else {
+                next = new PostingInfo(firstInfo.getDocumentID(), firstInfo.getPositionType());
+                next.positions().addAll(join.join(firstInfo.positions(), secondInfo.positions()));
+                if (next.positions().isEmpty())
+                    continue;
+                else
+                    break;
             }
-            if (firstInfo == null) {
-                firstInfo = fst.next();
-            }
-            if (secondInfo == null) {
-                secondInfo = snd.next();
-            }
-            if (secondInfo.compareTo(firstInfo) == 0)
-                break;
-            else if (secondInfo.compareTo(firstInfo) < 0)
-                secondInfo = null;
-            else
-                firstInfo = null;
-        }
-        if (firstInfo == null || secondInfo == null)
-            next = null;
-        else {
-            next = new PostingInfo(firstInfo.getDocumentID(), firstInfo.getPositionType());
-            next.positions().addAll(join.join(firstInfo.positions(), secondInfo.positions()));
         }
     }
 }

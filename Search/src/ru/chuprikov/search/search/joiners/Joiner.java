@@ -1,4 +1,6 @@
-package ru.chuprikov.search.search;
+package ru.chuprikov.search.search.joiners;
+
+import ru.chuprikov.search.search.PositionInfo;
 
 import java.util.List;
 

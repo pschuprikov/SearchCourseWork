@@ -1,6 +1,6 @@
 package ru.chuprikov.search.search.tokens;
 
-public class PrimitiveToken implements Token {
+class PrimitiveToken implements Token {
     private final TokenKind kind;
 
     public PrimitiveToken(TokenKind kind) {
@@ -10,5 +10,15 @@ public class PrimitiveToken implements Token {
     @Override
     public TokenKind kind() {
         return kind;
+    }
+
+    @Override
+    public int getIntegerValue() {
+        throw new UnsupportedOperationException();
+    }
+
+    @Override
+    public String getStringValue() {
+        throw new UnsupportedOperationException();
     }
 }

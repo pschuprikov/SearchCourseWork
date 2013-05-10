@@ -69,7 +69,6 @@ public class WebIndexerImpl implements WebIndexer {
                     break;
 
                 total++;
-                successful++;
                 Map<String, Datatypes.Posting.Builder> documentPostings = new HashMap<>();
                 try { //TODO: What the hell? Why is this try block here?
                     long documentID = documentDB.addDocument(new Document(parsedProblem.getProblemID(), parsedProblem.getUrl()));
@@ -78,9 +77,9 @@ public class WebIndexerImpl implements WebIndexer {
                     splitWithType(documentPostings, parsedProblem.getInputSpecification(), documentID, Datatypes.Posting.PositionType.INPUT_SPEC);
                     splitWithType(documentPostings, parsedProblem.getOutputSpecification(), documentID, Datatypes.Posting.PositionType.OUTPUT_SPEC);
                 } catch (Exception e) {
-                    successful--;
                     continue;
                 }
+                successful++;
 
                 for (Map.Entry<String, Datatypes.Posting.Builder> e : documentPostings.entrySet()) {
                     indexer.addToIndex(e.getKey(), e.getValue().build());
@@ -103,12 +102,12 @@ public class WebIndexerImpl implements WebIndexer {
 
                 total++;
                 Map<String, Datatypes.Posting.Builder> documentPostings = new HashMap<>();
-                try { //TODO: What the hell? Why is this try block here?
+                try { //TODO: Order is critical! Subject to change!
                     long documentID = documentDB.addDocument(new Document(parsedProblem.getProblemID(), parsedProblem.getUrl()));
                     splitWithType(documentPostings, parsedProblem.getTitle(), documentID, Datatypes.Posting.PositionType.TITLE);
+                    splitWithType(documentPostings, parsedProblem.getCondition(), documentID, Datatypes.Posting.PositionType.CONDITION);
                     splitWithType(documentPostings, parsedProblem.getInputSpecification(), documentID, Datatypes.Posting.PositionType.INPUT_SPEC);
                     splitWithType(documentPostings, parsedProblem.getOutputSpecification(), documentID, Datatypes.Posting.PositionType.OUTPUT_SPEC);
-                    splitWithType(documentPostings, parsedProblem.getCondition(), documentID, Datatypes.Posting.PositionType.CONDITION);
                 } catch (Exception e) {
                     e.printStackTrace();
                 }

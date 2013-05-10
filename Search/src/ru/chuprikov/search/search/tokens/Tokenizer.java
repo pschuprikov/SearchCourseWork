@@ -7,14 +7,14 @@ public class Tokenizer {
 
     public Tokenizer(String str) {
         this.str = str;
-        readNext();
+        readNextToken();
     }
 
-    Token getCurrent() {
+    public Token currentToken() {
         return currentToken;
     }
 
-    void readNext() {
+    public void readNextToken() {
         while (cur < str.length() && Character.isSpaceChar(str.charAt(cur)))
             cur++;
         if (cur == str.length()) {

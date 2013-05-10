@@ -22,7 +22,7 @@ public class Normalize {
         List<String> l = r.getTokens(s);
         ListIterator<String> e = l.listIterator();
         while (e.hasNext()) {
-            String str = e.next();
+            String str = e.next().toLowerCase();
             result.add(getBasisWord(str));
         }
         return result;

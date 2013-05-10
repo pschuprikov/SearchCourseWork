@@ -5,8 +5,8 @@ option java_outer_classname = "Datatypes";
 message Posting {
     required uint64 documentID = 1;
     enum PositionType {
-        CONDITION = 1;
-        TITLE = 2;
+        TITLE = 1;
+        CONDITION = 2;
         INPUT_SPEC = 3;
         OUTPUT_SPEC = 4;
     }

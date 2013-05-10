@@ -1,20 +1,20 @@
 package ru.chuprikov.search.search;
 
-class PositionInfo {
+public class PositionInfo {
     private final int fromIdx;
 
-    PositionInfo(int fromIdx, int toIdx) {
+    public PositionInfo(int fromIdx, int toIdx) {
         this.fromIdx = fromIdx;
         this.toIdx = toIdx;
     }
 
     private final int toIdx;
 
-    int getFromIdx() {
+    public int getFromIdx() {
         return fromIdx;
     }
 
-    int getToIdx() {
+    public int getToIdx() {
         return toIdx;
     }
 

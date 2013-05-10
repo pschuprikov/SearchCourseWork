@@ -1,18 +1,24 @@
 package ru.chuprikov.search.search.tokens;
 
-public class ProximityToken implements Token {
+class ProximityToken implements Token {
     private final int proximity;
 
     public ProximityToken(int proximity) {
         this.proximity = proximity;
     }
 
-    public int getProximity() {
+    @Override
+    public TokenKind kind() {
+        return TokenKind.PROXIMITY;
+    }
+
+    @Override
+    public int getIntegerValue() {
         return proximity;
     }
 
     @Override
-    public TokenKind kind() {
-        return TokenKind.PROXIMITY;
+    public String getStringValue() {
+        throw new UnsupportedOperationException();
     }
 }

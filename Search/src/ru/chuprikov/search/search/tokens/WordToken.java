@@ -1,10 +1,6 @@
 package ru.chuprikov.search.search.tokens;
 
-public class WordToken implements Token {
-    public String getWord() {
-        return word;
-    }
-
+class WordToken implements Token {
     private final String word;
 
     public WordToken(String word) {
@@ -14,5 +10,15 @@ public class WordToken implements Token {
     @Override
     public TokenKind kind() {
         return TokenKind.WORD;
+    }
+
+    @Override
+    public int getIntegerValue() {
+        throw new UnsupportedOperationException();
+    }
+
+    @Override
+    public String getStringValue() {
+        return word;
     }
 }
