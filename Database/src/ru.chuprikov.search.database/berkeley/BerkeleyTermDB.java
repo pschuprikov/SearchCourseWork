@@ -1,16 +1,19 @@
 package ru.chuprikov.search.database.berkeley;
 
-import com.sleepycat.bind.tuple.LongBinding;
 import com.sleepycat.bind.tuple.StringBinding;
+import com.sleepycat.bind.tuple.TupleInput;
+import com.sleepycat.bind.tuple.TupleOutput;
+import com.sleepycat.bind.tuple.TupleTupleBinding;
 import com.sleepycat.collections.StoredKeySet;
 import com.sleepycat.collections.StoredSortedMap;
 import com.sleepycat.je.*;
 import ru.chuprikov.search.database.CloseableIterator;
 import ru.chuprikov.search.database.TermDB;
+import ru.chuprikov.search.database.datatypes.Term;
 
 class BerkeleyTermDB extends ThreadLocalEntriesEntries implements TermDB {
     private final Database dictionaryDB;
-    private final StoredSortedMap<String, Long> storedSortedMap;
+    private final StoredSortedMap<String, Term> storedSortedMap;
 
     private final Sequence idSequence;
 
@@ -19,7 +22,7 @@ class BerkeleyTermDB extends ThreadLocalEntriesEntries implements TermDB {
         dictionaryDatabaseConfig.setAllowCreate(true);
         dictionaryDB = env.openDatabase(null, "term", dictionaryDatabaseConfig);
 
-        storedSortedMap = new StoredSortedMap<>(dictionaryDB, new StringBinding(), new LongBinding(), true);
+        storedSortedMap = new StoredSortedMap<>(dictionaryDB, new StringBinding(), termEntityBinding, true);
 
         SequenceConfig dictionaryIDSequenceConfig = new SequenceConfig();
         dictionaryIDSequenceConfig.setAllowCreate(true);
@@ -28,20 +31,44 @@ class BerkeleyTermDB extends ThreadLocalEntriesEntries implements TermDB {
         idSequence = sequencesDB.openSequence(null, keyEntry.get(), dictionaryIDSequenceConfig);
     }
 
+    private static TupleTupleBinding<Term> termEntityBinding = new TupleTupleBinding<Term>() {
+        @Override
+        public Term entryToObject(TupleInput keyInput, TupleInput dataInput) {
+            return new Term(keyInput.readString(), dataInput.readLong(), dataInput.readLong());
+        }
+
+        @Override
+        public void objectToKey(Term object, TupleOutput output) {
+            output.writeString(object.getTerm());
+        }
+
+        @Override
+        public void objectToData(Term object, TupleOutput output) {
+            output.writeLong(object.getTermID()).writeLong(object.getCount());
+        }
+    };
+
     @Override
-    public long get(String term) throws Exception {
+    public Term get(String term) throws Exception {
         return storedSortedMap.get(term);
     }
 
     @Override
-    public long add(String term) throws Exception {
-        if (contains(term))
-            return get(term);
+    public long add(final String term) throws Exception {
+        if (contains(term)) {
+            return get(term).getTermID();
+        }
         else {
             final long id = idSequence.get(null, 1);
-            storedSortedMap.put(term, id);
+            storedSortedMap.put(term, new Term(term, id, 0));
             return id;
         }
+    }
+
+    @Override
+    public void incrementCount(String term, long count) throws Exception {
+        Term oldTerm = get(term);
+        storedSortedMap.put(oldTerm.getTerm(), new Term(oldTerm.getTerm(), oldTerm.getTermID(), oldTerm.getCount() + count));
     }
 
     @Override

@@ -32,11 +32,42 @@ class BerkeleyPostingsIterator implements CloseableIterator<Datatypes.Posting> {
         this.cursor = indexDB.openCursor(null, new CursorConfig().setReadUncommitted(true));
         LongBinding.longToEntry(termID, keyEntry);
         LongBinding.longToEntry(documentID, valueEntry);
-        if (this.cursor.getSearchBothRange(keyEntry, valueEntry, LockMode.READ_UNCOMMITTED) == OperationStatus.NOTFOUND || LongBinding.entryToLong(keyEntry) != termID) {
-            keyEntry = null;
-        } else {
-            readNextPostingsList();
+        if (cursor.getSearchBothRange(keyEntry, valueEntry, LockMode.READ_UNCOMMITTED) == OperationStatus.NOTFOUND &&
+                cursor.getSearchKey(keyEntry, valueEntry, LockMode.READ_UNCOMMITTED) == OperationStatus.NOTFOUND) {
+            if (cursor.getLast(keyEntry, valueEntry, LockMode.READ_UNCOMMITTED) == OperationStatus.NOTFOUND) {
+                keyEntry = null;
+                return;
+            }
         }
+        if (LongBinding.entryToLong(keyEntry) != termID || LongBinding.entryToLong(valueEntry) > documentID) {
+            if (cursor.getPrev(keyEntry, valueEntry, LockMode.READ_UNCOMMITTED) == OperationStatus.NOTFOUND || LongBinding.entryToLong(keyEntry) != termID) {
+                keyEntry = null;
+                return;
+            }
+        }
+        readNextPostingsList();
+        if (!tryAdvance(documentID)) {
+            if (cursor.getNext(keyEntry, valueEntry, LockMode.READ_UNCOMMITTED) == OperationStatus.NOTFOUND || LongBinding.entryToLong(keyEntry) != termID) {
+                keyEntry = null;
+                return;
+            }
+        }
+    }
+
+    private boolean tryAdvance(long documentID) {
+        while (inputStream.available() != 0) {
+            inputStream.mark(0);
+            try {
+                Datatypes.Posting current = Datatypes.Posting.parseDelimitedFrom(inputStream);
+                if (current.getDocumentID() >= documentID) {
+                    inputStream.reset();
+                    return true;
+                }
+            } catch (IOException e) {
+                throw new AssertionError("io error in byte array stream");
+            }
+        }
+        return false;
     }
 
     private void readNextPostingsList() {

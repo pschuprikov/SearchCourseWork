@@ -1,6 +1,6 @@
 package ru.chuprikov.search.web;
 
-import ru.chuprikov.search.web.terms.TermInfo;
+import ru.chuprikov.search.database.datatypes.Term;
 import ru.chuprikov.search.web.terms.WebTermDB;
 
 import javax.annotation.PostConstruct;
@@ -15,7 +15,7 @@ import java.net.URL;
 @ManagedBean
 @SessionScoped
 public class Terms implements Serializable {
-    private TermInfo[] lastInfos;
+    private Term[] lastInfos;
     private static final int CHUNK_SIZE = 20;
 
     private final static QName qname = new QName("http://terms.web.search.chuprikov.ru/", "WebTermDBImplService");
@@ -45,20 +45,20 @@ public class Terms implements Serializable {
         this.request = request;
     }
 
-    public TermInfo[] getLastInfos() {
+    public Term[] getLastInfos() {
         return lastInfos;
     }
 
     public void resetWith() {
-        lastInfos = webTermDB.getNextTermInfos(request, CHUNK_SIZE);
+        lastInfos = webTermDB.getNextTerms(request, CHUNK_SIZE);
     }
 
     public void reset() throws Exception {
-        TermInfo first = webTermDB.getFirstTermInfo();
+        Term first = webTermDB.getFirstTerm();
         if (first == null)
-            lastInfos = new TermInfo[0];
+            lastInfos = new Term[0];
         else {
-            lastInfos = new TermInfo[1];
+            lastInfos = new Term[1];
             lastInfos[0] = first;
         }
         advance();
@@ -66,6 +66,6 @@ public class Terms implements Serializable {
 
     public void advance() {
         if (lastInfos != null && lastInfos.length > 0)
-            lastInfos = webTermDB.getNextTermInfos(lastInfos[lastInfos.length - 1].getTerm(), CHUNK_SIZE);
+            lastInfos = webTermDB.getNextTerms(lastInfos[lastInfos.length - 1].getTerm(), CHUNK_SIZE);
     }
 }

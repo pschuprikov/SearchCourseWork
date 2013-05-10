@@ -1,5 +1,7 @@
 package ru.chuprikov.search.web.terms;
 
+import ru.chuprikov.search.database.datatypes.Term;
+
 import javax.jws.WebMethod;
 import javax.jws.WebService;
 
@@ -7,11 +9,11 @@ import javax.jws.WebService;
 public interface WebTermDB {
 
     @WebMethod
-    TermInfo getTermInfo(String term) throws Exception;
+    Term get(String term) throws Exception;
 
     @WebMethod
-    TermInfo getFirstTermInfo() throws Exception;
+    Term getFirstTerm() throws Exception;
 
     @WebMethod
-    TermInfo[] getNextTermInfos(String term, int length);
+    Term[] getNextTerms(String term, int length);
 }

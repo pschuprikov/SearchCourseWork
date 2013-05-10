@@ -4,6 +4,7 @@ import ru.chuprikov.search.database.CloseableIterator;
 import ru.chuprikov.search.database.SearchDatabase;
 import ru.chuprikov.search.database.SearchDatabases;
 import ru.chuprikov.search.database.TermDB;
+import ru.chuprikov.search.database.datatypes.Term;
 
 import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
@@ -38,26 +39,26 @@ public class WebTermDBImpl implements WebTermDB {
     }
 
     @Override
-    public TermInfo getTermInfo(String term) throws Exception {
-        return new TermInfo(termDB.get(term), term);
+    public Term get(String term) throws Exception {
+        return termDB.get(term);
     }
 
     @Override
-    public TermInfo getFirstTermInfo() throws Exception {
+    public Term getFirstTerm() throws Exception {
         try (CloseableIterator<String> it = termDB.iterator()) {
-            return it.hasNext() ? getTermInfo(it.next()) : null;
+            return it.hasNext() ? get(it.next()) : null;
         }
     }
 
     @Override
-    public TermInfo[] getNextTermInfos(String term, int length) {
-        ArrayList<TermInfo> result = new ArrayList<>();
+    public Term[] getNextTerms(String term, int length) {
+        ArrayList<Term> result = new ArrayList<>();
         try (CloseableIterator<String> it = termDB.upperBound(term)) {
             while (it.hasNext() && result.size() < length)
-                result.add(getTermInfo(it.next()));
+                result.add(get(it.next()));
         } catch (Exception e) {
             e.printStackTrace();
         }
-        return result.toArray(new TermInfo[result.size()]);
+        return result.toArray(new Term[result.size()]);
     }
 }
