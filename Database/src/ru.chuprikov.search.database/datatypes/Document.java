@@ -43,7 +43,7 @@ public class Document {
         this.url = url;
     }
 
-    private long documentID;
-    private String url;
+    private long documentID = -1;
+    private String url = "";
     private ProblemID problemID;
 }

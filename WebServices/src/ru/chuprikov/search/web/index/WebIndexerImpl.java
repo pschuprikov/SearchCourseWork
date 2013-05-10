@@ -14,6 +14,7 @@ import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
 import javax.jws.WebService;
 import java.io.File;
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -69,27 +70,31 @@ public class WebIndexerImpl implements WebIndexer {
                     break;
 
                 total++;
-                Map<String, Datatypes.Posting.Builder> documentPostings = new HashMap<>();
-                try { //TODO: What the hell? Why is this try block here?
-                    long documentID = documentDB.addDocument(new Document(parsedProblem.getProblemID(), parsedProblem.getUrl()));
-                    splitWithType(documentPostings, parsedProblem.getTitle(), documentID, Datatypes.Posting.PositionType.TITLE);
-                    splitWithType(documentPostings, parsedProblem.getCondition(), documentID, Datatypes.Posting.PositionType.CONDITION);
-                    splitWithType(documentPostings, parsedProblem.getInputSpecification(), documentID, Datatypes.Posting.PositionType.INPUT_SPEC);
-                    splitWithType(documentPostings, parsedProblem.getOutputSpecification(), documentID, Datatypes.Posting.PositionType.OUTPUT_SPEC);
-                } catch (Exception e) {
-                    continue;
-                }
-                successful++;
-
-                for (Map.Entry<String, Datatypes.Posting.Builder> e : documentPostings.entrySet()) {
-                    indexer.addToIndex(e.getKey(), e.getValue().build());
-                }
+                successful = processDocument(successful, indexer, parsedProblem);
             }
         }
         return new ProcessStatistics(total, successful, 0);
     }
 
-    @Override //TODO: remove code duplication
+    private int processDocument(int successful, Indexer indexer, ParsedProblem parsedProblem) throws IOException {
+        Map<String, Datatypes.Posting.Builder> documentPostings = new HashMap<>();
+        try {
+            final long documentID = documentDB.addDocument(new Document(parsedProblem.getProblemID(), parsedProblem.getUrl()));
+            for (Datatypes.Posting.PositionType positionType : Datatypes.Posting.PositionType.values())
+                splitWithType(documentPostings, parsedProblem.getBlock(positionType), documentID, positionType);
+        } catch (Exception e) {
+            System.err.println(e.getMessage());
+            return successful;
+        }
+
+        successful++;
+        for (Map.Entry<String, Datatypes.Posting.Builder> e : documentPostings.entrySet()) {
+            indexer.addToIndex(e.getKey(), e.getValue().build());
+        }
+        return successful;
+    }
+
+    @Override
     public ProcessStatistics indexAll(long maxMemoryUsage, int maxPostingsChunkSize) throws Exception {
         int total = 0;
         int successful = 0;
@@ -98,24 +103,8 @@ public class WebIndexerImpl implements WebIndexer {
              CloseableIterator<ParsedProblem> parsedIter = parsedDB.iterator()) {
 
             while (parsedIter.hasNext()) {
-                final ParsedProblem parsedProblem = parsedIter.next();
-
                 total++;
-                Map<String, Datatypes.Posting.Builder> documentPostings = new HashMap<>();
-                try { //TODO: Order is critical! Subject to change!
-                    long documentID = documentDB.addDocument(new Document(parsedProblem.getProblemID(), parsedProblem.getUrl()));
-                    splitWithType(documentPostings, parsedProblem.getTitle(), documentID, Datatypes.Posting.PositionType.TITLE);
-                    splitWithType(documentPostings, parsedProblem.getCondition(), documentID, Datatypes.Posting.PositionType.CONDITION);
-                    splitWithType(documentPostings, parsedProblem.getInputSpecification(), documentID, Datatypes.Posting.PositionType.INPUT_SPEC);
-                    splitWithType(documentPostings, parsedProblem.getOutputSpecification(), documentID, Datatypes.Posting.PositionType.OUTPUT_SPEC);
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-
-                for (Map.Entry<String, Datatypes.Posting.Builder> e : documentPostings.entrySet()) {
-                    indexer.addToIndex(e.getKey(), e.getValue().build());
-                }
-                successful++;
+                successful = processDocument(successful, indexer, parsedIter.next());
             }
         }
         return new ProcessStatistics(total, successful, 0);

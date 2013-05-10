@@ -1,10 +1,8 @@
 package ru.chuprikov.search.search;
 
-import ru.chuprikov.search.database.CloseableIterator;
-import ru.chuprikov.search.database.IndexDB;
-import ru.chuprikov.search.database.SearchDatabase;
-import ru.chuprikov.search.database.TermDB;
+import ru.chuprikov.search.database.*;
 import ru.chuprikov.search.database.datatypes.Datatypes;
+import ru.chuprikov.search.database.datatypes.Document;
 import ru.chuprikov.search.search.joiners.Joiners;
 import ru.chuprikov.search.search.tokens.TokenKind;
 import ru.chuprikov.search.search.tokens.Tokenizer;
@@ -15,8 +13,10 @@ import java.util.*;
 public class Search implements AutoCloseable {
     private final IndexDB indexDB;
     private final TermDB termDB;
+    private final DocumentDB documentDB;
 
     public Search(SearchDatabase searchDB) throws Exception {
+        this.documentDB = searchDB.openDocumentDB();
         this.indexDB = searchDB.openIndexDB(0);
         this.termDB = searchDB.openTermDB();
     }
@@ -69,16 +69,19 @@ public class Search implements AutoCloseable {
         return cur;
     }
 
-    public List<Long> searchAndGetDocIDs(String request, int limit) throws Exception {
+    public List<Document> searchAndGetDocIDs(String request, int limit) throws Exception {
         ArrayList<CloseableIterator<Datatypes.Posting>> openedIterators = new ArrayList<>();
         try {
         Iterator<PostingInfo> it = parseC(new Tokenizer(request), openedIterators);
-        Set<Long> result = new HashSet<>();
+        Set<Long> duplicateEliminator = new HashSet<>();
 
-        while (it.hasNext() && result.size() < limit)
-            result.add(it.next().getDocumentID());
+        while (it.hasNext() && duplicateEliminator.size() < limit)
+            duplicateEliminator.add(it.next().getDocumentID());
 
-            return new ArrayList<>(result);
+        List<Document> result = new ArrayList<>();
+            for (long documentID : duplicateEliminator)
+                result.add(documentDB.get(documentID));
+        return result;
         } finally {
             for (CloseableIterator<Datatypes.Posting> cit : openedIterators)
                 cit.close();
@@ -87,6 +90,7 @@ public class Search implements AutoCloseable {
 
     @Override
     public void close() throws Exception {
+        documentDB.close();
         indexDB.close();
         termDB.close();
     }

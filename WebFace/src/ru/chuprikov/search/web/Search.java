@@ -1,5 +1,6 @@
 package ru.chuprikov.search.web;
 
+import ru.chuprikov.search.database.datatypes.Document;
 import ru.chuprikov.search.web.search.WebSearch;
 
 import javax.annotation.PostConstruct;
@@ -21,11 +22,11 @@ public class Search implements Serializable{
 
     private WebSearch webSearch;
 
-    public Long[] getSearchResult() {
+    public Document[] getSearchResult() {
         return searchResult;
     }
 
-    private Long[] searchResult;
+    private Document[] searchResult;
 
     public int getLimit() {
         return limit;

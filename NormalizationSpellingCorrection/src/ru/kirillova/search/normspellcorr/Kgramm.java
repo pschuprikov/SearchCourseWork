@@ -11,47 +11,10 @@ public class Kgramm {
 		// Это все нужно удалить. Для тестирования писала. Нужно забирать из базы список строк,
 		// которым соответствует данная биграмма s. Да, s - это биграмма. Не знаю как там что у
 		// тебя из базы доставать, поэтому оставлю вопрос открытым)
-        List<String> result = new ArrayList<>();
-        if (s.equals("кр")) {
-            result.add("кра");
-            result.add("кран");
-            result.add("круг");
-        }
-        if (s.equals("ра")) {
-            result.add("кра");
-            result.add("кран");
-        }
-        if (s.equals("ан")) {
-            result.add("кран");
-            result.add("ман");
 
-        }
-        if (s.equals("ру")) {
-            result.add("круг");
-
-        }
-        if (s.equals("уг")) {
-            result.add("круг");
-
-        }
-        if (s.equals("ма")) {
-            result.add("ман");
-        }
-        if (s.equals("ак")) {
-            result.add("кра");
-        }
-        if (s.equals("нк")) {
-            result.add("кран");
-        }
-        if (s.equals("гк")) {
-            result.add("круг");
-        }
-        if (s.equals("нм")) {
-            result.add("ман");
-        }
         // работа с бд
         // нужно вернуть список строк, в которых содержится биграмм s
-        return result;
+        return new ArrayList<>(); //TODO: implement
     }
 
 	private List<String> getSimilarStrings(String s) {

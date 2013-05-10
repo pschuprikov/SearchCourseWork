@@ -17,8 +17,17 @@
             </p:panel>
             <p:panel header="Search result">
                 <p:dataTable id="searchResultTable" var="_fsrch" value = "#{search.searchResult}">
-                    <p:column headerText="DocID" style="width: 10%">
-                        #{_fsrch}
+                    <p:column headerText="Document ID" style="width: 10%">
+                        #{_fsrch.documentID}
+                    </p:column>
+                    <p:column headerText="Resource" style="width: 10%">
+                        #{_fsrch.problemID.resource}
+                    </p:column>
+                    <p:column headerText="Problem ID" style="width: 10%">
+                        #{_fsrch.problemID.problemID}
+                    </p:column>
+                    <p:column headerText="URL">
+                        <a href="#{_fsrch.url}">#{_fsrch.url}</a>
                     </p:column>
                 </p:dataTable>
             </p:panel>

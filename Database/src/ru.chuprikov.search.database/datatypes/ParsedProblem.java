@@ -46,6 +46,16 @@ public class ParsedProblem implements Serializable {
         this.outputSpecification = outputSpecification;
     }
 
+    public String getBlock(Datatypes.Posting.PositionType positionType) {
+        switch (positionType) {
+            case CONDITION: return getCondition();
+            case INPUT_SPEC: return getInputSpecification();
+            case OUTPUT_SPEC: return getOutputSpecification();
+            case TITLE: return getTitle();
+            default: throw new AssertionError("Unknown position type");
+        }
+    }
+
     public String getCondition() {
         return condition;
     }
@@ -55,11 +65,11 @@ public class ParsedProblem implements Serializable {
     }
 
     private ProblemID problemID;
-    private String url;
-    private String title;
-    private String inputSpecification;
-    private String outputSpecification;
-    private String condition;
+    private String url = "";
+    private String title = "";
+    private String inputSpecification = "";
+    private String outputSpecification = "";
+    private String condition = "";
 
     public ParsedProblem() {
 

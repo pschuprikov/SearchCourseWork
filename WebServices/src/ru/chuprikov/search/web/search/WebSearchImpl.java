@@ -2,6 +2,7 @@ package ru.chuprikov.search.web.search;
 
 import ru.chuprikov.search.database.SearchDatabase;
 import ru.chuprikov.search.database.SearchDatabases;
+import ru.chuprikov.search.database.datatypes.Document;
 import ru.chuprikov.search.search.Search;
 
 import javax.annotation.PostConstruct;
@@ -29,8 +30,8 @@ public class WebSearchImpl implements WebSearch {
     }
 
     @Override
-    public Long[] searchSimpleConjunction(String request, int limit) throws Exception {
-        List<Long> resultPostings = search.searchAndGetDocIDs(request, limit);
-        return resultPostings.toArray(new Long[resultPostings.size()]);
+    public Document[] searchSimpleConjunction(String request, int limit) throws Exception {
+        List<Document> resultPostings = search.searchAndGetDocIDs(request, limit);
+        return resultPostings.toArray(new Document[resultPostings.size()]);
     }
 }
