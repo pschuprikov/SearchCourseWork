@@ -2,7 +2,7 @@ package ru.chuprikov.search.database;
 
 import java.io.File;
 
-public class Main {
+class Main {
     public static void main(String[] args) {
         if (args.length == 0)
             System.err.println("Usage: command [arg]");

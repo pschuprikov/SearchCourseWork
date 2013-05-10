@@ -8,6 +8,7 @@ import ru.chuprikov.search.database.datatypes.ProblemID;
 import ru.chuprikov.search.index.indexer.Indexer;
 import ru.chuprikov.search.index.indexer.spimi.SPIMIIndexer;
 import ru.chuprikov.search.web.fetch.ProcessStatistics;
+import ru.kirillova.search.normspellcorr.Normalize;
 
 import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
@@ -25,7 +26,7 @@ public class WebIndexerImpl implements WebIndexer {
 
     private static void splitWithType(Map<String, Datatypes.Posting.Builder> dic, String text, long docID, Datatypes.Posting.PositionType type) {
         int positionIdx = 0;
-        for (String s : text.split("[\\W]")) {
+        for (String s : Normalize.getNormalTokens(text)) {
             if (!s.isEmpty()) {
                 if (!dic.containsKey(s)) {
                     dic.put(s, Datatypes.Posting.newBuilder());
@@ -68,6 +69,7 @@ public class WebIndexerImpl implements WebIndexer {
                     break;
 
                 total++;
+                successful++;
                 Map<String, Datatypes.Posting.Builder> documentPostings = new HashMap<>();
                 try { //TODO: What the hell? Why is this try block here?
                     long documentID = documentDB.addDocument(new Document(parsedProblem.getProblemID(), parsedProblem.getUrl()));
@@ -76,13 +78,13 @@ public class WebIndexerImpl implements WebIndexer {
                     splitWithType(documentPostings, parsedProblem.getInputSpecification(), documentID, Datatypes.Posting.PositionType.INPUT_SPEC);
                     splitWithType(documentPostings, parsedProblem.getOutputSpecification(), documentID, Datatypes.Posting.PositionType.OUTPUT_SPEC);
                 } catch (Exception e) {
+                    successful--;
                     continue;
                 }
 
                 for (Map.Entry<String, Datatypes.Posting.Builder> e : documentPostings.entrySet()) {
                     indexer.addToIndex(e.getKey(), e.getValue().build());
                 }
-                successful++;
             }
         }
         return new ProcessStatistics(total, successful, 0);

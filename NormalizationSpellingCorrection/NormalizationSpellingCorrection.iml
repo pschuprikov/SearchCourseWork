@@ -7,12 +7,6 @@
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
-    <orderEntry type="library" name="jsf-2.0.1-FCS" level="project" />
-    <orderEntry type="module" module-name="RawDataRetrieval" />
-    <orderEntry type="module" module-name="Database" />
-    <orderEntry type="library" name="protobuf" level="project" />
-    <orderEntry type="module" module-name="Indexer" />
-    <orderEntry type="module" module-name="NormalizationSpellingCorrection" />
   </component>
 </module>
 

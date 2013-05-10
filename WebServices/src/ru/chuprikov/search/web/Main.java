@@ -16,7 +16,7 @@ import java.util.Scanner;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
-public class Main {
+class Main {
 
     private static final ArrayList<Endpoint> endpoints = new ArrayList<>();
     private static Runnable getPublisher(final Endpoint endpoint, final URL url) {

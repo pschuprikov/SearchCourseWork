@@ -1,4 +1,4 @@
-package ru.kirillova.search.database;
+package ru.kirillova.search.normspellcorr;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -7,7 +7,7 @@ import java.util.List;
 public class Tokenization {
 	
 	public List <String> getTokens(String str) {
-		List <String> result = new ArrayList <String>();
+		List <String> result = new ArrayList <>();
 		for(int i = 0; i < str.length(); ++i) {
 			if (Character.isLetter(str.charAt(i))) {
 				StringBuilder word = new StringBuilder();

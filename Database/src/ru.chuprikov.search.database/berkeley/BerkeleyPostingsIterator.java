@@ -14,7 +14,6 @@ class BerkeleyPostingsIterator implements CloseableIterator<Datatypes.Posting> {
     private DatabaseEntry keyEntry = new DatabaseEntry();
     private DatabaseEntry valueEntry = new DatabaseEntry();
     private final long termID;
-    private long currentDocumentID;
     private ByteArrayInputStream inputStream;
 
     BerkeleyPostingsIterator(Database indexDB, long termID) {
@@ -42,7 +41,7 @@ class BerkeleyPostingsIterator implements CloseableIterator<Datatypes.Posting> {
 
     private void readNextPostingsList() {
         TupleInput tupleInput = new TupleInput(valueEntry.getData());
-        currentDocumentID = tupleInput.readLong();
+        tupleInput.readLong();
         byte[] postingsBytes = new byte[tupleInput.available()];
         tupleInput.readFast(postingsBytes);
         inputStream = new ByteArrayInputStream(postingsBytes);

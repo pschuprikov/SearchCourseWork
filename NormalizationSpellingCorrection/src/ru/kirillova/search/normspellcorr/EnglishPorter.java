@@ -1,14 +1,14 @@
-package ru.kirillova.search.database;
+package ru.kirillova.search.normspellcorr;
 
 import java.util.HashSet;
 import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-public class EnglishPorter implements Stemming {
+class EnglishPorter implements Stemming {
 
-	Set<Character> vowels = new HashSet<Character>();
-	Set<Character> doubles = new HashSet<Character>();
+	private final Set<Character> vowels = new HashSet<>();
+    private final Set<Character> doubles = new HashSet<>();
 
 	private String step0(String s) {
 		Pattern r = Pattern.compile("(.*)('|'s|'s')$");

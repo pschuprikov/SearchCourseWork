@@ -1,4 +1,4 @@
-package ru.kirillova.search.database;
+package ru.kirillova.search.normspellcorr;
 
 import java.util.*;
 import java.util.Map.Entry;
@@ -11,7 +11,7 @@ public class Kgramm {
 		// Это все нужно удалить. Для тестирования писала. Нужно забирать из базы список строк,
 		// которым соответствует данная биграмма s. Да, s - это биграмма. Не знаю как там что у
 		// тебя из базы доставать, поэтому оставлю вопрос открытым)
-        List<String> result = new ArrayList<String>();
+        List<String> result = new ArrayList<>();
         if (s.equals("кр")) {
             result.add("кра");
             result.add("кран");
@@ -55,8 +55,8 @@ public class Kgramm {
     }
 
 	private List<String> getSimilarStrings(String s) {
-		List<String> result = new ArrayList<String>();
-		Map<String, Integer> words = new TreeMap<String, Integer>();
+		List<String> result = new ArrayList<>();
+		Map<String, Integer> words = new TreeMap<>();
 		for (int i = 0; i < s.length(); ++i) {
 			List<String> term = getWordsWithGramm("" + s.charAt(i % s.length())
 					+ s.charAt((i + 1) % s.length()));
@@ -153,7 +153,7 @@ public class Kgramm {
 			d[1][i + 1] = i;
 			d[0][i + 1] = inf;
 		}
-		Map<Character, Integer> lastPosition = new TreeMap<Character, Integer>();
+		Map<Character, Integer> lastPosition = new TreeMap<>();
 		for (int i = 0; i < n; ++i) {
 			int last = 0;
 			for (int j = 0; j < m; ++j) {
@@ -183,12 +183,11 @@ public class Kgramm {
 	}
 
     public List<String> fixMistake(String str) {
-        Normalize n = new Normalize();
-        String s = n.getBasisWord(str);
+        String s = Normalize.getBasisWord(str);
         String ends = str.substring(s.length(), str.length());
-        List<String> result = new ArrayList<String>();
+        List<String> result = new ArrayList<>();
         List<String> words = getSimilarStrings(s);
-        Map<String, Double> nearestwords = new TreeMap<String, Double>();
+        Map<String, Double> nearestwords = new TreeMap<>();
         ListIterator<String> it = words.listIterator();
         while (it.hasNext()) {
             String term = it.next();
@@ -198,7 +197,7 @@ public class Kgramm {
             }
         }
         // можно добавить функцию рейтинга
-        List<Entry<String, Double>> entries = new ArrayList<Entry<String, Double>>(
+        List<Entry<String, Double>> entries = new ArrayList<>(
                 nearestwords.entrySet());
         Collections.sort(entries, new Comparator<Entry<String, Double>>() {
             public int compare(Entry<String, Double> e1,

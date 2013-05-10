@@ -52,8 +52,8 @@ public class WebTermDBImpl implements WebTermDB {
     @Override
     public TermInfo[] getNextTermInfos(String term, int length) {
         ArrayList<TermInfo> result = new ArrayList<>();
-        try {
-            for (CloseableIterator<String> it = termDB.upperBound(term); it.hasNext() && result.size() < length;)
+        try (CloseableIterator<String> it = termDB.upperBound(term)) {
+            while (it.hasNext() && result.size() < length)
                 result.add(getTermInfo(it.next()));
         } catch (Exception e) {
             e.printStackTrace();

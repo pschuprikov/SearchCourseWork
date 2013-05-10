@@ -1,11 +1,11 @@
-package ru.kirillova.search.database;
+package ru.kirillova.search.normspellcorr;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-public class RussianPorter implements Stemming {
+class RussianPorter implements Stemming {
 
-    private String perfectiveGerund(String s) {
+    private static String perfectiveGerund(String s) {
         Pattern r = Pattern.compile("(.*)(ив|ивши|ившись|ыв|ывши|ывшись)$");
         Matcher m = r.matcher(s);
         if (m.matches()) {
@@ -19,7 +19,7 @@ public class RussianPorter implements Stemming {
         return "";
     }
 
-    private String adjectival(String s) {
+    private static String adjectival(String s) {
         Pattern r = Pattern
                 .compile("(.*)(ее|ие|ые|ое|ими|ыми|ей|ий|ый|ой|ем|им|ым|ом|его|ого|ему|ому|их|ых|ую|юю|ою|ею|ая|яя)$");
         Matcher m = r.matcher(s);
@@ -39,7 +39,7 @@ public class RussianPorter implements Stemming {
         return "";
     }
 
-    private String reflexive(String s) {
+    private static String reflexive(String s) {
         Pattern r = Pattern.compile("(.*)(ся|сь)$");
         Matcher m = r.matcher(s);
         if (m.matches()) {
@@ -48,7 +48,7 @@ public class RussianPorter implements Stemming {
         return "";
     }
 
-    private String verb(String s) {
+    private static String verb(String s) {
         Pattern r = Pattern
                 .compile("(.*)(ила|ыла|ена|ейте|уйте|ите|или|ыли|ей|уй|ил|ыл|им|ым|ен|ило|ыло|ено|ят|ует|уют|ит|ыт|ены|ить|ыть|ишь|ую)$");
         Matcher m = r.matcher(s);
@@ -69,7 +69,7 @@ public class RussianPorter implements Stemming {
         return "";
     }
 
-    private String noun(String s) {
+    private static String noun(String s) {
         Pattern r = Pattern
                 .compile("(.*)(а|ев|ов|ие|ье|иями|ами|еи|ии|ией|ой|ий|иям|ием|ам|ом|о|у|ах|иях|ы|ь|ию|ью|ия|ья)$");
         Matcher m = r.matcher(s);
@@ -89,7 +89,7 @@ public class RussianPorter implements Stemming {
         return "";
     }
 
-    private String superlative(String s) {
+    private static String superlative(String s) {
         Pattern r = Pattern.compile("(.*)(ейш|ейше)$");
         Matcher m = r.matcher(s);
         if (m.matches()) {
@@ -98,7 +98,7 @@ public class RussianPorter implements Stemming {
         return "";
     }
 
-    private String derevational(String s) {
+    private static String derevational(String s) {
         Pattern r = Pattern.compile("(.*)(ост|ость)$");
         Matcher m = r.matcher(s);
         if (m.matches()) {
@@ -107,7 +107,7 @@ public class RussianPorter implements Stemming {
         return "";
     }
 
-    private boolean vowel(char c) {
+    private static boolean vowel(char c) {
         if ((c == 'а') || (c == 'е') || (c == 'и') || (c == 'о') || (c == 'у')
                 || (c == 'ы') || (c == 'э') || (c == 'ю') || (c == 'я')) {
             return true;

@@ -27,7 +27,7 @@ public class Index implements Serializable {
         }
     }
 
-    private WebIndexer webIndexer;
+    private final WebIndexer webIndexer;
 
     public Index() {
         webIndexer = Service.create(url, qname).getPort(WebIndexer.class);

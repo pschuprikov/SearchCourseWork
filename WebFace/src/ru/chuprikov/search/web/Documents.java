@@ -38,7 +38,7 @@ public class Documents implements Serializable {
             webDocumentDB = Service.create(url, qname).getPort(WebDocumentDB.class);
             reset();
         } catch (MalformedURLException e) {
-            e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+            e.printStackTrace();
         }
     }
 
