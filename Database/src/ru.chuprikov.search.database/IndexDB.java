@@ -1,6 +1,6 @@
 package ru.chuprikov.search.database;
 
-import ru.chuprikov.search.database.datatypes.Datatypes;
+import ru.chuprikov.search.datatypes.Datatypes;
 
 import javax.jws.WebService;
 

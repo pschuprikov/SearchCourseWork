@@ -1,7 +1,6 @@
 package ru.chuprikov.search.web;
 
-import ru.chuprikov.search.database.datatypes.Document;
-import ru.chuprikov.search.web.documents.WebDocumentDB;
+import ru.chuprikov.search.datatypes.Document;
 
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ManagedProperty;
@@ -34,7 +33,7 @@ public class Documents implements Serializable {
 
     public Documents() throws Exception {
         try {
-            URL url = new URL("http://localhost:8081/WS/documents?wsdl");
+            URL url = new URL("http://localhost:8080/WebServices/DocumentDB?wsdl");
             webDocumentDB = Service.create(url, qname).getPort(WebDocumentDB.class);
             reset();
         } catch (MalformedURLException e) {

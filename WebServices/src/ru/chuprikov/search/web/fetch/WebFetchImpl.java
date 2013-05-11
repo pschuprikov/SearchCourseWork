@@ -4,13 +4,15 @@ import ru.chuprikov.search.database.CloseableIterator;
 import ru.chuprikov.search.database.FetchedDB;
 import ru.chuprikov.search.database.SearchDatabase;
 import ru.chuprikov.search.database.SearchDatabases;
-import ru.chuprikov.search.database.datatypes.ProblemID;
-import ru.chuprikov.search.database.datatypes.ProblemRawData;
+import ru.chuprikov.search.datatypes.ProblemID;
+import ru.chuprikov.search.datatypes.ProblemRawData;
+import ru.chuprikov.search.datatypes.ProcessStatistics;
 import ru.chuprikov.search.gather.fetcher.Fetcher;
 import ru.chuprikov.search.gather.fetcher.NoProxyProvider;
 import ru.chuprikov.search.gather.fetcher.ProxyFetcher;
 import ru.chuprikov.search.gather.problemsets.ProblemSetLoader;
 import ru.chuprikov.search.gather.problemsets.ProblemSets;
+import ru.chuprikov.search.web.WebFetch;
 
 import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
@@ -18,15 +20,15 @@ import javax.jws.WebService;
 import java.io.File;
 import java.util.ArrayList;
 
-@WebService(endpointInterface = "ru.chuprikov.search.web.fetch.WebFetch")
-public class WebFetchImpl implements WebFetch{
+@WebService(endpointInterface = "ru.chuprikov.search.web.WebFetch")
+public class WebFetchImpl implements WebFetch {
     private SearchDatabase searchDB;
     private FetchedDB fetchedDB;
 
     @PostConstruct
     private void openDatabaseConnections() {
         try {
-            searchDB = SearchDatabases.openBerkeley(new File(System.getProperty("user.dir") + "/mydb"));
+            searchDB = SearchDatabases.openBerkeley(new File("/home/pasha/repos/SearchCourseWork/mydb/"));
             fetchedDB = searchDB.openFetchedDB();
         } catch (Exception e) {
             e.printStackTrace();

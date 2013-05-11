@@ -1,7 +1,7 @@
 package ru.chuprikov.search.web;
 
-import ru.chuprikov.search.database.datatypes.ParsedProblem;
-import ru.chuprikov.search.database.datatypes.ProblemID;
+import ru.chuprikov.search.datatypes.ParsedProblem;
+import ru.chuprikov.search.datatypes.ProblemID;
 
 import javax.annotation.PostConstruct;
 import javax.faces.bean.ManagedBean;

@@ -1,7 +1,7 @@
 package ru.chuprikov.search.gather.problemsets;
 
-import ru.chuprikov.search.database.datatypes.ProblemID;
-import ru.chuprikov.search.database.datatypes.ProblemRawData;
+import ru.chuprikov.search.datatypes.ProblemID;
+import ru.chuprikov.search.datatypes.ProblemRawData;
 import ru.chuprikov.search.gather.fetcher.FetchInfo;
 import ru.chuprikov.search.gather.fetcher.URLContentLoader;
 

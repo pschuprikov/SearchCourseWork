@@ -1,8 +1,8 @@
 package ru.chuprikov.search.search;
 
 import ru.chuprikov.search.database.*;
-import ru.chuprikov.search.database.datatypes.Datatypes;
-import ru.chuprikov.search.database.datatypes.Document;
+import ru.chuprikov.search.datatypes.Datatypes;
+import ru.chuprikov.search.datatypes.Document;
 import ru.chuprikov.search.search.joiners.Joiners;
 import ru.chuprikov.search.search.tokens.TokenKind;
 import ru.chuprikov.search.search.tokens.Tokenizer;

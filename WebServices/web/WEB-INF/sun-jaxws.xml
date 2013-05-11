@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<endpoints xmlns='http://java.sun.com/xml/ns/jax-ws/ri/runtime' version='2.0'>
+    <endpoint name="DocumentDB" implementation="ru.chuprikov.search.web.documents.WebDocumentDBImpl" url-pattern="/DocumentDB"/>
+    <endpoint name="Fetch" implementation="ru.chuprikov.search.web.fetch.WebFetchImpl" url-pattern="/Fetch"/>
+    <endpoint name="Parse" implementation="ru.chuprikov.search.web.fetch.WebParseImpl" url-pattern="/Parse"/>
+    <endpoint name="Indexer" implementation="ru.chuprikov.search.web.index.WebIndexerImpl" url-pattern="/Indexer"/>
+    <endpoint name="IndexDB" implementation="ru.chuprikov.search.web.index.WebIndexDBImpl" url-pattern="/IndexDB"/>
+    <endpoint name="Search" implementation="ru.chuprikov.search.web.search.WebSearchImpl" url-pattern="/Search"/>
+    <endpoint name="TermDB" implementation="ru.chuprikov.search.web.terms.WebTermDBImpl" url-pattern="/TermDB"/>
+</endpoints>

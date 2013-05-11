@@ -1,6 +1,7 @@
-package ru.chuprikov.search.web.terms;
+package ru.chuprikov.search.web;
 
-import ru.chuprikov.search.database.datatypes.Term;
+
+import ru.chuprikov.search.datatypes.Term;
 
 import javax.jws.WebMethod;
 import javax.jws.WebService;

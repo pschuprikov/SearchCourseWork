@@ -4,7 +4,8 @@ import ru.chuprikov.search.database.CloseableIterator;
 import ru.chuprikov.search.database.SearchDatabase;
 import ru.chuprikov.search.database.SearchDatabases;
 import ru.chuprikov.search.database.TermDB;
-import ru.chuprikov.search.database.datatypes.Term;
+import ru.chuprikov.search.datatypes.Term;
+import ru.chuprikov.search.web.WebTermDB;
 
 import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
@@ -12,7 +13,7 @@ import javax.jws.WebService;
 import java.io.File;
 import java.util.ArrayList;
 
-@WebService(endpointInterface = "ru.chuprikov.search.web.terms.WebTermDB")
+@WebService(endpointInterface = "ru.chuprikov.search.web.WebTermDB")
 public class WebTermDBImpl implements WebTermDB {
 
     private SearchDatabase searchDB;

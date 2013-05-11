@@ -4,7 +4,8 @@ import ru.chuprikov.search.database.CloseableIterator;
 import ru.chuprikov.search.database.DocumentDB;
 import ru.chuprikov.search.database.SearchDatabase;
 import ru.chuprikov.search.database.SearchDatabases;
-import ru.chuprikov.search.database.datatypes.Document;
+import ru.chuprikov.search.datatypes.Document;
+import ru.chuprikov.search.web.WebDocumentDB;
 
 import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
@@ -12,7 +13,7 @@ import javax.jws.WebService;
 import java.io.File;
 import java.util.ArrayList;
 
-@WebService(endpointInterface = "ru.chuprikov.search.web.documents.WebDocumentDB")
+@WebService(endpointInterface = "ru.chuprikov.search.web.WebDocumentDB")
 public class WebDocumentDBImpl implements WebDocumentDB {
     private SearchDatabase searchDB;
     private DocumentDB documentDB;

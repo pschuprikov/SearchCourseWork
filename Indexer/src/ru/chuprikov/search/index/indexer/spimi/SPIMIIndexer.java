@@ -3,7 +3,7 @@ package ru.chuprikov.search.index.indexer.spimi;
 import ru.chuprikov.search.database.IndexDB;
 import ru.chuprikov.search.database.PostingsWriter;
 import ru.chuprikov.search.database.TermDB;
-import ru.chuprikov.search.database.datatypes.Datatypes;
+import ru.chuprikov.search.datatypes.Datatypes;
 import ru.chuprikov.search.index.indexer.Indexer;
 
 import java.io.*;

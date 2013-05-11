@@ -1,9 +1,11 @@
 package ru.chuprikov.search.web.fetch;
 
 import ru.chuprikov.search.database.*;
-import ru.chuprikov.search.database.datatypes.ParsedProblem;
-import ru.chuprikov.search.database.datatypes.ProblemID;
-import ru.chuprikov.search.database.datatypes.ProblemRawData;
+import ru.chuprikov.search.datatypes.ParsedProblem;
+import ru.chuprikov.search.datatypes.ProblemID;
+import ru.chuprikov.search.datatypes.ProblemRawData;
+import ru.chuprikov.search.datatypes.ProcessStatistics;
+import ru.chuprikov.search.web.WebParse;
 import ru.kirillova.search.database.MultiSiteContentParser;
 
 import javax.annotation.PostConstruct;
@@ -12,7 +14,7 @@ import javax.jws.WebService;
 import java.io.File;
 import java.util.ArrayList;
 
-@WebService(endpointInterface = "ru.chuprikov.search.web.fetch.WebParse")
+@WebService(endpointInterface = "ru.chuprikov.search.web.WebParse")
 public class WebParseImpl implements WebParse {
     private SearchDatabase searchDB;
     private FetchedDB fetchedDB;
@@ -22,7 +24,7 @@ public class WebParseImpl implements WebParse {
     void initDatabaseConnection() {
         try {
 
-            searchDB = SearchDatabases.openBerkeley(new File(System.getProperty("user.dir") + "/mydb"));
+            searchDB = SearchDatabases.openBerkeley(new File("/home/pasha/repos/SearchCourseWork/mydb/"));
             parsedDB = searchDB.openParsedDB();
             fetchedDB = searchDB.openFetchedDB();
         } catch (Exception e) {

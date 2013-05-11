@@ -1,9 +1,0 @@
-<component name="ArtifactManager">
-  <artifact type="jar" name="WebServices:jar">
-    <output-path>$PROJECT_DIR$/out/artifacts/WebServices_jar</output-path>
-    <root id="archive" name="WebServices.jar">
-      <element id="module-output" name="WebServices" />
-      <element id="artifact" artifact-name="RawDataRetrieval:jar" />
-    </root>
-  </artifact>
-</component>

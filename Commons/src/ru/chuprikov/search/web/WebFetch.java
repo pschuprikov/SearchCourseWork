@@ -1,8 +1,9 @@
-package ru.chuprikov.search.web.fetch;
+package ru.chuprikov.search.web;
 
 
-import ru.chuprikov.search.database.datatypes.ProblemID;
-import ru.chuprikov.search.database.datatypes.ProblemRawData;
+import ru.chuprikov.search.datatypes.ProblemID;
+import ru.chuprikov.search.datatypes.ProblemRawData;
+import ru.chuprikov.search.datatypes.ProcessStatistics;
 
 import javax.jws.WebMethod;
 import javax.jws.WebService;
@@ -14,7 +15,8 @@ public interface WebFetch {
 
     @WebMethod void clearFetches() throws Exception;
 
-    @WebMethod ProblemRawData getProblemRawData(ProblemID problemID);
+    @WebMethod
+    ProblemRawData getProblemRawData(ProblemID problemID);
     @WebMethod ProblemRawData getFirstProblemRawData() throws Exception;
     @WebMethod ProblemRawData[] getNextProblemRawDatas(ProblemID problemID, int count) throws Exception;
 }

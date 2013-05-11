@@ -1,0 +1,24 @@
+<component name="ArtifactManager">
+  <artifact type="war" name="WebServices">
+    <output-path>$PROJECT_DIR$/out/artifacts/WebServices</output-path>
+    <root id="archive" name="WebServices.war">
+      <element id="directory" name="WEB-INF">
+        <element id="directory" name="classes">
+          <element id="module-output" name="WebServices" />
+          <element id="module-output" name="RawDataRetrieval" />
+          <element id="module-output" name="Database" />
+          <element id="module-output" name="Commons" />
+          <element id="module-output" name="Indexer" />
+          <element id="module-output" name="NormalizationSpellingCorrection" />
+          <element id="module-output" name="Search" />
+        </element>
+        <element id="directory" name="lib">
+          <element id="library" level="project" name="jsf-2.0.1-FCS" />
+          <element id="library" level="project" name="protobuf" />
+          <element id="library" level="project" name="je" />
+        </element>
+      </element>
+      <element id="javaee-facet-resources" facet="WebServices/web/Web" />
+    </root>
+  </artifact>
+</component>

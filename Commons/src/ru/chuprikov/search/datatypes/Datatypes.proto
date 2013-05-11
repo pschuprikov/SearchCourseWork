@@ -1,4 +1,4 @@
-package ru.chuprikov.search.database.datatypes;
+package ru.chuprikov.search.datatypes;
 
 option java_outer_classname = "Datatypes";
 

@@ -1,6 +1,4 @@
-package ru.chuprikov.search.web.index;
-
-import ru.chuprikov.search.database.datatypes.Datatypes;
+package ru.chuprikov.search.datatypes;
 
 import javax.xml.bind.annotation.XmlRootElement;
 

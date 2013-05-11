@@ -1,5 +1,20 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <module type="JAVA_MODULE" version="4">
+  <component name="FacetManager">
+    <facet type="web" name="Web">
+      <configuration>
+        <descriptors>
+          <deploymentDescriptor name="web.xml" url="file://$MODULE_DIR$/web/WEB-INF/web.xml" />
+        </descriptors>
+        <webroots>
+          <root url="file://$MODULE_DIR$/web" relative="/" />
+        </webroots>
+      </configuration>
+      <facet type="webservices" name="WebServices">
+        <configuration ws.engine="Glassfish / JAX-WS 2.2 RI / Metro 1.X / JWSDP 2.2" />
+      </facet>
+    </facet>
+  </component>
   <component name="NewModuleRootManager" inherit-compiler-output="true">
     <exclude-output />
     <content url="file://$MODULE_DIR$">
@@ -9,11 +24,12 @@
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="library" name="jsf-2.0.1-FCS" level="project" />
     <orderEntry type="module" module-name="RawDataRetrieval" />
-    <orderEntry type="module" module-name="Database" />
     <orderEntry type="library" name="protobuf" level="project" />
     <orderEntry type="module" module-name="Indexer" />
     <orderEntry type="module" module-name="NormalizationSpellingCorrection" />
     <orderEntry type="module" module-name="Search" />
+    <orderEntry type="module" module-name="Commons" />
+    <orderEntry type="module" module-name="Database" />
   </component>
 </module>
 

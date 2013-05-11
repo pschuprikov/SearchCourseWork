@@ -1,6 +1,6 @@
 package ru.chuprikov.search.database;
 
-import ru.chuprikov.search.database.datatypes.Term;
+import ru.chuprikov.search.datatypes.Term;
 
 public interface TermDB extends AutoCloseable {
     boolean contains(String term) throws Exception;

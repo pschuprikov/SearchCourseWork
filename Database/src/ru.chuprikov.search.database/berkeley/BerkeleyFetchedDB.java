@@ -12,8 +12,8 @@ import com.sleepycat.je.DatabaseException;
 import com.sleepycat.je.Environment;
 import ru.chuprikov.search.database.CloseableListIterator;
 import ru.chuprikov.search.database.FetchedDB;
-import ru.chuprikov.search.database.datatypes.ProblemID;
-import ru.chuprikov.search.database.datatypes.ProblemRawData;
+import ru.chuprikov.search.datatypes.ProblemID;
+import ru.chuprikov.search.datatypes.ProblemRawData;
 
 class BerkeleyFetchedDB implements FetchedDB {
     private final Database db;

@@ -12,8 +12,8 @@ import com.sleepycat.je.DatabaseException;
 import com.sleepycat.je.Environment;
 import ru.chuprikov.search.database.CloseableListIterator;
 import ru.chuprikov.search.database.ParsedDB;
-import ru.chuprikov.search.database.datatypes.ParsedProblem;
-import ru.chuprikov.search.database.datatypes.ProblemID;
+import ru.chuprikov.search.datatypes.ParsedProblem;
+import ru.chuprikov.search.datatypes.ProblemID;
 
 class BerkeleyParsedDB implements ParsedDB {
     private final Database db;

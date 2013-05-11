@@ -1,7 +1,6 @@
 package ru.chuprikov.search.web;
 
-import ru.chuprikov.search.web.fetch.ProcessStatistics;
-import ru.chuprikov.search.web.fetch.WebFetch;
+import ru.chuprikov.search.datatypes.ProcessStatistics;
 
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
@@ -21,13 +20,14 @@ public class Fetch implements Serializable {
 
     static {
         try {
-             url = new URL("http://localhost:8081/WS/fetch?wsdl");
+             url = new URL("http://localhost:8080/WebServices/Fetch?wsdl");
         } catch (MalformedURLException e) {
             e.printStackTrace();
         }
     }
 
-    private final WebFetch webFetchService;
+
+    private WebFetch webFetchService;
 
     public Fetch() {
         webFetchService = Service.create(url, qname).getPort(WebFetch.class);

@@ -1,7 +1,7 @@
-package ru.chuprikov.search.web.index;
+package ru.chuprikov.search.web;
 
-import ru.chuprikov.search.database.datatypes.ProblemID;
-import ru.chuprikov.search.web.fetch.ProcessStatistics;
+import ru.chuprikov.search.datatypes.ProblemID;
+import ru.chuprikov.search.datatypes.ProcessStatistics;
 
 import javax.jws.WebMethod;
 import javax.jws.WebService;

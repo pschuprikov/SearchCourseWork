@@ -1,6 +1,6 @@
 package ru.chuprikov.search.database;
 
-import ru.chuprikov.search.database.datatypes.Document;
+import ru.chuprikov.search.datatypes.Document;
 
 public interface DocumentDB extends AutoCloseable {
     long addDocument(Document document) throws Exception;

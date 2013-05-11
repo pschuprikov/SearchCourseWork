@@ -1,6 +1,6 @@
 package ru.chuprikov.search.index.indexer.spimi;
 
-import ru.chuprikov.search.database.datatypes.Datatypes;
+import ru.chuprikov.search.datatypes.Datatypes;
 
 import java.io.ByteArrayOutputStream;
 import java.io.DataOutputStream;

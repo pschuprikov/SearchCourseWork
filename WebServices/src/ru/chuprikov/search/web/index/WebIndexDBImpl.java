@@ -4,7 +4,9 @@ import ru.chuprikov.search.database.CloseableIterator;
 import ru.chuprikov.search.database.IndexDB;
 import ru.chuprikov.search.database.SearchDatabase;
 import ru.chuprikov.search.database.SearchDatabases;
-import ru.chuprikov.search.database.datatypes.Datatypes;
+import ru.chuprikov.search.datatypes.Datatypes;
+import ru.chuprikov.search.datatypes.PostingInfo;
+import ru.chuprikov.search.web.WebIndexDB;
 
 import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
@@ -12,14 +14,14 @@ import javax.jws.WebService;
 import java.io.File;
 import java.util.ArrayList;
 
-@WebService(endpointInterface = "ru.chuprikov.search.web.index.WebIndexDB")
-public class WebIndexDBImpl implements WebIndexDB{
+@WebService(endpointInterface = "ru.chuprikov.search.web.WebIndexDB")
+public class WebIndexDBImpl implements WebIndexDB {
     private SearchDatabase searchDB;
     private IndexDB indexDB;
 
     @PostConstruct
     private void openDatabaseConnection() throws Exception {
-        searchDB = SearchDatabases.openBerkeley(new File(System.getProperty("user.dir") + "/mydb"));
+        searchDB = SearchDatabases.openBerkeley(new File("/home/pasha/repos/SearchCourseWork/mydb/"));
         indexDB = searchDB.openIndexDB(0);
     }
 

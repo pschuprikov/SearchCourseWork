@@ -6,6 +6,7 @@
       xmlns:h="http://java.sun.com/jsf/html"
       xmlns:p="http://primefaces.org/ui"
       xmlns:c="http://java.sun.com/jsf/composite"
+      xmlns:f="http://java.sun.com/jsf/core"
       xml:lang="en" lang="en">
 <h:body>
     <c:interface name="search"/>
@@ -28,6 +29,12 @@
                     </p:column>
                     <p:column headerText="URL">
                         <a href="#{_fsrch.url}">#{_fsrch.url}</a>
+                    </p:column>
+                    <p:column headerText="Content">
+                        <p:commandButton value="Show content" ajax="false" action="#{search.showContent()}">
+                            <f:param name="resource" value="#{_fsrch.problemID.resource}"/>
+                            <f:param name="problemID" value="#{_fsrch.problemID.problemID}"/>
+                        </p:commandButton>
                     </p:column>
                 </p:dataTable>
             </p:panel>

@@ -1,7 +1,7 @@
 package ru.kirillova.search.database;
 
-import ru.chuprikov.search.database.datatypes.ParsedProblem;
-import ru.chuprikov.search.database.datatypes.ProblemRawData;
+import ru.chuprikov.search.datatypes.ParsedProblem;
+import ru.chuprikov.search.datatypes.ProblemRawData;
 import ru.chuprikov.search.gather.problemsets.ProblemSets;
 
 import java.util.HashMap;

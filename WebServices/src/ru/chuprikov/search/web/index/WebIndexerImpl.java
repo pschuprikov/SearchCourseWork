@@ -1,13 +1,10 @@
 package ru.chuprikov.search.web.index;
 
 import ru.chuprikov.search.database.*;
-import ru.chuprikov.search.database.datatypes.Datatypes;
-import ru.chuprikov.search.database.datatypes.Document;
-import ru.chuprikov.search.database.datatypes.ParsedProblem;
-import ru.chuprikov.search.database.datatypes.ProblemID;
+import ru.chuprikov.search.datatypes.*;
 import ru.chuprikov.search.index.indexer.Indexer;
 import ru.chuprikov.search.index.indexer.spimi.SPIMIIndexer;
-import ru.chuprikov.search.web.fetch.ProcessStatistics;
+import ru.chuprikov.search.web.WebIndexer;
 import ru.kirillova.search.normspellcorr.Normalize;
 
 import javax.annotation.PostConstruct;
@@ -18,7 +15,7 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
-@WebService(endpointInterface = "ru.chuprikov.search.web.index.WebIndexer")
+@WebService(endpointInterface = "ru.chuprikov.search.web.WebIndexer")
 public class WebIndexerImpl implements WebIndexer {
     private SearchDatabase searchDB;
     private DocumentDB documentDB;
@@ -40,7 +37,7 @@ public class WebIndexerImpl implements WebIndexer {
 
     @PostConstruct
     private void openDatabaseConnection() throws Exception {
-        searchDB = SearchDatabases.openBerkeley(new File(System.getProperty("user.dir") + "/mydb"));
+        searchDB = SearchDatabases.openBerkeley(new File("/home/pasha/repos/SearchCourseWork/mydb/"));
         documentDB = searchDB.openDocumentDB();
         termDB = searchDB.openTermDB();
         parsedDB = searchDB.openParsedDB();
@@ -96,6 +93,7 @@ public class WebIndexerImpl implements WebIndexer {
 
     @Override
     public ProcessStatistics indexAll(long maxMemoryUsage, int maxPostingsChunkSize) throws Exception {
+        Thread.sleep(1000000);
         int total = 0;
         int successful = 0;
         try (IndexDB indexDB = searchDB.openIndexDB(maxPostingsChunkSize);

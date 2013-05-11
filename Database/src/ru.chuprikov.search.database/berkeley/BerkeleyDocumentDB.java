@@ -6,8 +6,8 @@ import com.sleepycat.collections.StoredValueSet;
 import com.sleepycat.je.*;
 import ru.chuprikov.search.database.CloseableIterator;
 import ru.chuprikov.search.database.DocumentDB;
-import ru.chuprikov.search.database.datatypes.Document;
-import ru.chuprikov.search.database.datatypes.ProblemID;
+import ru.chuprikov.search.datatypes.Document;
+import ru.chuprikov.search.datatypes.ProblemID;
 
 class BerkeleyDocumentDB extends ThreadLocalEntriesEntries implements DocumentDB {
     private final Database documentDB;

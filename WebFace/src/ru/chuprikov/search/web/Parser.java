@@ -1,9 +1,8 @@
 package ru.chuprikov.search.web;
 
-import ru.chuprikov.search.database.datatypes.ParsedProblem;
-import ru.chuprikov.search.database.datatypes.ProblemID;
-import ru.chuprikov.search.web.fetch.ProcessStatistics;
-import ru.chuprikov.search.web.fetch.WebParse;
+import ru.chuprikov.search.datatypes.ParsedProblem;
+import ru.chuprikov.search.datatypes.ProblemID;
+import ru.chuprikov.search.datatypes.ProcessStatistics;
 
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
@@ -112,7 +111,7 @@ public class Parser implements Serializable {
 
     public Parser() throws Exception {
         try {
-            URL url = new URL("http://localhost:8081/WS/parse?wsdl");
+            URL url = new URL("http://localhost:8080/WebServices/Parse?wsdl");
             webParse = Service.create(url, qname).getPort(WebParse.class);
             reset();
         } catch (MalformedURLException e) {

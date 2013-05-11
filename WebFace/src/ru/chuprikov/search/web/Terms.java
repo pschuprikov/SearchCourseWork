@@ -1,7 +1,6 @@
 package ru.chuprikov.search.web;
 
-import ru.chuprikov.search.database.datatypes.Term;
-import ru.chuprikov.search.web.terms.WebTermDB;
+import ru.chuprikov.search.datatypes.Term;
 
 import javax.annotation.PostConstruct;
 import javax.faces.bean.ManagedBean;
@@ -31,7 +30,7 @@ public class Terms implements Serializable {
     @PostConstruct
     private void init() {
         try {
-            URL url = new URL("http://localhost:8081/WS/terms?wsdl");
+            URL url = new URL("http://localhost:8080/WebServices/TermDB?wsdl");
             webTermDB = Service.create(url, qname).getPort(WebTermDB.class);
             reset();
         } catch (MalformedURLException e) {

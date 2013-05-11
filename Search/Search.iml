@@ -10,6 +10,7 @@
     <orderEntry type="module" module-name="Database" />
     <orderEntry type="module" module-name="NormalizationSpellingCorrection" />
     <orderEntry type="library" name="protobuf" level="project" />
+    <orderEntry type="module" module-name="Commons" />
   </component>
 </module>
 

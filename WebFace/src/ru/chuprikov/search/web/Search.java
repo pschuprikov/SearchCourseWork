@@ -1,10 +1,10 @@
 package ru.chuprikov.search.web;
 
-import ru.chuprikov.search.database.datatypes.Document;
-import ru.chuprikov.search.web.search.WebSearch;
+import ru.chuprikov.search.datatypes.Document;
 
 import javax.annotation.PostConstruct;
 import javax.faces.bean.ManagedBean;
+import javax.faces.bean.ManagedProperty;
 import javax.faces.bean.SessionScoped;
 import javax.xml.namespace.QName;
 import javax.xml.ws.Service;
@@ -19,6 +19,17 @@ public class Search implements Serializable{
 
     private final static QName qname = new QName("http://search.web.search.chuprikov.ru/", "WebSearchImplService");
     private static URL url;
+
+    public void setControl(Control control) {
+        this.control = control;
+    }
+
+    public Control getControl() {
+        return control;
+    }
+
+    @ManagedProperty(value="#{control}")
+    private Control control;
 
     private WebSearch webSearch;
 
@@ -40,7 +51,7 @@ public class Search implements Serializable{
 
     static {
         try {
-            url = new URL("http://localhost:8081/WS/search?wsdl");
+            url = new URL("http://localhost:8080/WebServices/Search?wsdl");
         } catch (MalformedURLException e) {
             e.printStackTrace();
         }
@@ -61,5 +72,10 @@ public class Search implements Serializable{
 
     public void search() throws Exception {
         searchResult = webSearch.searchSimpleConjunction(request, limit);
+    }
+
+    public String showContent() throws Exception {
+        control.setActiveIdx(7);
+        return "parsedProblem";
     }
 }

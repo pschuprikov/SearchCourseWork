@@ -1,6 +1,6 @@
 package ru.chuprikov.search.search;
 
-import ru.chuprikov.search.database.datatypes.Datatypes;
+import ru.chuprikov.search.datatypes.Datatypes;
 
 import java.util.ArrayList;
 import java.util.List;

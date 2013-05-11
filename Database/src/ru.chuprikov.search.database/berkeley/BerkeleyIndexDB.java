@@ -7,7 +7,7 @@ import com.sleepycat.je.Environment;
 import ru.chuprikov.search.database.CloseableIterator;
 import ru.chuprikov.search.database.IndexDB;
 import ru.chuprikov.search.database.PostingsWriter;
-import ru.chuprikov.search.database.datatypes.Datatypes;
+import ru.chuprikov.search.datatypes.Datatypes;
 
 import java.io.IOException;
 

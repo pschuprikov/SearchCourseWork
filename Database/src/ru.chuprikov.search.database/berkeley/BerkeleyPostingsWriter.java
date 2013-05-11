@@ -4,7 +4,7 @@ import com.sleepycat.bind.tuple.LongBinding;
 import com.sleepycat.bind.tuple.TupleOutput;
 import com.sleepycat.je.*;
 import ru.chuprikov.search.database.PostingsWriter;
-import ru.chuprikov.search.database.datatypes.Datatypes;
+import ru.chuprikov.search.datatypes.Datatypes;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;

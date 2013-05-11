@@ -1,8 +1,8 @@
 package ru.chuprikov.search.web;
 
-import ru.chuprikov.search.database.datatypes.ProblemID;
-import ru.chuprikov.search.database.datatypes.ProblemRawData;
-import ru.chuprikov.search.web.fetch.WebFetch;
+
+import ru.chuprikov.search.datatypes.ProblemID;
+import ru.chuprikov.search.datatypes.ProblemRawData;
 
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
@@ -43,7 +43,7 @@ public class Fetches implements Serializable {
 
     public Fetches() throws Exception {
         try {
-            URL url = new URL("http://localhost:8081/WS/fetch?wsdl");
+            URL url = new URL("http://localhost:8080/WebServices/Fetch?wsdl");
             webFetch = Service.create(url, qname).getPort(WebFetch.class);
             reset();
         } catch (MalformedURLException e) {

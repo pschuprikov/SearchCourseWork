@@ -1,7 +1,7 @@
 package ru.chuprikov.search.database;
 
-import ru.chuprikov.search.database.datatypes.ParsedProblem;
-import ru.chuprikov.search.database.datatypes.ProblemID;
+import ru.chuprikov.search.datatypes.ParsedProblem;
+import ru.chuprikov.search.datatypes.ProblemID;
 
 import javax.jws.WebService;
 

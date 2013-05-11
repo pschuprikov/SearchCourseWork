@@ -1,7 +1,6 @@
 package ru.chuprikov.search.web;
 
-import ru.chuprikov.search.web.index.PostingInfo;
-import ru.chuprikov.search.web.index.WebIndexDB;
+import ru.chuprikov.search.datatypes.PostingInfo;
 
 import javax.annotation.PostConstruct;
 import javax.faces.bean.ManagedBean;
@@ -40,7 +39,7 @@ public class Postings implements Serializable {
     @PostConstruct
     private void init() {
         try {
-            URL url = new URL("http://localhost:8081/WS/indexdb?wsdl");
+            URL url = new URL("http://localhost:8080/WebServices/IndexDB?wsdl");
             webIndexDB = Service.create(url, qname).getPort(WebIndexDB.class);
             reset();
         } catch (MalformedURLException e) {

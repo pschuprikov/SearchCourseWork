@@ -24,9 +24,8 @@
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="library" name="Tomcat 7.0" level="application_server_libraries" />
     <orderEntry type="library" name="jsf-2.0.1-FCS" level="project" />
-    <orderEntry type="module" module-name="WebServices" />
-    <orderEntry type="module" module-name="Database" />
     <orderEntry type="library" name="jsf/primefaces-3.4.1" level="project" />
+    <orderEntry type="module" module-name="Commons" />
   </component>
 </module>
 

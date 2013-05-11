@@ -4,7 +4,7 @@ import com.sleepycat.bind.tuple.LongBinding;
 import com.sleepycat.bind.tuple.TupleInput;
 import com.sleepycat.je.*;
 import ru.chuprikov.search.database.CloseableIterator;
-import ru.chuprikov.search.database.datatypes.Datatypes;
+import ru.chuprikov.search.datatypes.Datatypes;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;

@@ -1,7 +1,6 @@
 package ru.chuprikov.search.web;
 
-import ru.chuprikov.search.database.datatypes.ProblemID;
-import ru.chuprikov.search.web.index.WebIndexer;
+import ru.chuprikov.search.datatypes.ProblemID;
 
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
@@ -21,7 +20,7 @@ public class Index implements Serializable {
 
     static {
         try {
-            url = new URL("http://localhost:8081/WS/indexer?wsdl");
+            url = new URL("http://localhost:8080/WebServices/Indexer?wsdl");
         } catch (MalformedURLException e) {
             e.printStackTrace();
         }

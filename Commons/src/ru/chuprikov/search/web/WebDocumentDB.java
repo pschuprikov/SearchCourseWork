@@ -1,6 +1,6 @@
-package ru.chuprikov.search.web.documents;
+package ru.chuprikov.search.web;
 
-import ru.chuprikov.search.database.datatypes.Document;
+import ru.chuprikov.search.datatypes.Document;
 
 import javax.jws.WebMethod;
 import javax.jws.WebService;
