@@ -14,7 +14,7 @@ public class BerkeleySearchDatabase implements SearchDatabase {
         conf.setAllowCreate(true);
         env = new Environment(file, conf);
 
-        sequencesDB = env.openDatabase(null, "seqs", DatabaseConfig.DEFAULT.setAllowCreate(true));
+        sequencesDB = env.openDatabase(null, "seqs", new DatabaseConfig().setAllowCreate(true));
     }
 
     @Override
@@ -54,7 +54,8 @@ public class BerkeleySearchDatabase implements SearchDatabase {
 
     @Override
     public void truncateTermDB() throws Exception {
-        env.truncateDatabase(null, "term", false);
+        env.truncateDatabase(null, BerkeleyTermDB.TERM_DB, false);
+        env.truncateDatabase(null, BerkeleyTermDB.TERM_BY_ID_IDX, false);
     }
 
     @Override
@@ -65,6 +66,21 @@ public class BerkeleySearchDatabase implements SearchDatabase {
     @Override
     public void truncateDocumentDB() throws Exception {
         env.truncateDatabase(null, "document", false);
+    }
+
+    @Override
+    public BigrammDB openBigrammDB() throws Exception {
+        return new BerkeleyBigrammDB(env);
+    }
+
+    @Override
+    public void truncateBigrammDB() throws Exception {
+        env.truncateDatabase(null, "bigramm", false);
+    }
+
+    @Override
+    public void truncateSequences() throws Exception {
+        env.truncateDatabase(null, "seqs", false);
     }
 
     @Override

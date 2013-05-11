@@ -17,6 +17,8 @@ class Main {
                                 case "document" : searchDB.truncateDocumentDB(); break;
                                 case "fetched" : searchDB.truncateFetchedDB(); break;
                                 case "index" : searchDB.truncateIndexDB(); break;
+                                case "bigramm" : searchDB.truncateBigrammDB(); break;
+                                case "seqs" : searchDB.truncateSequences(); break;
                                 default:
                                     System.err.println("Unknown database"); break;
                             }

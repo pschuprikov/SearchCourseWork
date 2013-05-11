@@ -1,48 +1,46 @@
 package ru.kirillova.search.normspellcorr;
 
+import ru.chuprikov.search.database.BigrammDB;
+import ru.chuprikov.search.database.TermDB;
+import ru.chuprikov.search.datatypes.BigrammUnit;
+import ru.chuprikov.search.datatypes.Term;
+
 import java.util.*;
 import java.util.Map.Entry;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class Kgramm {
+    private final BigrammDB bigrammDB;
+    private final TermDB termDB;
 
-	private List<String> getWordsWithGramm(String s) {
-		// Это все нужно удалить. Для тестирования писала. Нужно забирать из базы список строк,
-		// которым соответствует данная биграмма s. Да, s - это биграмма. Не знаю как там что у
-		// тебя из базы доставать, поэтому оставлю вопрос открытым)
-
-        // работа с бд
-        // нужно вернуть список строк, в которых содержится биграмм s
-        return new ArrayList<>(); //TODO: implement
+    public Kgramm(TermDB termDB, BigrammDB bigrammDB) {
+        this.bigrammDB = bigrammDB;
+        this.termDB = termDB;
     }
 
-	private List<String> getSimilarStrings(String s) {
-		List<String> result = new ArrayList<>();
-		Map<String, Integer> words = new TreeMap<>();
+    private List<Term> getSimilarTerms(String s) throws Exception {
+		List<Term> result = new ArrayList<>();
+		Map<BigrammUnit, Integer> words = new HashMap<>();
 		for (int i = 0; i < s.length(); ++i) {
-			List<String> term = getWordsWithGramm("" + s.charAt(i % s.length())
-					+ s.charAt((i + 1) % s.length()));
-			ListIterator<String> e = term.listIterator();
-			while (e.hasNext()) {
-				String str = e.next();
-                if (Math.abs(str.length() - s.length()) > 2) continue;
-				if (words.containsKey(str)) {
-					words.put(str, words.get(str) + 1);
+			BigrammUnit[] terms = bigrammDB.get("" + s.charAt(i % s.length()) + s.charAt((i + 1) % s.length()));
+			for (BigrammUnit bu : terms) {
+                Term term = termDB.get(bu.getTermID());
+                if (Math.abs(bu.getTermLength() - s.length()) > 2) continue;
+				if (words.containsKey(bu)) {
+					words.put(bu, words.get(bu) + 1);
 				} else {
-					words.put(str, 1);
+					words.put(bu, 1);
 				}
 			}
 		}
-		Iterator<Entry<String, Integer>> it = words.entrySet().iterator();
-		while (it.hasNext()) {
-			Entry<String, Integer> e = it.next();
+        for (Entry<BigrammUnit, Integer> e : words.entrySet()) {
 			double t = ((double)e.getValue())
-					/ (s.length() - 1 + e.getKey().length() - 1 - e.getValue());
+					/ (s.length() - 1 + e.getKey().getTermLength() - 1 - e.getValue());
 			if (t >= 0.5) {
-				result.add(e.getKey());
+				result.add(termDB.get(e.getKey().getTermID()));
 			}
-		}
+        }
 		return result;
 	}
 
@@ -145,23 +143,22 @@ public class Kgramm {
 		return d[n + 1][m + 1];
 	}
 
-    public List<String> fixMistake(String str) {
+    public List<String> fixMistake(String str) throws Exception {
         String s = Normalize.getBasisWord(str);
-        String ends = str.substring(s.length(), str.length());
+        String ending = str.substring(s.length(), str.length());
         List<String> result = new ArrayList<>();
-        List<String> words = getSimilarStrings(s);
-        Map<String, Double> nearestwords = new TreeMap<>();
-        ListIterator<String> it = words.listIterator();
-        while (it.hasNext()) {
-            String term = it.next();
-            double d = levDist(s, term);
+        List<Term> terms = getSimilarTerms(s);
+        Map<String, Double> nearestWords = new HashMap<>();
+
+        for (Term term : terms) {
+            double d = levDist(s, term.getTerm());
             if (d <= 3.) {
-                nearestwords.put(term + ends, d);
+                nearestWords.put(term.getTerm() + ending, d);
             }
         }
+
         // можно добавить функцию рейтинга
-        List<Entry<String, Double>> entries = new ArrayList<>(
-                nearestwords.entrySet());
+        List<Entry<String, Double>> entries = new ArrayList<>(nearestWords.entrySet());
         Collections.sort(entries, new Comparator<Entry<String, Double>>() {
             public int compare(Entry<String, Double> e1,
                                Entry<String, Double> e2) {
@@ -170,6 +167,7 @@ public class Kgramm {
                 return (v1 > v2) ? 1 : (v1 == v2) ? 0 : -1;
             }
         });
+
         ListIterator<Entry<String, Double>> it2 = entries.listIterator();
         int k = 10;
         for (int i = 0; (i < k) && (it2.hasNext()); ++i) {

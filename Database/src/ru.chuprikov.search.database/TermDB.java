@@ -8,6 +8,7 @@ public interface TermDB extends AutoCloseable {
     void incrementCount(String term, long count) throws Exception;
 
     Term get(String term) throws Exception;
+    Term get(long termID) throws Exception;
     CloseableIterator<String> iterator() throws Exception;
     CloseableIterator<String> upperBound(String first) throws Exception;
 }

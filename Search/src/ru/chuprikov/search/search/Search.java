@@ -3,9 +3,11 @@ package ru.chuprikov.search.search;
 import ru.chuprikov.search.database.*;
 import ru.chuprikov.search.datatypes.Datatypes;
 import ru.chuprikov.search.datatypes.Document;
+import ru.chuprikov.search.datatypes.Term;
 import ru.chuprikov.search.search.joiners.Joiners;
 import ru.chuprikov.search.search.tokens.TokenKind;
 import ru.chuprikov.search.search.tokens.Tokenizer;
+import ru.kirillova.search.normspellcorr.Kgramm;
 import ru.kirillova.search.normspellcorr.Normalize;
 
 import java.util.*;
@@ -14,11 +16,15 @@ public class Search implements AutoCloseable {
     private final IndexDB indexDB;
     private final TermDB termDB;
     private final DocumentDB documentDB;
+    private final BigrammDB bigrammDB;
+    private final Kgramm kgramm;
 
     public Search(SearchDatabase searchDB) throws Exception {
         this.documentDB = searchDB.openDocumentDB();
         this.indexDB = searchDB.openIndexDB(0);
         this.termDB = searchDB.openTermDB();
+        this.bigrammDB = searchDB.openBigrammDB();
+        this.kgramm = new Kgramm(termDB, bigrammDB);
     }
 
     private Iterator<PostingInfo> parseE(Tokenizer tokenizer, List<CloseableIterator<Datatypes.Posting>> openedIterators) throws Exception {
@@ -33,8 +39,12 @@ public class Search implements AutoCloseable {
     }
 
     private Iterator<PostingInfo> getPostingsIterator(String token, List<CloseableIterator<Datatypes.Posting>> openedIterators) throws Exception {
-        final String term = Normalize.getBasisWord(token);
-        final long termID = termDB.get(term).getTermID();
+        final String termStr = Normalize.getBasisWord(token);
+        Term term = termDB.get(termStr);
+        if (term == null) {
+            term = termDB.get(Normalize.getBasisWord(kgramm.fixMistake(token).get(0)));
+        }
+        final long termID = term.getTermID();
         final CloseableIterator<Datatypes.Posting> termPostingsIterator = indexDB.iterator(termID);
         openedIterators.add(termPostingsIterator);
         return new PostingsAdapter(termPostingsIterator);
@@ -92,6 +102,7 @@ public class Search implements AutoCloseable {
     public void close() throws Exception {
         documentDB.close();
         indexDB.close();
+        bigrammDB.close();
         termDB.close();
     }
 }

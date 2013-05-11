@@ -15,4 +15,9 @@ public interface SearchDatabase extends AutoCloseable {
 
     DocumentDB openDocumentDB() throws Exception;
     void truncateDocumentDB() throws Exception;
+
+    BigrammDB openBigrammDB() throws Exception;
+    void truncateBigrammDB() throws Exception;
+
+    void truncateSequences() throws Exception;
 }

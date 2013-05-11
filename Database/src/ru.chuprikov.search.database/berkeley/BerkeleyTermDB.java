@@ -1,9 +1,6 @@
 package ru.chuprikov.search.database.berkeley;
 
-import com.sleepycat.bind.tuple.StringBinding;
-import com.sleepycat.bind.tuple.TupleInput;
-import com.sleepycat.bind.tuple.TupleOutput;
-import com.sleepycat.bind.tuple.TupleTupleBinding;
+import com.sleepycat.bind.tuple.*;
 import com.sleepycat.collections.StoredKeySet;
 import com.sleepycat.collections.StoredSortedMap;
 import com.sleepycat.je.*;
@@ -13,22 +10,33 @@ import ru.chuprikov.search.datatypes.Term;
 
 class BerkeleyTermDB extends ThreadLocalEntriesEntries implements TermDB {
     private final Database dictionaryDB;
+    private final SecondaryDatabase termByIDDB;
     private final StoredSortedMap<String, Term> storedSortedMap;
+    private final StoredSortedMap<Long, Term> storedSortedIndexMap;
 
     private final Sequence idSequence;
 
+    static final String TERM_DB = "term";
+    static final String TERM_BY_ID_IDX ="term_by_id_idx";
+
+    private final SecondaryKeyCreator idByTermKeyCreator = new TupleTupleKeyCreator<Long>() {
+        @Override
+        public boolean createSecondaryKey(TupleInput primaryKeyInput, TupleInput dataInput, TupleOutput indexKeyOutput) {
+            indexKeyOutput.writeLong(dataInput.readLong());
+            return true;
+        }
+    };
+
     BerkeleyTermDB(Environment env, Database sequencesDB) {
-        DatabaseConfig dictionaryDatabaseConfig = new DatabaseConfig();
-        dictionaryDatabaseConfig.setAllowCreate(true);
-        dictionaryDB = env.openDatabase(null, "term", dictionaryDatabaseConfig);
+        dictionaryDB = env.openDatabase(null, TERM_DB, new DatabaseConfig().setAllowCreate(true));
+        termByIDDB = env.openSecondaryDatabase(null, TERM_BY_ID_IDX, dictionaryDB, (SecondaryConfig)
+                new SecondaryConfig().setAllowPopulate(true).setKeyCreator(idByTermKeyCreator).setAllowCreate(true));
 
         storedSortedMap = new StoredSortedMap<>(dictionaryDB, new StringBinding(), termEntityBinding, true);
+        storedSortedIndexMap = new StoredSortedMap<>(termByIDDB, new LongBinding(), termEntityBinding, true);
 
-        SequenceConfig dictionaryIDSequenceConfig = new SequenceConfig();
-        dictionaryIDSequenceConfig.setAllowCreate(true);
-        dictionaryIDSequenceConfig.setInitialValue(1);
-        StringBinding.stringToEntry("term", keyEntry.get());
-        idSequence = sequencesDB.openSequence(null, keyEntry.get(), dictionaryIDSequenceConfig);
+        StringBinding.stringToEntry(TERM_DB, keyEntry.get());
+        idSequence = sequencesDB.openSequence(null, keyEntry.get(), SequenceConfig.DEFAULT.setAllowCreate(true).setInitialValue(1));
     }
 
     private static TupleTupleBinding<Term> termEntityBinding = new TupleTupleBinding<Term>() {
@@ -51,6 +59,11 @@ class BerkeleyTermDB extends ThreadLocalEntriesEntries implements TermDB {
     @Override
     public Term get(String term) throws Exception {
         return storedSortedMap.get(term);
+    }
+
+    @Override
+    public Term get(long termID) throws Exception {
+        return storedSortedIndexMap.get(termID);
     }
 
     @Override
@@ -89,6 +102,7 @@ class BerkeleyTermDB extends ThreadLocalEntriesEntries implements TermDB {
     @Override
     public void close() throws Exception {
         idSequence.close();
+        termByIDDB.close();
         dictionaryDB.close();
     }
 }

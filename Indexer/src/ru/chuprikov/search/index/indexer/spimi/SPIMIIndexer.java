@@ -1,8 +1,10 @@
 package ru.chuprikov.search.index.indexer.spimi;
 
+import ru.chuprikov.search.database.BigrammDB;
 import ru.chuprikov.search.database.IndexDB;
 import ru.chuprikov.search.database.PostingsWriter;
 import ru.chuprikov.search.database.TermDB;
+import ru.chuprikov.search.datatypes.BigrammUnit;
 import ru.chuprikov.search.datatypes.Datatypes;
 import ru.chuprikov.search.index.indexer.Indexer;
 
@@ -18,13 +20,15 @@ public class SPIMIIndexer implements Indexer {
     private SPIMIChunkIndexer chunkIndexer;
 
     private final IndexDB indexDB;
+    private final BigrammDB bigrammDB;
 
     private boolean closed = false;
     private final TermDB termDB;
 
-    public SPIMIIndexer(File temporaryFolder, IndexDB indexDB, TermDB termDB, long maxMemoryUsageBytes) {
+    public SPIMIIndexer(File temporaryFolder, IndexDB indexDB, TermDB termDB, BigrammDB bigrammDB, long maxMemoryUsageBytes) {
         this.indexDB = indexDB;
         this.termDB = termDB;
+        this.bigrammDB = bigrammDB;
         this.maxMemoryUsage = maxMemoryUsageBytes;
         this.temporaryFolder = temporaryFolder;
         this.temporaryFolder.mkdirs();
@@ -64,7 +68,13 @@ public class SPIMIIndexer implements Indexer {
     }
 
     private void processPostings(String term, PriorityQueue<PostingsListReader> postings) throws Exception {
-        try (PostingsWriter writer = indexDB.getPostingsWriter(termDB.add(term))) {
+        final long termID = termDB.add(term);
+
+        for (int i = 0; i < term.length(); i++) {
+            bigrammDB.add(term.substring(i, i + 1) + term.charAt(i < term.length() - 1 ? i + 1 : 0), new BigrammUnit(termID, term.length()));
+        }
+
+        try (PostingsWriter writer = indexDB.getPostingsWriter(termID)) {
             long count = 0;
             while (!postings.isEmpty()) {
                 final PostingsListReader currentReader = postings.poll();

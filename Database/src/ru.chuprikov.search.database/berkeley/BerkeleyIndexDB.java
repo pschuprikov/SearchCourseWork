@@ -18,11 +18,7 @@ class BerkeleyIndexDB extends ThreadLocalEntriesEntries implements IndexDB {
 
     BerkeleyIndexDB(Environment env, int maxPostingsChunkSizeBytes) throws DatabaseException {
         this.maxPostingsChunkSizeBytes = maxPostingsChunkSizeBytes;
-
-        DatabaseConfig indexDatabaseConfig = new DatabaseConfig();
-        indexDatabaseConfig.setAllowCreate(true);
-        indexDatabaseConfig.setSortedDuplicates(true);
-        indexDB = env.openDatabase(null, "index", indexDatabaseConfig);
+        indexDB = env.openDatabase(null, "index", new DatabaseConfig().setAllowCreate(true).setSortedDuplicates(true));
     }
 
     @Override

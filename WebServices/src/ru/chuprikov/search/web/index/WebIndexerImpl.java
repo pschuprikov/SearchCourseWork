@@ -21,6 +21,7 @@ public class WebIndexerImpl implements WebIndexer {
     private DocumentDB documentDB;
     private TermDB termDB;
     private ParsedDB parsedDB;
+    private BigrammDB bigrammDB;
 
     private static void splitWithType(Map<String, Datatypes.Posting.Builder> dic, String text, long docID, Datatypes.Posting.PositionType type) {
         int positionIdx = 0;
@@ -41,24 +42,24 @@ public class WebIndexerImpl implements WebIndexer {
         documentDB = searchDB.openDocumentDB();
         termDB = searchDB.openTermDB();
         parsedDB = searchDB.openParsedDB();
+        bigrammDB = searchDB.openBigrammDB();
     }
 
     @PreDestroy
     private void closeDatabaseConnection() throws Exception {
         termDB.close();
+        bigrammDB.close();
         documentDB.close();
         parsedDB.close();
         searchDB.close();
     }
-
-
 
     @Override
     public ProcessStatistics index(ProblemID from, ProblemID to, long maxMemoryUsage, int maxPostingsChunkSize) throws Exception {
         int total = 0;
         int successful = 0;
         try (IndexDB indexDB = searchDB.openIndexDB(maxPostingsChunkSize);
-             Indexer indexer = new SPIMIIndexer(new File(System.getProperty("user.dir") + "/spimi"), indexDB, termDB, maxMemoryUsage);
+             Indexer indexer = new SPIMIIndexer(new File(System.getProperty("user.dir") + "/spimi"), indexDB, termDB, bigrammDB, maxMemoryUsage);
              CloseableIterator<ParsedProblem> parsedIter = parsedDB.upperBound(from)) {
 
             while (parsedIter.hasNext()) {
@@ -93,11 +94,10 @@ public class WebIndexerImpl implements WebIndexer {
 
     @Override
     public ProcessStatistics indexAll(long maxMemoryUsage, int maxPostingsChunkSize) throws Exception {
-        Thread.sleep(1000000);
         int total = 0;
         int successful = 0;
         try (IndexDB indexDB = searchDB.openIndexDB(maxPostingsChunkSize);
-             Indexer indexer = new SPIMIIndexer(new File(System.getProperty("user.dir") + "/spimi"), indexDB, termDB, maxMemoryUsage);
+             Indexer indexer = new SPIMIIndexer(new File(System.getProperty("user.dir") + "/spimi"), indexDB, termDB, bigrammDB, maxMemoryUsage);
              CloseableIterator<ParsedProblem> parsedIter = parsedDB.iterator()) {
 
             while (parsedIter.hasNext()) {
