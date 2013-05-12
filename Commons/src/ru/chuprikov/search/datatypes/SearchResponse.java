@@ -5,16 +5,16 @@ import javax.xml.bind.annotation.XmlRootElement;
 @XmlRootElement
 public class SearchResponse {
     private long timeMills = 0;
-    private String correctedRequest = "";
+    private String[] suggestions = new String[0];
     private Document[] foundDocuments = new Document[0];
 
     public SearchResponse() {
 
     }
 
-    public SearchResponse(long timeMills, String correctedRequest, Document[] foundDocuments) {
+    public SearchResponse(long timeMills, String[] suggestions, Document[] foundDocuments) {
         this.timeMills = timeMills;
-        this.correctedRequest = correctedRequest;
+        this.suggestions = suggestions;
         this.foundDocuments = foundDocuments;
     }
 
@@ -30,15 +30,15 @@ public class SearchResponse {
         return timeMills;
     }
 
+    public String[] getSuggestions() {
+        return suggestions;
+    }
+
+    public void setSuggestions(String[] suggestions) {
+        this.suggestions = suggestions;
+    }
+
     public void setTimeMills(long timeMills) {
         this.timeMills = timeMills;
-    }
-
-    public String getCorrectedRequest() {
-        return correctedRequest;
-    }
-
-    public void setCorrectedRequest(String correctedRequest) {
-        this.correctedRequest = correctedRequest;
     }
 }

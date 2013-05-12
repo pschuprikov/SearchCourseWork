@@ -7,6 +7,7 @@ import ru.chuprikov.search.search.tokens.TokenKind;
 import ru.chuprikov.search.search.tokens.Tokenizer;
 import ru.kirillova.search.normspellcorr.Kgramm;
 import ru.kirillova.search.normspellcorr.Normalize;
+import ru.kirillova.search.normspellcorr.Suggestion;
 
 import java.util.*;
 
@@ -25,21 +26,24 @@ public class Search implements AutoCloseable {
         this.kgramm = new Kgramm(termDB, bigrammDB);
     }
 
-    private Iterator<PostingInfo> parseE(Tokenizer tokenizer, List<CloseableIterator<Datatypes.Posting>> openedIterators, StringBuilder correctedRequestBuilder) throws Exception {
-        Iterator<PostingInfo> cur = parseN(tokenizer, openedIterators, correctedRequestBuilder);
+    private Iterator<PostingInfo> parseE(Tokenizer tokenizer, List<CloseableIterator<Datatypes.Posting>> openedIterators, Suggestions sugest) throws Exception {
+        Iterator<PostingInfo> cur = parseN(tokenizer, openedIterators, sugest);
         while (tokenizer.currentToken().kind() == TokenKind.PROXIMITY) {
             int proximity = tokenizer.currentToken().getIntegerValue();
-            correctedRequestBuilder.append(" /" + proximity + " ");
+            sugest.appendToken(" /" + proximity + " ");
             tokenizer.readNextToken();
-            Iterator<PostingInfo> next = parseN(tokenizer, openedIterators, correctedRequestBuilder);
+            Iterator<PostingInfo> next = parseN(tokenizer, openedIterators, sugest);
             cur = new Intersector(cur, next, Joiners.getProximityJoiner(proximity));
         }
         return cur;
     }
 
-    private Iterator<PostingInfo> getWildcardIterator(String token, List<CloseableIterator<Datatypes.Posting>> openedIterators, StringBuilder correctedRequestBuilder) throws Exception {
+    private Iterator<PostingInfo> getWildcardIterator(String token, List<CloseableIterator<Datatypes.Posting>> openedIterators, Suggestions sugest) throws Exception {
+        final String stemmedToken = Normalize.getBasisWord(token);
+        final String suffix = token.substring(stemmedToken.length(), token.length());
+
         Set<String> kgramms = new HashSet<>();
-        String[] bits = token.split("\\*");
+        String[] bits = stemmedToken.split("\\*");
         if (bits[0].length() >= 2)
             kgramms.add("$" + bits[0].substring(0, 2));
         if (bits[bits.length - 1].length() >= 2)
@@ -69,14 +73,14 @@ public class Search implements AutoCloseable {
 
         List<Iterator<PostingInfo>> options = new ArrayList<>();
 
-        correctedRequestBuilder.append("{");
+        sugest.appendToken("{");
         for (Term term : candidates) {
-            if (term.getTerm().matches(token.replaceAll("\\*", ".*"))) {
+            if (term.getTerm().matches(stemmedToken.replaceAll("\\*", ".*"))) {
                 options.add(getTermIterator(term, openedIterators));
-                correctedRequestBuilder.append(term.getTerm() + " ");
+                sugest.appendToken(term.getTerm() + suffix + " ");
             }
         }
-        correctedRequestBuilder.append("}");
+        sugest.appendToken("}");
 
         return new Merger(options);
     }
@@ -87,54 +91,55 @@ public class Search implements AutoCloseable {
         return new PostingsAdapter(termPostingsIterator);
     }
 
-    private Iterator<PostingInfo> getPostingsIterator(String token, List<CloseableIterator<Datatypes.Posting>> openedIterators, StringBuilder correctedRequestBuilder) throws Exception {
+    private Iterator<PostingInfo> getPostingsIterator(String token, List<CloseableIterator<Datatypes.Posting>> openedIterators, Suggestions sugest) throws Exception {
         if (token.contains("*")) {
-            return getWildcardIterator(token, openedIterators, correctedRequestBuilder);
+            return getWildcardIterator(token, openedIterators, sugest);
         } else {
             final String termStr = Normalize.getBasisWord(token);
             Term term = termDB.get(termStr);
 
             if (term == null) {
-                String tokenReplacement = kgramm.fixMistake(token).get(0);
+                List<Suggestion> suggestions = kgramm.fixMistake(token);
+                String tokenReplacement = suggestions.get(0).getWord();
                 term = termDB.get(Normalize.getBasisWord(tokenReplacement));
 
-                correctedRequestBuilder.append(tokenReplacement);
+                sugest.appendSuggestions(suggestions);
             } else
-                correctedRequestBuilder.append(token);
+                sugest.appendToken(token);
 
             return getTermIterator(term, openedIterators);
         }
     }
 
-    private Iterator<PostingInfo> parseN(Tokenizer tokenizer, List<CloseableIterator<Datatypes.Posting>> openedIterators, StringBuilder correctedRequestBuilder) throws Exception {
+    private Iterator<PostingInfo> parseN(Tokenizer tokenizer, List<CloseableIterator<Datatypes.Posting>> openedIterators, Suggestions sugest) throws Exception {
         Iterator<PostingInfo> result;
         if (tokenizer.currentToken().kind() == TokenKind.CITE) {
-            correctedRequestBuilder.append('"');
+            sugest.appendToken("\"");
             tokenizer.readNextToken();
 
-            result = getPostingsIterator(tokenizer.currentToken().getStringValue(), openedIterators, correctedRequestBuilder);
+            result = getPostingsIterator(tokenizer.currentToken().getStringValue(), openedIterators, sugest);
             tokenizer.readNextToken();
 
             while (tokenizer.currentToken().kind() != TokenKind.CITE) {
-                correctedRequestBuilder.append(' ');
-                result = new Intersector(result, getPostingsIterator(tokenizer.currentToken().getStringValue(), openedIterators, correctedRequestBuilder), Joiners.getPhraseJoiner());
+                sugest.appendToken(" ");
+                result = new Intersector(result, getPostingsIterator(tokenizer.currentToken().getStringValue(), openedIterators, sugest), Joiners.getPhraseJoiner());
                 tokenizer.readNextToken();
             }
 
-            correctedRequestBuilder.append('"');
+            sugest.appendToken("\"");
             tokenizer.readNextToken();
         } else {
-            result = getPostingsIterator(tokenizer.currentToken().getStringValue(), openedIterators, correctedRequestBuilder);
+            result = getPostingsIterator(tokenizer.currentToken().getStringValue(), openedIterators, sugest);
             tokenizer.readNextToken();
         }
         return result;
     }
 
-    private Iterator<PostingInfo> parseC(Tokenizer tokenizer, List<CloseableIterator<Datatypes.Posting>> openedIterators, StringBuilder correctedRequestBuilder) throws Exception {
-        Iterator<PostingInfo> cur = parseE(tokenizer, openedIterators, correctedRequestBuilder);
+    private Iterator<PostingInfo> parseC(Tokenizer tokenizer, List<CloseableIterator<Datatypes.Posting>> openedIterators, Suggestions sugest) throws Exception {
+        Iterator<PostingInfo> cur = parseE(tokenizer, openedIterators, sugest);
         while (tokenizer.currentToken().kind() != TokenKind.EOF) {
-            correctedRequestBuilder.append(' ');
-            cur = new Intersector(cur, parseE(tokenizer, openedIterators, correctedRequestBuilder), Joiners.getOrJoiner());
+            sugest.appendToken(" ");
+            cur = new Intersector(cur, parseE(tokenizer, openedIterators, sugest), Joiners.getOrJoiner());
         }
 
         return cur;
@@ -145,8 +150,8 @@ public class Search implements AutoCloseable {
         try {
             long startTime = System.currentTimeMillis();
 
-            StringBuilder correctedRequestBuilder = new StringBuilder();
-            Iterator<PostingInfo> it = parseC(new Tokenizer(request), openedIterators, correctedRequestBuilder);
+            Suggestions sugest = new Suggestions();
+            Iterator<PostingInfo> it = parseC(new Tokenizer(request), openedIterators, sugest);
             Set<Long> duplicateEliminator = new HashSet<>();
 
             while (it.hasNext() && duplicateEliminator.size() < limit)
@@ -157,7 +162,7 @@ public class Search implements AutoCloseable {
             for (long documentID : duplicateEliminator)
                 found[writeIdx++] = documentDB.get(documentID);
 
-            return new SearchResponse(System.currentTimeMillis() - startTime, correctedRequestBuilder.toString(), found);
+            return new SearchResponse(System.currentTimeMillis() - startTime, sugest.getSuggestions(5), found);
         } finally {
             for (CloseableIterator<Datatypes.Posting> cit : openedIterators)
                 cit.close();

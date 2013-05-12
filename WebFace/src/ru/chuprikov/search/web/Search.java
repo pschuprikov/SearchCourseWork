@@ -64,8 +64,15 @@ public class Search implements Serializable{
     public void search() throws Exception {
         searchResult = new Document[0];
         SearchResponse response = webSearch.searchSimpleConjunction(request, limit);
+
         FacesContext.getCurrentInstance().addMessage("search",
-            new FacesMessage("Search result", "Time taken: " + response.getTimeMills() + "ms; Searching: " + response.getCorrectedRequest()));
+            new FacesMessage("Search result", "Time taken: " + response.getTimeMills() + "ms"));
+
+
+        for (int i = 0; i < response.getSuggestions().length; i++) {
+            FacesContext.getCurrentInstance().addMessage(null,
+                    new FacesMessage(i == 0 ? "Suggesstion (searched):" : "Suggestion: ", response.getSuggestions()[i]));
+        }
         searchResult = response.getFoundDocuments();
     }
 

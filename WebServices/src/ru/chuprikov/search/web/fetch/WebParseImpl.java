@@ -43,6 +43,26 @@ public class WebParseImpl implements WebParse {
         }
     }
 
+    private String alphaNumericStringFilter(String str) {
+        StringBuilder res = new StringBuilder();
+        for (char c : str.toCharArray()) {
+            if (Character.isLetterOrDigit(c))
+                res.append(c);
+            else
+                res.append(' ');
+        }
+        return res.toString();
+    }
+
+
+    private ParsedProblem applyAlphaNumericFilter(ParsedProblem problem) {
+        problem.setCondition(alphaNumericStringFilter(problem.getCondition()));
+        problem.setTitle(alphaNumericStringFilter(problem.getTitle()));
+        problem.setInputSpecification(alphaNumericStringFilter(problem.getInputSpecification()));
+        problem.setOutputSpecification(alphaNumericStringFilter(problem.getOutputSpecification()));
+        return problem;
+    }
+
     @Override
     public ProcessStatistics parse(ProblemID from, ProblemID to) throws Exception {
         int total = 0;
@@ -59,7 +79,7 @@ public class WebParseImpl implements WebParse {
                     already++;
                 } else {
                     try {
-                        parsedDB.saveParsed(parser.parseContent(current));
+                        parsedDB.saveParsed(applyAlphaNumericFilter(parser.parseContent(current)));
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
@@ -88,7 +108,7 @@ public class WebParseImpl implements WebParse {
                 if (parsedDB.contains(current.getProblemID())) {
                     already++;
                 } else {
-                    parsedDB.saveParsed(parser.parseContent(current));
+                    parsedDB.saveParsed(applyAlphaNumericFilter(parser.parseContent(current)));
                     success++;
                 }
             }

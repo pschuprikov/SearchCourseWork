@@ -68,9 +68,9 @@ public class SPIMIIndexer implements Indexer {
     }
 
     private void processPostings(String term, PriorityQueue<PostingsListReader> postings) throws Exception {
+        boolean isTermNew = !termDB.contains(term);
         final long termID = termDB.add(term);
-
-        processKgramm(term, termID);
+        if (isTermNew) processKgramm(term, termID);
 
         try (PostingsWriter writer = indexDB.getPostingsWriter(termID)) {
             long count = 0;

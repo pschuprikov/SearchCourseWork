@@ -3,6 +3,7 @@ package ru.chuprikov.search.gather.problemsets;
 import ru.chuprikov.search.datatypes.ProblemRawData;
 import ru.chuprikov.search.gather.fetcher.FetchInfo;
 import ru.chuprikov.search.gather.fetcher.StandardURLContentLoader;
+import ru.chuprikov.search.misc.ProblemSetName;
 
 import java.io.IOException;
 import java.io.OutputStreamWriter;
@@ -30,7 +31,7 @@ class UVaURLContentLoader extends StandardURLContentLoader<ProblemFetchInfo> {
 
     @Override
     public String loadContent(FetchInfo<ProblemFetchInfo> problem, Proxy proxy) throws IOException {
-        if (!problem.get().getProblemID().getResource().equals("UVa"))
+        if (!problem.get().getProblemID().getResource().equals(ProblemSetName.UVA.name()))
             throw new AssertionError();
 
         StringBuilder sb = new StringBuilder();

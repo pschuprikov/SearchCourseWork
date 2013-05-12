@@ -1,6 +1,7 @@
 package ru.chuprikov.search.database.berkeley;
 
 import com.sleepycat.bind.tuple.LongBinding;
+import com.sleepycat.bind.tuple.TupleInput;
 import com.sleepycat.bind.tuple.TupleOutput;
 import com.sleepycat.je.*;
 import ru.chuprikov.search.database.PostingsWriter;
@@ -35,8 +36,12 @@ class BerkeleyPostingsWriter implements PostingsWriter {
             else
                 status = cursor.getLast(keyEntry, valueEntry, LockMode.DEFAULT);
 
-            if (status == OperationStatus.SUCCESS && LongBinding.entryToLong(keyEntry) == termID)
-                outputStream.write(valueEntry.getData());
+            if (status == OperationStatus.SUCCESS && LongBinding.entryToLong(keyEntry) == termID) {
+                TupleInput reader = new TupleInput(valueEntry.getData());
+                reader.readLong();
+                while (reader.available() > 0)
+                    outputStream.write(reader.read());
+            }
 
             LongBinding.longToEntry(termID, keyEntry);
         } finally {

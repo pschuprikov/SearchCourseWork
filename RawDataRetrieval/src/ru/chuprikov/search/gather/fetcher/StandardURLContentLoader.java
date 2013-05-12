@@ -9,8 +9,8 @@ import java.net.URLConnection;
 
 public class StandardURLContentLoader<T> implements URLContentLoader<T> {
 
-    private static final int CONNECT_TIMEOUT_MILLS = 500;
-    private static final int READ_TIMEOUT_MILLS = 500;
+    private static final int CONNECT_TIMEOUT_MILLS = 1000;
+    private static final int READ_TIMEOUT_MILLS = 1000;
 
     protected String readFromConnection(URLConnection conn) throws IOException {
         final BufferedReader contentReader = new BufferedReader(new InputStreamReader(conn.getInputStream()));

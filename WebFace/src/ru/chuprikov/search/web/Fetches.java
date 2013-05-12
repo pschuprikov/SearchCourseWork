@@ -71,8 +71,10 @@ public class Fetches implements Serializable {
     }
 
     public void advance() throws Exception {
-        if (lastDatas != null && lastDatas.length > 0)
-            lastDatas = webFetch.getNextProblemRawDatas(lastDatas[lastDatas.length - 1].getProblemID(), CHUNK_SIZE);
+        if (lastDatas != null && lastDatas.length > 0) {
+            ProblemRawData[] res = webFetch.getNextProblemRawDatas(lastDatas[lastDatas.length - 1].getProblemID(), CHUNK_SIZE);
+            lastDatas = res;
+        }
     }
 
     public void clear() throws Exception {

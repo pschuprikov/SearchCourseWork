@@ -14,7 +14,7 @@
         <h:form>
             <p:panel header="Search">
                 <p:messages id="resp" showDetail="true"/>
-                <p:inputText value="#{search.request}"/>
+                <p:inputText value="#{search.request}"/><h:outputText value="(&quot;cite&quot;) (a /proximity b) (prefix*suffix)"/>
                 <p:commandButton update="searchResultTable,resp" actionListener="#{search.search}" value="Search"/>
             </p:panel>
             <p:panel header="Search result">

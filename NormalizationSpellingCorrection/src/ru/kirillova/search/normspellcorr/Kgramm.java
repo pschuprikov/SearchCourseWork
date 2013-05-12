@@ -143,10 +143,9 @@ public class Kgramm {
 		return d[n + 1][m + 1];
 	}
 
-    public List<String> fixMistake(String str) throws Exception {
+    public List<Suggestion> fixMistake(String str) throws Exception {
         String s = Normalize.getBasisWord(str);
         String ending = str.substring(s.length(), str.length());
-        List<String> result = new ArrayList<>();
         List<Term> terms = getSimilarTerms(s);
         Map<String, Double> nearestWords = new HashMap<>();
 
@@ -157,22 +156,18 @@ public class Kgramm {
             }
         }
 
-        // можно добавить функцию рейтинга
-        List<Entry<String, Double>> entries = new ArrayList<>(nearestWords.entrySet());
-        Collections.sort(entries, new Comparator<Entry<String, Double>>() {
-            public int compare(Entry<String, Double> e1,
-                               Entry<String, Double> e2) {
-                double v1 = e1.getValue();
-                double v2 = e2.getValue();
-                return (v1 > v2) ? 1 : (v1 == v2) ? 0 : -1;
-            }
-        });
+        // можно добавить функцию рейтинга)
 
-        ListIterator<Entry<String, Double>> it2 = entries.listIterator();
-        int k = 10;
-        for (int i = 0; (i < k) && (it2.hasNext()); ++i) {
-            result.add(it2.next().getKey());
+        List<Suggestion> result = new ArrayList<>();
+        for (Entry<String, Double> e : nearestWords.entrySet()) {
+            result.add(new Suggestion(e.getKey(), e.getValue()));
         }
+        Collections.sort(result);
+
+        while (result.size() > 10) {
+            result.remove(result.size() - 1);
+        }
+
         return result;
     }
 }

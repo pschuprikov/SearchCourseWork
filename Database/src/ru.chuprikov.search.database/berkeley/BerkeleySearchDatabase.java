@@ -7,7 +7,7 @@ import java.io.File;
 
 public class BerkeleySearchDatabase implements SearchDatabase {
     private final Environment env;
-    private final Database sequencesDB;
+    private Database sequencesDB;
 
     public BerkeleySearchDatabase(File file) throws DatabaseException {
         EnvironmentConfig conf = new EnvironmentConfig();
@@ -80,7 +80,9 @@ public class BerkeleySearchDatabase implements SearchDatabase {
 
     @Override
     public void truncateSequences() throws Exception {
+        sequencesDB.close();
         env.truncateDatabase(null, "seqs", false);
+        sequencesDB = env.openDatabase(null, "seqs", new DatabaseConfig().setAllowCreate(true));
     }
 
     @Override

@@ -59,7 +59,7 @@ public class WebIndexerImpl implements WebIndexer {
         int total = 0;
         int successful = 0;
         try (IndexDB indexDB = searchDB.openIndexDB(maxPostingsChunkSize);
-             Indexer indexer = new SPIMIIndexer(new File(System.getProperty("user.dir") + "/spimi"), indexDB, termDB, bigrammDB, maxMemoryUsage);
+             Indexer indexer = new SPIMIIndexer(new File("/home/pasha/repos/SearchCourseWork/spimi"), indexDB, termDB, bigrammDB, maxMemoryUsage);
              CloseableIterator<ParsedProblem> parsedIter = parsedDB.upperBound(from)) {
 
             while (parsedIter.hasNext()) {
@@ -94,17 +94,21 @@ public class WebIndexerImpl implements WebIndexer {
 
     @Override
     public ProcessStatistics indexAll(long maxMemoryUsage, int maxPostingsChunkSize) throws Exception {
-        int total = 0;
-        int successful = 0;
-        try (IndexDB indexDB = searchDB.openIndexDB(maxPostingsChunkSize);
-             Indexer indexer = new SPIMIIndexer(new File(System.getProperty("user.dir") + "/spimi"), indexDB, termDB, bigrammDB, maxMemoryUsage);
-             CloseableIterator<ParsedProblem> parsedIter = parsedDB.iterator()) {
+        try {
+            int total = 0;
+            int successful = 0;
+            try (IndexDB indexDB = searchDB.openIndexDB(maxPostingsChunkSize);
+                 Indexer indexer = new SPIMIIndexer(new File("/home/pasha/repos/SearchCourseWork/spimi"), indexDB, termDB, bigrammDB, maxMemoryUsage);
+                 CloseableIterator<ParsedProblem> parsedIter = parsedDB.iterator()) {
 
-            while (parsedIter.hasNext()) {
-                total++;
-                successful = processDocument(successful, indexer, parsedIter.next());
+                while (parsedIter.hasNext()) {
+                    total++;
+                    successful = processDocument(successful, indexer, parsedIter.next());
+                }
             }
+            return new ProcessStatistics(total, successful, 0);
+        } catch (Exception e) {
+            throw e;
         }
-        return new ProcessStatistics(total, successful, 0);
     }
 }
