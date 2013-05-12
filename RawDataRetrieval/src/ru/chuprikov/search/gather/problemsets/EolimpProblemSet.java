@@ -3,6 +3,7 @@ package ru.chuprikov.search.gather.problemsets;
 import ru.chuprikov.search.datatypes.ProblemID;
 import ru.chuprikov.search.gather.fetcher.StandardURLContentLoader;
 import ru.chuprikov.search.gather.fetcher.URLContentLoader;
+import ru.chuprikov.search.misc.ProblemSetName;
 
 class EolimpProblemSet implements ProblemSet {
     private final int last;
@@ -34,7 +35,7 @@ class EolimpProblemSet implements ProblemSet {
     @Override
     public ProblemFetchInfo next() {
         current++;
-        return new ProblemFetchInfo(new ProblemID(ProblemSets.ProblemSetName.EOLIMP.toString(), Integer.toString(current)),
+        return new ProblemFetchInfo(new ProblemID(ProblemSetName.EOLIMP.toString(), Integer.toString(current)),
                 "http://www.e-olimp.com/en/problems/" + current, this
         );
     }

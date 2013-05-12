@@ -12,6 +12,7 @@ import ru.chuprikov.search.gather.fetcher.NoProxyProvider;
 import ru.chuprikov.search.gather.fetcher.ProxyFetcher;
 import ru.chuprikov.search.gather.problemsets.ProblemSetLoader;
 import ru.chuprikov.search.gather.problemsets.ProblemSets;
+import ru.chuprikov.search.misc.ProblemSetName;
 import ru.chuprikov.search.web.WebFetch;
 
 import javax.annotation.PostConstruct;
@@ -51,7 +52,7 @@ public class WebFetchImpl implements WebFetch {
         Fetcher proxyFetcher = new ProxyFetcher(new NoProxyProvider());
         ProblemSetLoader loader = new ProblemSetLoader(proxyFetcher, fetchedDB);
 
-        loader.loadURLs(ProblemSets.getRange(ProblemSets.ProblemSetName.valueOf(resource), from, to));
+        loader.loadURLs(ProblemSets.getRange(ProblemSetName.valueOf(resource), from, to));
         proxyFetcher.awaitCompletion();
 
         ProcessStatistics response = new ProcessStatistics();

@@ -81,7 +81,6 @@ public class Documents implements Serializable {
     }
 
     public String showContent() throws Exception {
-        control.setActiveIdx(6);
         return "parsedProblem";
     }
 }

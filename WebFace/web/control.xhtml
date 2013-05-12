@@ -12,6 +12,7 @@
 </h:head>
 <h:body>
     <p:tabView id="tabs" activeIndex="#{control.activeIdx}" style="border: 0">
+        <p:ajax event="tabChange" listener="#{control.onTabChange}"/>
         <p:tab id="fetchTab" title="fetch control">
             <c:fetch/>
         </p:tab>

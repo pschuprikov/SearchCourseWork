@@ -6,6 +6,7 @@
       xmlns:c="http://java.sun.com/jsf/composite"
       xmlns:h="http://java.sun.com/jsf/html"
       xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://java.sun.com/jsf/core"
       xml:lang="en" lang="en">
 
 <c:interface name="index"/>
@@ -15,13 +16,19 @@
             <p:messages id="resp" showDetail="true"/>
             <p:panel header="From">
                 <p:panelGrid columns="2">
-                    <h:outputText value="Resource:"/><p:inputText value="#{index.problemIDFrom.resource}"/>
+                    <h:outputText value="Resource:"/>
+                    <p:selectOneMenu value="#{index.problemIDFrom.resource}" effect="fade" style="width: 100%">
+                        <f:selectItems value="#{resourcesList.values}" var="resname" itemLabel="#{resname}" itemValue="#{resname}"/>
+                    </p:selectOneMenu>
                     <h:outputText value="ProblemID:"/><p:inputText value="#{index.problemIDFrom.problemID}"/>
                 </p:panelGrid>
             </p:panel>
             <p:panel header="To">
                 <p:panelGrid columns="2">
-                    <h:outputText value="Resource:"/><p:inputText value="#{index.problemIDTo.resource}"/>
+                    <h:outputText value="Resource:"/>
+                    <p:selectOneMenu value="#{index.problemIDTo.resource}" effect="fade" style="width: 100%">
+                        <f:selectItems value="#{resourcesList.values}" var="resname" itemLabel="#{resname}" itemValue="#{resname}"/>
+                    </p:selectOneMenu>
                     <h:outputText value="ProblemID:"/><p:inputText value="#{index.problemIDTo.problemID}"/>
                 </p:panelGrid>
             </p:panel>

@@ -6,7 +6,6 @@ import ru.chuprikov.search.datatypes.SearchResponse;
 import javax.annotation.PostConstruct;
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
-import javax.faces.bean.ManagedProperty;
 import javax.faces.bean.SessionScoped;
 import javax.faces.context.FacesContext;
 import javax.xml.namespace.QName;
@@ -22,17 +21,6 @@ public class Search implements Serializable{
 
     private final static QName qname = new QName("http://search.web.search.chuprikov.ru/", "WebSearchImplService");
     private static URL url;
-
-    public void setControl(Control control) {
-        this.control = control;
-    }
-
-    public Control getControl() {
-        return control;
-    }
-
-    @ManagedProperty(value="#{control}")
-    private Control control;
 
     private WebSearch webSearch;
 
@@ -82,7 +70,6 @@ public class Search implements Serializable{
     }
 
     public String showContent() throws Exception {
-        control.setActiveIdx(7);
         return "parsedProblem";
     }
 }

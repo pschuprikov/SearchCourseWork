@@ -3,6 +3,7 @@ package ru.chuprikov.search.gather.problemsets;
 import ru.chuprikov.search.datatypes.ProblemID;
 import ru.chuprikov.search.gather.fetcher.StandardURLContentLoader;
 import ru.chuprikov.search.gather.fetcher.URLContentLoader;
+import ru.chuprikov.search.misc.ProblemSetName;
 
 class TimusProblemSet implements ProblemSet {
     private final int last;
@@ -24,7 +25,7 @@ class TimusProblemSet implements ProblemSet {
     public ProblemFetchInfo next() {
         current++;
         return new ProblemFetchInfo(
-            new ProblemID(ProblemSets.ProblemSetName.TIMUS.toString(), Integer.toString(current)),
+            new ProblemID(ProblemSetName.TIMUS.toString(), Integer.toString(current)),
             "http://acm.timus.ru/problem.aspx?num=" + current, this
         );
     }

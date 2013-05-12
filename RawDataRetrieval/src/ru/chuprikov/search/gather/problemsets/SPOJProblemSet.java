@@ -3,6 +3,7 @@ package ru.chuprikov.search.gather.problemsets;
 import ru.chuprikov.search.datatypes.ProblemID;
 import ru.chuprikov.search.gather.fetcher.StandardURLContentLoader;
 import ru.chuprikov.search.gather.fetcher.URLContentLoader;
+import ru.chuprikov.search.misc.ProblemSetName;
 
 import java.io.BufferedReader;
 import java.io.FileReader;
@@ -19,7 +20,7 @@ public class SPOJProblemSet implements ProblemSet {
     private static final URLContentLoader<ProblemFetchInfo> loader = new StandardURLContentLoader<>();
 
     SPOJProblemSet(int first, int last) throws IOException {
-        try (BufferedReader br = new BufferedReader(new FileReader("spojids"))) {
+        try (BufferedReader br = new BufferedReader(new FileReader("/home/pasha/repos/SearchCourseWork/spojids"))) {
             while (true) {
                 final String line = br.readLine();
                 if (line == null)
@@ -50,7 +51,7 @@ public class SPOJProblemSet implements ProblemSet {
     @Override
     public ProblemFetchInfo next() {
         current++;
-        return new ProblemFetchInfo(new ProblemID(ProblemSets.ProblemSetName.SPOJ.toString(), ids.get(Math.min(current, ids.size() - 1))),
+        return new ProblemFetchInfo(new ProblemID(ProblemSetName.SPOJ.toString(), ids.get(Math.min(current, ids.size() - 1))),
             "http://www.spoj.com/problems/" + ids.get(Math.min(current, ids.size() - 1)), this
         );
     }

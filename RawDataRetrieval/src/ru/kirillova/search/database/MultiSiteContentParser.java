@@ -2,7 +2,7 @@ package ru.kirillova.search.database;
 
 import ru.chuprikov.search.datatypes.ParsedProblem;
 import ru.chuprikov.search.datatypes.ProblemRawData;
-import ru.chuprikov.search.gather.problemsets.ProblemSets;
+import ru.chuprikov.search.misc.ProblemSetName;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -11,11 +11,11 @@ public class MultiSiteContentParser implements ContentParser {
     private static final Map<String, ContentParser> parsers = new HashMap<>();
 
     public MultiSiteContentParser() {
-        parsers.put(ProblemSets.ProblemSetName.UVA.toString(), new UvaContentParser());
-        parsers.put(ProblemSets.ProblemSetName.SPOJ.toString(), new SpojContentParser());
-        parsers.put(ProblemSets.ProblemSetName.EOLIMP.toString(), new EolimpContentParser());
-        parsers.put(ProblemSets.ProblemSetName.TIMUS.toString(), new TimusContentParser());
-        parsers.put(ProblemSets.ProblemSetName.CF.toString(), new CodeforcesContentParser());
+        parsers.put(ProblemSetName.UVA.toString(), new UvaContentParser());
+        parsers.put(ProblemSetName.SPOJ.toString(), new SpojContentParser());
+        parsers.put(ProblemSetName.EOLIMP.toString(), new EolimpContentParser());
+        parsers.put(ProblemSetName.TIMUS.toString(), new TimusContentParser());
+        parsers.put(ProblemSetName.CF.toString(), new CodeforcesContentParser());
     }
 
     @Override

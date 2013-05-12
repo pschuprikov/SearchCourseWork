@@ -6,6 +6,7 @@
       xmlns:c="http://java.sun.com/jsf/composite"
       xmlns:h="http://java.sun.com/jsf/html"
       xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://java.sun.com/jsf/core"
       xml:lang="en" lang="en">
     <c:interface name="fetch"/>
     <c:implementation>
@@ -13,7 +14,11 @@
             <p:panel header="Fetch">
                 <p:messages id="resp" showDetail="true"/>
                 <p:panelGrid columns="2">
-                    <h:outputText value="Resource:"/><p:inputText id="resource" value="#{fetch.resource}" label="resource"/>
+                    <h:outputText value="Resource:"/>
+                        <p:selectOneMenu value="#{fetch.resource}" effect="fade" style="width: 100%">
+                            <f:selectItems value="#{resourcesList.values}" var="resname" itemLabel="#{resname}" itemValue="#{resname}"/>
+                        </p:selectOneMenu>
+
                     <h:outputText value="From:"/><p:inputText id="from" value="#{fetch.from}" label="from"/>
                     <h:outputText value="To:"/><p:inputText id="to" value="#{fetch.to}" label="to"/>
                 </p:panelGrid>

@@ -6,6 +6,7 @@
       xmlns:c="http://java.sun.com/jsf/composite"
       xmlns:h="http://java.sun.com/jsf/html"
       xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://java.sun.com/jsf/core"
       xml:lang="en" lang="en">
 <h:head>
     <title>Parser</title>
@@ -17,9 +18,16 @@
             <p:panel header="parse">
                 <p:messages id="resp" showDetail="true"/>
                 <p:panelGrid columns="4">
-                    <h:outputText value="Resource from:"/><p:inputText id="resourceFrom" value="#{parser.requestResourceFrom}"/>
+                    <h:outputText value="Resource from:"/>
+                    <p:selectOneMenu value="#{parser.requestResourceFrom}" effect="fade" style="width: 100%">
+                        <f:selectItems value="#{resourcesList.values}" var="resname" itemLabel="#{resname}" itemValue="#{resname}"/>
+                    </p:selectOneMenu>
                     <h:outputText value="ProblemID from:"/><p:inputText id="problemIDFrom"  value="#{parser.requestProblemIDFrom}"/>
-                    <h:outputText value="Resource to:"/><p:inputText id="resourceTo" value="#{parser.requestResourceTo}"/>
+
+                    <h:outputText value="Resource to:"/>
+                    <p:selectOneMenu value="#{parser.requestResourceTo}" effect="fade" style="width: 100%">
+                        <f:selectItems value="#{resourcesList.values}" var="resname" itemLabel="#{resname}" itemValue="#{resname}"/>
+                    </p:selectOneMenu>
                     <h:outputText value="ProblemID to:"/><p:inputText id="problemIDTo"  value="#{parser.requestProblemIDTo}"/>
 
                     <p:commandButton id="parseAllButton" update="resp" value="Parse all" action="#{parser.parseAll}"/>

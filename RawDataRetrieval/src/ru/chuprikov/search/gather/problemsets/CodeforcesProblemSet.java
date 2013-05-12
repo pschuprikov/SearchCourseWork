@@ -3,6 +3,7 @@ package ru.chuprikov.search.gather.problemsets;
 import ru.chuprikov.search.datatypes.ProblemID;
 import ru.chuprikov.search.gather.fetcher.StandardURLContentLoader;
 import ru.chuprikov.search.gather.fetcher.URLContentLoader;
+import ru.chuprikov.search.misc.ProblemSetName;
 
 class CodeforcesProblemSet implements ProblemSet {
     private final int lastRound;
@@ -36,7 +37,7 @@ class CodeforcesProblemSet implements ProblemSet {
         }
 
         return new ProblemFetchInfo(
-            new ProblemID(ProblemSets.ProblemSetName.CF.toString(), "" + currentRound + currentLetter),
+            new ProblemID(ProblemSetName.CF.toString(), "" + currentRound + currentLetter),
             "http://www.codeforces.ru/problemset/problem/" + currentRound + "/" + currentLetter, this
         );
     }

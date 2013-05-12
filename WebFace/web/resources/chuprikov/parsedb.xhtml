@@ -39,8 +39,11 @@
             </p:panel>
             <p:panel header="Search">
                 <p:panelGrid columns="2">
-                    <h:outputText value="resource"/><p:inputText value="#{parser.requestResource}"/>
-                    <h:outputText value="problemID"/><p:inputText value="#{parser.requestProblemID}"/>
+                    <h:outputText value="Resource:"/>
+                    <p:selectOneMenu id="resource" value="#{parser.requestResource}" effect="fade" style="width: 100%">
+                        <f:selectItems value="#{resourcesList.values}" var="resname" itemLabel="#{resname}" itemValue="#{resname}"/>
+                    </p:selectOneMenu>
+                    <h:outputText value="Problem ID:"/><p:inputText value="#{parser.requestProblemID}"/>
                 </p:panelGrid>
                 <p:commandButton update="parsedTable" actionListener="#{parser.resetWith}" value="Search"/>
             </p:panel>

@@ -84,7 +84,6 @@ public class Postings implements Serializable {
 
     public String show(long termID) throws Exception {
         this.termID = termID;
-        control.setActiveIdx(4);
         reset();
         return "postingsList";
     }

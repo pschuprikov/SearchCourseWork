@@ -33,7 +33,7 @@ public class Fetch implements Serializable {
         webFetchService = Service.create(url, qname).getPort(WebFetch.class);
     }
 
-    private String resource = "";
+    private String resource = "OLOLO";
     private int from;
     private int to;
 

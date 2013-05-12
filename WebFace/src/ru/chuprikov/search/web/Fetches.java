@@ -22,7 +22,7 @@ public class Fetches implements Serializable {
 
     transient private WebFetch webFetch;
 
-    private String requestResource = "";
+    private String requestResource = "OLOLO";
     private String requestProblemID = "";
 
     public String getRequestResource() {
