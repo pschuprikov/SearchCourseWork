@@ -1,11 +1,14 @@
 package ru.chuprikov.search.web;
 
 import ru.chuprikov.search.datatypes.Document;
+import ru.chuprikov.search.datatypes.SearchResponse;
 
 import javax.annotation.PostConstruct;
+import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ManagedProperty;
 import javax.faces.bean.SessionScoped;
+import javax.faces.context.FacesContext;
 import javax.xml.namespace.QName;
 import javax.xml.ws.Service;
 import java.io.Serializable;
@@ -71,7 +74,11 @@ public class Search implements Serializable{
     }
 
     public void search() throws Exception {
-        searchResult = webSearch.searchSimpleConjunction(request, limit);
+        searchResult = new Document[0];
+        SearchResponse response = webSearch.searchSimpleConjunction(request, limit);
+        FacesContext.getCurrentInstance().addMessage("search",
+            new FacesMessage("Search result", "Time taken: " + response.getTimeMills() + "ms; Searching: " + response.getCorrectedRequest()));
+        searchResult = response.getFoundDocuments();
     }
 
     public String showContent() throws Exception {

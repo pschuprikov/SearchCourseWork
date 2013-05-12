@@ -13,8 +13,9 @@
     <c:implementation>
         <h:form>
             <p:panel header="Search">
+                <p:messages id="resp" showDetail="true"/>
                 <p:inputText value="#{search.request}"/>
-                <p:commandButton update="searchResultTable" actionListener="#{search.search}" value="Search"/>
+                <p:commandButton update="searchResultTable,resp" actionListener="#{search.search}" value="Search"/>
             </p:panel>
             <p:panel header="Search result">
                 <p:dataTable id="searchResultTable" var="_fsrch" value = "#{search.searchResult}">

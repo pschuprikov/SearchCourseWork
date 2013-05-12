@@ -7,7 +7,7 @@ import java.io.Serializable;
 @ManagedBean
 @SessionScoped
 public class Control implements Serializable{
-    private int activeIdx;
+    private int activeIdx = 7;
 
     public int getActiveIdx() {
         return activeIdx;

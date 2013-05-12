@@ -1,6 +1,6 @@
 package ru.chuprikov.search.web;
 
-import ru.chuprikov.search.datatypes.Document;
+import ru.chuprikov.search.datatypes.SearchResponse;
 
 import javax.jws.WebMethod;
 import javax.jws.WebService;
@@ -8,5 +8,5 @@ import javax.jws.WebService;
 @WebService
 public interface WebSearch {
     @WebMethod
-    Document[] searchSimpleConjunction(String request, int limit) throws Exception;
+    SearchResponse searchSimpleConjunction(String request, int limit) throws Exception;
 }

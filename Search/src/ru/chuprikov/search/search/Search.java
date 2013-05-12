@@ -3,6 +3,7 @@ package ru.chuprikov.search.search;
 import ru.chuprikov.search.database.*;
 import ru.chuprikov.search.datatypes.Datatypes;
 import ru.chuprikov.search.datatypes.Document;
+import ru.chuprikov.search.datatypes.SearchResponse;
 import ru.chuprikov.search.datatypes.Term;
 import ru.chuprikov.search.search.joiners.Joiners;
 import ru.chuprikov.search.search.tokens.TokenKind;
@@ -27,71 +28,88 @@ public class Search implements AutoCloseable {
         this.kgramm = new Kgramm(termDB, bigrammDB);
     }
 
-    private Iterator<PostingInfo> parseE(Tokenizer tokenizer, List<CloseableIterator<Datatypes.Posting>> openedIterators) throws Exception {
-        Iterator<PostingInfo> cur = parseN(tokenizer, openedIterators);
+    private Iterator<PostingInfo> parseE(Tokenizer tokenizer, List<CloseableIterator<Datatypes.Posting>> openedIterators, StringBuilder correctedRequestBuilder) throws Exception {
+        Iterator<PostingInfo> cur = parseN(tokenizer, openedIterators, correctedRequestBuilder);
         while (tokenizer.currentToken().kind() == TokenKind.PROXIMITY) {
             int proximity = tokenizer.currentToken().getIntegerValue();
+            correctedRequestBuilder.append(" /" + proximity + " ");
             tokenizer.readNextToken();
-            Iterator<PostingInfo> next = parseN(tokenizer, openedIterators);
+            Iterator<PostingInfo> next = parseN(tokenizer, openedIterators, correctedRequestBuilder);
             cur = new Merger(cur, next, Joiners.getProximityJoiner(proximity));
         }
         return cur;
     }
 
-    private Iterator<PostingInfo> getPostingsIterator(String token, List<CloseableIterator<Datatypes.Posting>> openedIterators) throws Exception {
+    private Iterator<PostingInfo> getPostingsIterator(String token, List<CloseableIterator<Datatypes.Posting>> openedIterators, StringBuilder correctedRequestBuilder) throws Exception {
         final String termStr = Normalize.getBasisWord(token);
         Term term = termDB.get(termStr);
+
         if (term == null) {
-            term = termDB.get(Normalize.getBasisWord(kgramm.fixMistake(token).get(0)));
+            String tokenReplacement = kgramm.fixMistake(token).get(0);
+            term = termDB.get(Normalize.getBasisWord(tokenReplacement));
+            correctedRequestBuilder.append(tokenReplacement);
+        } else {
+            correctedRequestBuilder.append(token);
         }
+
         final long termID = term.getTermID();
         final CloseableIterator<Datatypes.Posting> termPostingsIterator = indexDB.iterator(termID);
         openedIterators.add(termPostingsIterator);
         return new PostingsAdapter(termPostingsIterator);
     }
 
-    private Iterator<PostingInfo> parseN(Tokenizer tokenizer, List<CloseableIterator<Datatypes.Posting>> openedIterators) throws Exception {
+    private Iterator<PostingInfo> parseN(Tokenizer tokenizer, List<CloseableIterator<Datatypes.Posting>> openedIterators, StringBuilder correctedRequestBuilder) throws Exception {
         Iterator<PostingInfo> result;
         if (tokenizer.currentToken().kind() == TokenKind.CITE) {
+            correctedRequestBuilder.append('"');
             tokenizer.readNextToken();
 
-            result = getPostingsIterator(tokenizer.currentToken().getStringValue(), openedIterators);
+            result = getPostingsIterator(tokenizer.currentToken().getStringValue(), openedIterators, correctedRequestBuilder);
             tokenizer.readNextToken();
 
             while (tokenizer.currentToken().kind() != TokenKind.CITE) {
-                result = new Merger(result, getPostingsIterator(tokenizer.currentToken().getStringValue(), openedIterators), Joiners.getPhraseJoiner());
+                correctedRequestBuilder.append(' ');
+                result = new Merger(result, getPostingsIterator(tokenizer.currentToken().getStringValue(), openedIterators, correctedRequestBuilder), Joiners.getPhraseJoiner());
                 tokenizer.readNextToken();
             }
 
+            correctedRequestBuilder.append('"');
             tokenizer.readNextToken();
         } else {
-            result = getPostingsIterator(tokenizer.currentToken().getStringValue(), openedIterators);
+            result = getPostingsIterator(tokenizer.currentToken().getStringValue(), openedIterators, correctedRequestBuilder);
             tokenizer.readNextToken();
         }
         return result;
     }
 
-    private Iterator<PostingInfo> parseC(Tokenizer tokenizer, List<CloseableIterator<Datatypes.Posting>> openedIterators) throws Exception {
-        Iterator<PostingInfo> cur = parseE(tokenizer, openedIterators);
-        while (tokenizer.currentToken().kind() != TokenKind.EOF)
-            cur = new Merger(cur, parseE(tokenizer, openedIterators), Joiners.getOrJoiner());
+    private Iterator<PostingInfo> parseC(Tokenizer tokenizer, List<CloseableIterator<Datatypes.Posting>> openedIterators, StringBuilder correctedRequestBuilder) throws Exception {
+        Iterator<PostingInfo> cur = parseE(tokenizer, openedIterators, correctedRequestBuilder);
+        while (tokenizer.currentToken().kind() != TokenKind.EOF) {
+            correctedRequestBuilder.append(' ');
+            cur = new Merger(cur, parseE(tokenizer, openedIterators, correctedRequestBuilder), Joiners.getOrJoiner());
+        }
 
         return cur;
     }
 
-    public List<Document> searchAndGetDocIDs(String request, int limit) throws Exception {
+    public SearchResponse searchAndGetDocIDs(String request, int limit) throws Exception {
         ArrayList<CloseableIterator<Datatypes.Posting>> openedIterators = new ArrayList<>();
         try {
-        Iterator<PostingInfo> it = parseC(new Tokenizer(request), openedIterators);
-        Set<Long> duplicateEliminator = new HashSet<>();
+            long startTime = System.currentTimeMillis();
 
-        while (it.hasNext() && duplicateEliminator.size() < limit)
-            duplicateEliminator.add(it.next().getDocumentID());
+            StringBuilder correctedRequestBuilder = new StringBuilder();
+            Iterator<PostingInfo> it = parseC(new Tokenizer(request), openedIterators, correctedRequestBuilder);
+            Set<Long> duplicateEliminator = new HashSet<>();
 
-        List<Document> result = new ArrayList<>();
+            while (it.hasNext() && duplicateEliminator.size() < limit)
+                duplicateEliminator.add(it.next().getDocumentID());
+
+            Document[] found = new Document[duplicateEliminator.size()];
+            int writeIdx = 0;
             for (long documentID : duplicateEliminator)
-                result.add(documentDB.get(documentID));
-        return result;
+                found[writeIdx++] = documentDB.get(documentID);
+
+            return new SearchResponse(System.currentTimeMillis() - startTime, correctedRequestBuilder.toString(), found);
         } finally {
             for (CloseableIterator<Datatypes.Posting> cit : openedIterators)
                 cit.close();
