@@ -1,10 +1,7 @@
 package ru.chuprikov.search.search;
 
 import ru.chuprikov.search.database.*;
-import ru.chuprikov.search.datatypes.Datatypes;
-import ru.chuprikov.search.datatypes.Document;
-import ru.chuprikov.search.datatypes.SearchResponse;
-import ru.chuprikov.search.datatypes.Term;
+import ru.chuprikov.search.datatypes.*;
 import ru.chuprikov.search.search.joiners.Joiners;
 import ru.chuprikov.search.search.tokens.TokenKind;
 import ru.chuprikov.search.search.tokens.Tokenizer;
@@ -35,27 +32,78 @@ public class Search implements AutoCloseable {
             correctedRequestBuilder.append(" /" + proximity + " ");
             tokenizer.readNextToken();
             Iterator<PostingInfo> next = parseN(tokenizer, openedIterators, correctedRequestBuilder);
-            cur = new Merger(cur, next, Joiners.getProximityJoiner(proximity));
+            cur = new Intersector(cur, next, Joiners.getProximityJoiner(proximity));
         }
         return cur;
     }
 
-    private Iterator<PostingInfo> getPostingsIterator(String token, List<CloseableIterator<Datatypes.Posting>> openedIterators, StringBuilder correctedRequestBuilder) throws Exception {
-        final String termStr = Normalize.getBasisWord(token);
-        Term term = termDB.get(termStr);
-
-        if (term == null) {
-            String tokenReplacement = kgramm.fixMistake(token).get(0);
-            term = termDB.get(Normalize.getBasisWord(tokenReplacement));
-            correctedRequestBuilder.append(tokenReplacement);
-        } else {
-            correctedRequestBuilder.append(token);
+    private Iterator<PostingInfo> getWildcardIterator(String token, List<CloseableIterator<Datatypes.Posting>> openedIterators, StringBuilder correctedRequestBuilder) throws Exception {
+        Set<String> kgramms = new HashSet<>();
+        String[] bits = token.split("\\*");
+        if (bits[0].length() >= 2)
+            kgramms.add("$" + bits[0].substring(0, 2));
+        if (bits[bits.length - 1].length() >= 2)
+            kgramms.add(bits[bits.length - 1].substring(bits[bits.length - 1].length() - 2, bits[bits.length - 1].length()) + "$");
+        for (String bit : bits) {
+            if (bit.length() == 2)
+                kgramms.add(bit);
+            else for (int i = 0; i < bit.length() - 2; i++)
+                kgramms.add(bit.substring(i, i + 3));
         }
 
-        final long termID = term.getTermID();
-        final CloseableIterator<Datatypes.Posting> termPostingsIterator = indexDB.iterator(termID);
+        Map<Long, Integer> termHits = new HashMap<>();
+        for (String kg : kgramms) {
+            for (BigrammUnit bu : bigrammDB.get(kg)) {
+                if (!termHits.containsKey(bu.getTermID()))
+                    termHits.put(bu.getTermID(), 0);
+                termHits.put(bu.getTermID(), termHits.get(bu.getTermID()) + 1);
+            }
+        }
+
+        List<Term> candidates = new ArrayList<>();
+        for (Long termID : termHits.keySet()) {
+            if (termHits.get(termID) == kgramms.size()) {
+                candidates.add(termDB.get(termID));
+            }
+        }
+
+        List<Iterator<PostingInfo>> options = new ArrayList<>();
+
+        correctedRequestBuilder.append("{");
+        for (Term term : candidates) {
+            if (term.getTerm().matches(token.replaceAll("\\*", ".*"))) {
+                options.add(getTermIterator(term, openedIterators));
+                correctedRequestBuilder.append(term.getTerm() + " ");
+            }
+        }
+        correctedRequestBuilder.append("}");
+
+        return new Merger(options);
+    }
+
+    private Iterator<PostingInfo> getTermIterator(Term term, List<CloseableIterator<Datatypes.Posting>> openedIterators) throws Exception {
+        final CloseableIterator<Datatypes.Posting> termPostingsIterator = indexDB.iterator(term.getTermID());
         openedIterators.add(termPostingsIterator);
         return new PostingsAdapter(termPostingsIterator);
+    }
+
+    private Iterator<PostingInfo> getPostingsIterator(String token, List<CloseableIterator<Datatypes.Posting>> openedIterators, StringBuilder correctedRequestBuilder) throws Exception {
+        if (token.contains("*")) {
+            return getWildcardIterator(token, openedIterators, correctedRequestBuilder);
+        } else {
+            final String termStr = Normalize.getBasisWord(token);
+            Term term = termDB.get(termStr);
+
+            if (term == null) {
+                String tokenReplacement = kgramm.fixMistake(token).get(0);
+                term = termDB.get(Normalize.getBasisWord(tokenReplacement));
+
+                correctedRequestBuilder.append(tokenReplacement);
+            } else
+                correctedRequestBuilder.append(token);
+
+            return getTermIterator(term, openedIterators);
+        }
     }
 
     private Iterator<PostingInfo> parseN(Tokenizer tokenizer, List<CloseableIterator<Datatypes.Posting>> openedIterators, StringBuilder correctedRequestBuilder) throws Exception {
@@ -69,7 +117,7 @@ public class Search implements AutoCloseable {
 
             while (tokenizer.currentToken().kind() != TokenKind.CITE) {
                 correctedRequestBuilder.append(' ');
-                result = new Merger(result, getPostingsIterator(tokenizer.currentToken().getStringValue(), openedIterators, correctedRequestBuilder), Joiners.getPhraseJoiner());
+                result = new Intersector(result, getPostingsIterator(tokenizer.currentToken().getStringValue(), openedIterators, correctedRequestBuilder), Joiners.getPhraseJoiner());
                 tokenizer.readNextToken();
             }
 
@@ -86,7 +134,7 @@ public class Search implements AutoCloseable {
         Iterator<PostingInfo> cur = parseE(tokenizer, openedIterators, correctedRequestBuilder);
         while (tokenizer.currentToken().kind() != TokenKind.EOF) {
             correctedRequestBuilder.append(' ');
-            cur = new Merger(cur, parseE(tokenizer, openedIterators, correctedRequestBuilder), Joiners.getOrJoiner());
+            cur = new Intersector(cur, parseE(tokenizer, openedIterators, correctedRequestBuilder), Joiners.getOrJoiner());
         }
 
         return cur;

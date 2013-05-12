@@ -70,9 +70,7 @@ public class SPIMIIndexer implements Indexer {
     private void processPostings(String term, PriorityQueue<PostingsListReader> postings) throws Exception {
         final long termID = termDB.add(term);
 
-        for (int i = 0; i < term.length(); i++) {
-            bigrammDB.add(term.substring(i, i + 1) + term.charAt(i < term.length() - 1 ? i + 1 : 0), new BigrammUnit(termID, term.length()));
-        }
+        processKgramm(term, termID);
 
         try (PostingsWriter writer = indexDB.getPostingsWriter(termID)) {
             long count = 0;
@@ -86,6 +84,21 @@ public class SPIMIIndexer implements Indexer {
                 }
             }
             termDB.incrementCount(term, count);
+        }
+    }
+
+    private void processKgramm(String term, long termID) {
+        if (term.length() < 2)
+            return;
+        final BigrammUnit unit = new BigrammUnit(termID, term.length());
+        for (int i = 0; i < term.length(); i++) {
+            bigrammDB.add(term.substring(i, i + 1) + term.charAt(i < term.length() - 1 ? i + 1 : 0), unit);
+        }
+        bigrammDB.add("$" + term.substring(0, 2), unit);
+        bigrammDB.add(term.substring(term.length() - 2, term.length()) + "$", unit);
+
+        for (int i = 0; i < term.length() - 2; i++) {
+            bigrammDB.add(term.substring(i, i + 3), unit);
         }
     }
 

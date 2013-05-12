@@ -32,7 +32,7 @@ public class Tokenizer {
             currentToken = TokensFactory.createProximityToken(proximity);
         } else {
             StringBuilder word = new StringBuilder();
-            while (cur < str.length() && Character.isAlphabetic(str.charAt(cur))) {
+            while (cur < str.length() && (Character.isAlphabetic(str.charAt(cur)) || str.charAt(cur) == '*')) {
                 word.append(str.charAt(cur));
                 cur++;
             }

@@ -1,76 +1,51 @@
 package ru.chuprikov.search.search;
 
-import ru.chuprikov.search.search.joiners.Joiner;
-
 import java.util.Iterator;
+import java.util.List;
+import java.util.PriorityQueue;
 
 public class Merger implements Iterator<PostingInfo> {
-    private final Iterator<PostingInfo> fst;
-    private final Iterator<PostingInfo> snd;
-    private final Joiner join;
+    private final List<Iterator<PostingInfo>> options;
+    private final PriorityQueue<IndexedPostingInfo> queue = new PriorityQueue<>();
 
-    private PostingInfo next = null;
+    private static class IndexedPostingInfo implements Comparable<IndexedPostingInfo> {
+        private final PostingInfo postingInfo;
+        private final int optionIdx;
 
+        private IndexedPostingInfo(int optionIdx, PostingInfo postingInfo) {
+            this.optionIdx = optionIdx;
+            this.postingInfo = postingInfo;
+        }
 
-    public Merger(Iterator<PostingInfo> fst, Iterator<PostingInfo> snd, Joiner join) {
-        this.fst = fst;
-        this.snd = snd;
-        this.join = join;
-        advance();
+        @Override
+        public int compareTo(IndexedPostingInfo o) {
+            return postingInfo.compareTo(o.postingInfo);
+        }
     }
 
+    public Merger(List<Iterator<PostingInfo>> options) {
+        this.options = options;
+        for (int i = 0; i < options.size(); i++) {
+            if (options.get(i).hasNext())
+                queue.add(new IndexedPostingInfo(i, options.get(i).next()));
+        }
+    }
+
+    @Override
     public boolean hasNext() {
-        return next != null;
+        return !queue.isEmpty();
     }
 
     @Override
     public PostingInfo next() {
-        PostingInfo result =  next;
-        advance();
-        return result;
+        IndexedPostingInfo cur = queue.poll();
+        if (options.get(cur.optionIdx).hasNext())
+            queue.add(new IndexedPostingInfo(cur.optionIdx, options.get(cur.optionIdx).next()));
+        return cur.postingInfo;
     }
 
     @Override
     public void remove() {
         throw new UnsupportedOperationException();
-    }
-
-    private void advance() {
-        while (true) {
-
-            PostingInfo firstInfo = null;
-            PostingInfo secondInfo = null;
-            while(true) {
-                if (!fst.hasNext() && firstInfo == null || !snd.hasNext() && secondInfo == null) {
-                    firstInfo = null;
-                    secondInfo = null;
-                    break;
-                }
-                if (firstInfo == null) {
-                    firstInfo = fst.next();
-                }
-                if (secondInfo == null) {
-                    secondInfo = snd.next();
-                }
-                if (secondInfo.compareTo(firstInfo) == 0)
-                    break;
-                else if (secondInfo.compareTo(firstInfo) < 0)
-                    secondInfo = null;
-                else
-                    firstInfo = null;
-            }
-
-            if (firstInfo == null || secondInfo == null) {
-                next = null;
-                break;
-            } else {
-                next = new PostingInfo(firstInfo.getDocumentID(), firstInfo.getPositionType());
-                next.positions().addAll(join.join(firstInfo.positions(), secondInfo.positions()));
-                if (next.positions().isEmpty())
-                    continue;
-                else
-                    break;
-            }
-        }
     }
 }
