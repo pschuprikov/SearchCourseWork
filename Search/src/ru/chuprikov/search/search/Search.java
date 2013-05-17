@@ -46,7 +46,7 @@ public class Search implements AutoCloseable {
         String[] bits = stemmedToken.split("\\*");
         if (bits[0].length() >= 2)
             kgramms.add("$" + bits[0].substring(0, 2));
-        if (bits[bits.length - 1].length() >= 2)
+        if (!stemmedToken.endsWith("*") && bits[bits.length - 1].length() >= 2)
             kgramms.add(bits[bits.length - 1].substring(bits[bits.length - 1].length() - 2, bits[bits.length - 1].length()) + "$");
         for (String bit : bits) {
             if (bit.length() == 2)
